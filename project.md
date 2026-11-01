@@ -12,20 +12,23 @@
 
 ## Vision and problem
 
-The team wants to help enforcement and related agencies fight the illegal drug market by understanding its logistics: how drugs move, where documented shipments originate, transit and end, and how patterns may change over time. Relevant information can be spread across case files, jurisdictions and agencies, making it difficult to see the larger picture or coordinate investigations.
+The team wants to help enforcement agencies, local authorities and service planners direct limited resources by understanding the logistics of the illegal drug market: how drugs move, where documented shipments originate, transit and end, and how patterns may change over time. Relevant information can be spread across case files, jurisdictions and agencies, making it difficult to see the larger picture or coordinate a response. The intended response includes interdiction, youth outreach, helpline visibility and rehabilitation capacity, depending on the evidence and the decisions of responsible authorities.
 
-The ambition is an AI-assisted geographic intelligence platform, informally compared to a Palantir-like system for the anti-drug effort. Its main product and differentiator is **mapping and predicting possible trafficking corridors**, not a general-purpose dashboard or a service primarily aimed at people who use drugs. Case analysis, community intelligence and other features support this core objective. The wider aspiration is to contribute to reducing substance-related harm in Kerala; the project does not claim that technology alone can eliminate drug use or trafficking.
+The ambition is an AI-assisted geographic intelligence platform, informally compared to a Palantir-like system for the anti-drug effort. Its core is **mapping documented movements and forecasting possible trafficking corridors** to inform resource planning across enforcement, prevention and recovery. Its signature feature is a traceable evidence trail behind every mapped connection. Case analysis and community intelligence support this objective. The wider aspiration is to reduce substance-related harm in Kerala, including harm affecting young people; technology alone cannot eliminate drug use or trafficking.
 
 ## Intended users and workflow
 
-The primary users are authorized analysts and investigators in Kerala Police, Excise and other relevant agencies. The proposed workflow is:
+The primary user is a **district-level anti-narcotics analyst** in Kerala Police or Excise. Local-government prevention coordinators and authorized health or rehabilitation planners are intended recipients of appropriate aggregate findings; each role should see only information it is authorized to access. The proposed workflow is:
 
 1. Bring together authorized case records and other relevant sources.
 2. Extract and review locations, times, documented movements and supporting evidence.
 3. Map known movements and analyze patterns across locations, time and jurisdictions.
 4. Estimate which corridors may warrant future analyst review, where the data supports a tested model.
-5. Let an analyst inspect the evidence, limitations and uncertainty, then prepare a report for relevant agencies.
-6. Receive community tips privately, review and corroborate them, and use appropriately verified information to improve future analysis.
+5. Let the analyst inspect each connection's sources, confidence, review history and limitations, then prepare a role-appropriate brief.
+6. Relevant authorities review the brief alongside service availability and local knowledge before deciding whether to adjust interdiction, youth awareness, helpline promotion or rehabilitation resources.
+7. Receive community tips privately, review and corroborate them, and use appropriately verified information to improve future analysis.
+
+For example, a fictional corridor may show increased documented activity near several school zones. An analyst can check the underlying records and their uncertainty, then share an aggregate finding with prevention and service planners to consider outreach or support. Proximity does not establish activity at a school or a need for a particular service: those decisions require independent local information and human judgment.
 
 No live agency data access, integration or reporting arrangement has yet been confirmed. Any real-world use requires the relevant authorization and agency participation.
 
@@ -35,11 +38,17 @@ No live agency data access, integration or reporting arrangement has yet been co
 
 Display recorded seizure locations and documented origins, destinations, transit points and transport modes where available. Show movement at the geographic resolution supported by the evidence: district-level data should not be represented as a verified street-level journey. Distinguish documented movements, unverified claims and model-generated hypotheses. Users should be able to filter by time, geography, substance category, evidence status and source, and inspect the records behind a map feature.
 
+### Evidence trail and resource planning
+
+Every mapped connection should be clickable and show its source records, evidence status, source dates, geographic precision and review history, including who reviewed it and when. Show an evidence-confidence assessment with its basis and an explicit unknown or unreviewed state when it cannot be assessed; do not present an unvalidated score as a measured probability. Access to individual records and reviewer identity must follow role permissions, while cross-agency summaries use suitable aggregation.
+
+Help authorized users prepare resource-planning briefs for interdiction, outreach, helpline promotion and rehabilitation capacity. The platform provides evidence for discussion, not automatic resource allocation. Service planning needs its own local evidence, including capacity and access gaps; a trafficking indicator alone does not measure demand for treatment or identify people needing care.
+
 ### Pattern analysis and prediction
 
 Analyze recurring connections and changes across geographic and time windows. The intended goal is to predict possible future trafficking corridors, but the exact prediction target depends on the available data and must be defined and validated explicitly. One candidate for an initial experiment is ranking corridors by the likelihood of a future **documented case** involving them during a defined period. This is not automatically a probability of actual trafficking: seizures and case records are incomplete and depend on enforcement and reporting.
 
-Model results are decision support for trained analysts, not proof of wrongdoing or a sole basis for searches, arrests or other enforcement action. Present uncertainty, evidence and limitations. Avoid individual suspicion scores or using demographic characteristics such as gender or identity as proxies for criminality.
+Forecast only at an appropriate aggregate place or corridor level, never for individuals. Model results are decision support for trained analysts, not proof of wrongdoing or a sole basis for searches, arrests or other enforcement action. Show a simple baseline beside the model, backtest on held-out historical periods, and include a visible **“What this cannot tell you”** panel describing missing evidence, reporting and enforcement bias, and the difference between recorded cases and actual trafficking. Present uncertainty and avoid individual suspicion scores or using demographic characteristics such as gender or identity as proxies for criminality.
 
 ### Community intelligence
 
@@ -57,6 +66,7 @@ The team expects that obtaining useful data for the MVP may be feasible, but acc
 - Transport mode, substance category and quantity where available.
 - Evidence references, corroboration and links between records.
 - Where available, aggregate enforcement activity and coverage to help interpret observed case patterns.
+- Where authorized and relevant, aggregated school-zone context, existing outreach, helpline reach and rehabilitation capacity to inform resource planning without identifying students or patients.
 
 Public geographic data can provide boundaries and transport context, subject to its licence. Public aggregate statistics can provide background but do not by themselves establish routes. Missing origins, destinations or enforcement coverage should remain explicitly unknown rather than inferred as facts. Obtain permission before accessing or using real records and before displaying them in a public demonstration. Start with synthetic data when real data is unavailable or unsuitable for demonstration, and label it clearly.
 
@@ -77,6 +87,7 @@ A possible hackathon stack is React and Leaflet for the interface, Python and Fa
 ## Validation and limitations
 
 - Split evaluation chronologically and use only information available at each prediction date. Compare forecasts on later unseen periods with simple recent-history baselines; report uncertainty, misses and differences in coverage across districts.
+- Audit differences in data coverage, enforcement effort and model errors across locations, and assess feedback loops before use. Use aggregation thresholds and suppress small groups in shared outputs; select thresholds with the relevant agency and privacy expertise rather than assuming aggregation guarantees anonymity.
 - A successful backtest of future recorded cases does not prove detection of all trafficking, reliable street-level routes or reduced harm. Agency-led evaluation is needed before operational use.
 - Seizure and case data reflect both underlying activity and enforcement/reporting practices. Missing and biased observations can create feedback loops.
 - Community submissions are vulnerable to mistakes, duplication and manipulation. Raw reports must not be treated as independent ground truth.
@@ -84,9 +95,15 @@ A possible hackathon stack is React and Leaflet for the interface, Python and Fa
 
 ## Hackathon scope and next steps
 
-The intended demonstration is an end-to-end route intelligence workflow: load documented or clearly synthetic movements, explore corridors on a map, inspect supporting evidence, show a tested forecast or baseline if the data supports it, review a fictional community tip, and prepare an analyst brief. Prioritize the route mapping and prediction experience; supporting features should make this core stronger.
+The intended demonstration is an end-to-end route intelligence and resource-planning workflow: load documented or clearly synthetic movements, explore corridors on a map, inspect clickable evidence and review history, show a tested forecast alongside a baseline and limitations if the data supports it, review a fictional community tip, and prepare an aggregate brief for enforcement and service planners. Prioritize the route mapping and prediction experience; supporting features should make this core stronger.
 
 First confirm the availability, quality and permitted use of movement-level data with potential agency partners while developing the data model and map in parallel. The team has not yet settled on a project name, data partner, final prediction target, model, or production architecture.
+
+## Questions to prepare for
+
+- **Who uses it?** A district-level anti-narcotics analyst reviews evidence and prepares a brief; authorized local prevention and health planners use suitable aggregate findings with their own service data to decide on resources.
+- **Could it harm communities?** Limit geographic detail and small-group disclosure, audit coverage and model errors, distinguish allegations from corroborated evidence, and require human review before sharing or action. These measures reduce risks but do not guarantee fairness.
+- **Why use this alongside existing tools?** Its proposed differentiator is evidence-linked corridor analysis: each connection can be traced to sources and review history, with transparent baseline comparisons and limitations-first forecasting. Existing agency systems and their capabilities must be investigated before claiming a unique operational advantage.
 
 ## Reference context
 
