@@ -15,5 +15,7 @@
 - **GitHub CLI (`gh`)**: `gh` is pre-installed in PATH and authenticated (account: `MaenExists`). The Git credential helper is already configured to use `gh auth git-credential`.
   - Use `gh` for GitHub actions: `gh repo create`, `gh repo rename`, `gh pr create`, `gh issue list`, etc.
   - Standard Git HTTPS commands (`git push`, `git pull`, `git clone`) authenticate automatically via `gh`. Do not prompt the user for GitHub credentials.
+  - Run commands non-interactively and do not ask the owner to set up SSH keys. For example, supply explicit titles and bodies for pull requests and use `--yes` when renaming a repository.
+  - When authorized to create a repository, use `gh repo create <name> --private --source=. --remote=origin --push` to create a private repository and push the current branch.
 - Push when the owner has requested or otherwise authorized it. Check the result and report the commit and any failure accurately; never claim a commit or push succeeded without verification.
 - Some agent sessions may have a read-only `.git` directory or no network access. If Git or GitHub operations are blocked, complete the permitted work, explain the specific failure and leave the owner clear instructions for completing the remaining steps. Do not bypass sandbox restrictions.
