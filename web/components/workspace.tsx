@@ -621,6 +621,7 @@ export default function Workspace() {
                   </div>
                   <CorridorMap
                     records={filtered}
+                    focusedDistrict={district}
                     selected={selected}
                     onSelect={setSelected}
                     forecast={data.forecast}
@@ -1532,6 +1533,16 @@ export default function Workspace() {
                     "Open Data Kerala / OpenStreetMap",
                     "District boundary polygons, simplified for this display. Adapted geographic database is ODbL 1.0. © OpenStreetMap contributors.",
                     "https://github.com/opendatakerala/kl_district",
+                  ],
+                  [
+                    "CARTO / OpenStreetMap",
+                    "Detailed online roads and place labels, displayed in grayscale. Tile availability and public-map coverage vary. No case data or lead narratives are sent to the basemap provider.",
+                    "https://carto.com/attributions",
+                  ],
+                  [
+                    "GeoNames",
+                    "6,364 bundled Kerala locality references, CC BY 4.0. Local search and place points are geographic context, never case evidence. Coordinates represent localities, not verified addresses.",
+                    "https://www.geonames.org/",
                   ],
                   [
                     "Natural Earth",

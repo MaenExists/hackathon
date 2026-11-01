@@ -1,29 +1,61 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
-import { Plus, Minus, LocateFixed, Layers, Compass } from "lucide-react";
-import { places, corridors, placeName, corridorName } from "../data/geography";
+import { useEffect, useState, useRef, useMemo } from "react";
+import {
+  Plus,
+  Minus,
+  LocateFixed,
+  Layers,
+  Compass,
+  Search,
+  Maximize,
+  Minimize,
+  X,
+  Crosshair,
+} from "lucide-react";
+import type * as Leaflet from "leaflet";
+import type { GeoJsonObject } from "geojson";
+import { places, corridors, corridorName } from "../data/geography";
 import type { CaseRecord, ForecastRow } from "../lib/types";
-type Feature = {
-  properties: { name: string };
-  geometry: { type: string; coordinates: number[][][][] };
+
+type Location = {
+  id: string;
+  name: string;
+  localName?: string;
+  aliases?: string;
+  kind: string;
+  lat: number;
+  lon: number;
 };
-const project = (lon: number, lat: number): [number, number] => [
-  (lon - 73.5) * 137,
-  (14.0 - lat) * 137,
+type Engine = {
+  L: typeof Leaflet;
+  map: Leaflet.Map;
+  boundaries: Leaflet.LayerGroup;
+  evidence: Leaflet.LayerGroup;
+  locations: Leaflet.LayerGroup;
+  tiles: Leaflet.TileLayer;
+};
+const KERALA: Leaflet.LatLngBoundsLiteral = [
+  [8.15, 74.75],
+  [12.85, 77.6],
 ];
-const shape = (f: Feature) =>
-  f.geometry.coordinates
-    .map((poly) =>
-      poly
-        .map(
-          (ring) =>
-            ring
-              .map((p, i) => `${i ? "L" : "M"}${project(p[0], p[1]).join(",")}`)
-              .join(" ") + " Z",
-        )
-        .join(" "),
-    )
-    .join(" ");
+const SIGNALS = {
+  documented: "#438fff",
+  unreviewed: "#ffd000",
+  disputed: "#ff4545",
+};
+const fallbackLocations: Location[] = places.map((p) => ({
+  ...p,
+  kind: "district reference",
+}));
+function label(text: string) {
+  const el = document.createElement("span");
+  el.textContent = text;
+  return el;
+}
+function reducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export default function CorridorMap({
   records,
   selected,
@@ -32,6 +64,7 @@ export default function CorridorMap({
   showHypotheses,
   showPoints,
   setShowPoints,
+  focusedDistrict = "all",
 }: {
   records: CaseRecord[];
   selected: string;
@@ -40,335 +73,615 @@ export default function CorridorMap({
   showHypotheses: boolean;
   showPoints: boolean;
   setShowPoints: (x: boolean) => void;
+  focusedDistrict?: string;
 }) {
-  const [districts, setDistricts] = useState<Feature[]>([]),
-    [land, setLand] = useState<Feature[]>([]),
-    [mapError, setMapError] = useState(false);
-  const [zoom, setZoom] = useState(1),
-    [pan, setPan] = useState({ x: 0, y: 0 });
-  const [narrow, setNarrow] = useState(false);
-  const drag = useRef<{ x: number; y: number; px: number; py: number } | null>(
-    null,
-  );
+  const container = useRef<HTMLDivElement>(null),
+    engine = useRef<Engine | null>(null);
+  const [ready, setReady] = useState(false),
+    [mapError, setMapError] = useState(""),
+    [tileState, setTileState] = useState("loading");
+  const [street, setStreet] = useState(true),
+    [districts, setDistricts] = useState(true),
+    [localPoints, setLocalPoints] = useState(true),
+    [expanded, setExpanded] = useState(false);
+  const [locations, setLocations] = useState<Location[]>(fallbackLocations),
+    [query, setQuery] = useState(""),
+    [searchOpen, setSearchOpen] = useState(false),
+    [chosen, setChosen] = useState<Location | null>(null);
+  const [view, setView] = useState({ zoom: 7, lat: 10.5, lon: 76.3, tick: 0 });
+  const previousSelected = useRef(selected),
+    previousDistrict = useRef(focusedDistrict);
+  const searchResults = useMemo(() => {
+    const term = query.trim().toLocaleLowerCase();
+    if (!term) return [];
+    return locations
+      .filter((p) =>
+        `${p.name} ${p.localName ?? ""} ${p.aliases ?? ""}`
+          .toLocaleLowerCase()
+          .includes(term),
+      )
+      .sort(
+        (a, b) =>
+          Number(!a.name.toLocaleLowerCase().startsWith(term)) -
+            Number(!b.name.toLocaleLowerCase().startsWith(term)) ||
+          a.name.localeCompare(b.name),
+      )
+      .slice(0, 7);
+  }, [query, locations]);
   useEffect(() => {
-    const media = window.matchMedia("(max-width: 760px)");
-    const resize = () => setNarrow(media.matches);
-    resize();
-    media.addEventListener("change", resize);
-    return () => media.removeEventListener("change", resize);
-  }, []);
-  useEffect(() => {
-    Promise.all(
-      ["/data/kerala.geojson", "/data/land.geojson"].map((url) =>
-        fetch(url).then((r) => {
-          if (!r.ok) throw Error();
-          return r.json() as Promise<{ features: Feature[] }>;
-        }),
-      ),
-    )
-      .then(([a, b]) => {
-        setDistricts(a.features);
-        setLand(b.features);
+    let cancelled = false,
+      observer: ResizeObserver | undefined;
+    async function initialize() {
+      try {
+        const L = await import("leaflet");
+        if (cancelled || !container.current) return;
+        const map = L.map(container.current, {
+          zoomControl: false,
+          attributionControl: false,
+          scrollWheelZoom: true,
+          touchZoom: true,
+          doubleClickZoom: true,
+          keyboard: true,
+          zoomSnap: 0.25,
+          zoomDelta: 1,
+          wheelPxPerZoomLevel: 120,
+          wheelDebounceTime: 30,
+          minZoom: 6,
+          maxZoom: 19,
+          maxBounds: [
+            [5, 70],
+            [19, 84],
+          ],
+          maxBoundsViscosity: 0.6,
+          zoomAnimation: !reducedMotion(),
+          fadeAnimation: !reducedMotion(),
+        });
+        map.fitBounds(KERALA, { padding: [32, 60], animate: false });
+        map.createPane("districts");
+        map.getPane("districts")!.style.zIndex = "350";
+        map.createPane("evidence");
+        map.getPane("evidence")!.style.zIndex = "450";
+        const boundaries = L.layerGroup().addTo(map),
+          evidence = L.layerGroup().addTo(map),
+          locationLayer = L.layerGroup().addTo(map);
+        const tiles = L.tileLayer(
+          "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+          {
+            subdomains: "abcd",
+            maxZoom: 19,
+            maxNativeZoom: 19,
+            keepBuffer: 2,
+            className: "street-tiles",
+            crossOrigin: "anonymous",
+          },
+        );
+        let failures = 0;
+        tiles.on("loading", () => {
+          failures = 0;
+        });
+        tiles.on("tileerror", () => {
+          failures++;
+          if (!cancelled) setTileState("unavailable");
+        });
+        tiles.on("load", () => {
+          if (!cancelled) setTileState(failures ? "unavailable" : "ready");
+        });
+        tiles.addTo(map);
+        L.control
+          .scale({ imperial: false, position: "bottomright", maxWidth: 90 })
+          .addTo(map);
+        const refresh = () => {
+          const c = map.getCenter();
+          if (!cancelled)
+            setView((v) => ({
+              zoom: map.getZoom(),
+              lat: c.lat,
+              lon: c.lng,
+              tick: v.tick + 1,
+            }));
+        };
+        map.on("moveend zoomend resize", refresh);
+        refresh();
+        engine.current = {
+          L,
+          map,
+          boundaries,
+          evidence,
+          locations: locationLayer,
+          tiles,
+        };
+        observer = new ResizeObserver(() => map.invalidateSize({ pan: false }));
+        observer.observe(container.current);
+        setReady(true);
+        const geographic = await Promise.allSettled(
+          ["/data/land.geojson", "/data/kerala.geojson"].map((url) =>
+            fetch(url).then((r) => {
+              if (!r.ok) throw Error();
+              return r.json() as Promise<GeoJsonObject>;
+            }),
+          ),
+        );
+        if (cancelled) return;
+        for (let i = 0; i < geographic.length; i++) {
+          const result = geographic[i];
+          if (result.status === "fulfilled")
+            L.geoJSON(result.value, {
+              pane: "districts",
+              interactive: false,
+              style: {
+                color: i ? "#707070" : "#303030",
+                weight: i ? 1 : 0.6,
+                fillColor: "#000000",
+                fillOpacity: i ? 0.04 : 0.08,
+              },
+            }).addTo(boundaries);
+        }
+        if (geographic[1].status === "rejected")
+          setMapError(
+            "District boundary overlay unavailable. Street map and evidence remain available.",
+          );
+      } catch {
+        if (!cancelled)
+          setMapError(
+            "The map could not initialize. Reload the workspace to try again.",
+          );
+      }
+    }
+    initialize();
+    fetch("/data/kerala-places.json")
+      .then((r) => {
+        if (!r.ok) throw Error();
+        return r.json() as Promise<{ places: Location[] }>;
       })
-      .catch(() => setMapError(true));
+      .then((data) => {
+        if (!cancelled) setLocations([...fallbackLocations, ...data.places]);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      observer?.disconnect();
+      engine.current?.map.remove();
+      engine.current = null;
+    };
   }, []);
-  const active = corridors.filter((c) =>
-    records.some((r) => r.corridorId === c.id),
-  );
-  const visiblePlaces = new Set(
-    active.flatMap((c) => [c.origin, ...c.transit, c.destination]),
-  );
-  const path = (c: (typeof corridors)[number]) =>
-    [c.origin, ...c.transit, c.destination]
-      .map((id, i) => {
+  useEffect(() => {
+    const e = engine.current;
+    if (!e) return;
+    if (street) {
+      if (!e.map.hasLayer(e.tiles)) {
+        setTileState("loading");
+        e.tiles.addTo(e.map);
+      }
+    } else {
+      e.tiles.remove();
+      setTileState("off");
+    }
+  }, [street, ready]);
+  useEffect(() => {
+    const e = engine.current;
+    if (!e) return;
+    if (districts) e.boundaries.addTo(e.map);
+    else e.boundaries.remove();
+  }, [districts, ready]);
+  useEffect(() => {
+    const e = engine.current;
+    if (!e) return;
+    const { L, map, evidence } = e;
+    evidence.clearLayers();
+    const coordinates = (
+      c: (typeof corridors)[number],
+    ): Leaflet.LatLngTuple[] =>
+      [c.origin, ...c.transit, c.destination].map((id) => {
         const p = places.find((p) => p.id === id)!;
-        const [x, y] = project(p.lon, p.lat);
-        return `${i ? "L" : "M"}${x},${y}`;
+        return [p.lat, p.lon];
+      });
+    if (showHypotheses)
+      for (const f of forecast.slice(0, 3)) {
+        const c = corridors.find((c) => c.id === f.corridorId)!;
+        L.polyline(coordinates(c), {
+          pane: "evidence",
+          color: SIGNALS.unreviewed,
+          weight: 8,
+          opacity: 0.65,
+          dashArray: "2 12",
+          interactive: false,
+        }).addTo(evidence);
+      }
+    for (const c of corridors) {
+      const rows = records.filter((r) => r.corridorId === c.id);
+      if (!rows.length) continue;
+      const status = rows.some((r) => r.status === "documented")
+        ? "documented"
+        : rows.some((r) => r.status === "disputed")
+          ? "disputed"
+          : "unreviewed";
+      const hitTarget = L.polyline(coordinates(c), {
+        pane: "evidence",
+        color: "transparent",
+        weight: 18,
+        opacity: 0,
+        className: "map-route-hit",
+      }).addTo(evidence);
+      hitTarget.on("click", () => onSelect(c.id));
+      hitTarget.bindTooltip(
+        label(
+          `${corridorName(c.id)} · district precision · fictional evidence`,
+        ),
+        { sticky: true, className: "evidence-tooltip" },
+      );
+      const line = L.polyline(coordinates(c), {
+        pane: "evidence",
+        color: SIGNALS[status],
+        weight: c.id === selected ? 3 : 1.5,
+        opacity: c.id === selected ? 1 : 0.6,
+        dashArray: status === "documented" ? undefined : "7 6",
+        className: "map-route",
+      }).addTo(evidence);
+      line.bindTooltip(
+        label(
+          `${corridorName(c.id)} · ${rows.length} fictional records · district precision`,
+        ),
+        { sticky: true, className: "evidence-tooltip" },
+      );
+      line.on("click", () => onSelect(c.id));
+      const element = line.getElement();
+      if (element) {
+        element.setAttribute("role", "button");
+        element.setAttribute("tabindex", "0");
+        element.setAttribute(
+          "aria-label",
+          `${corridorName(c.id)}, ${rows.length} synthetic records`,
+        );
+        element.setAttribute("data-corridor-id", c.id);
+        element.addEventListener("keydown", (event) => {
+          const key = (event as KeyboardEvent).key;
+          if (key === "Enter" || key === " ") {
+            event.preventDefault();
+            onSelect(c.id);
+          }
+        });
+      }
+    }
+    if (showPoints)
+      for (const r of records.filter((r) => !r.corridorId)) {
+        const p = places.find((p) => p.id === r.seizurePlace)!;
+        L.circleMarker([p.lat, p.lon], {
+          pane: "evidence",
+          radius: 4,
+          color: SIGNALS.unreviewed,
+          fillColor: "#000",
+          fillOpacity: 1,
+          weight: 2,
+        })
+          .bindTooltip(
+            label(`${r.id} · fictional seizure only · movement unknown`),
+            { className: "evidence-tooltip" },
+          )
+          .addTo(evidence);
+      }
+    // District reference markers never imply an exact event location.
+    for (const p of places) {
+      const linked = corridors.find(
+        (c) =>
+          c.id === selected &&
+          [c.origin, ...c.transit, c.destination].includes(p.id),
+      );
+      const marker = L.circleMarker([p.lat, p.lon], {
+        pane: "evidence",
+        radius: linked ? 4 : 2.5,
+        color: linked ? "#eeeeee" : "#888888",
+        weight: 1,
+        fillColor: "#000",
+        fillOpacity: 1,
+      }).addTo(evidence);
+      marker.bindTooltip(label(p.name.replace(" Urban", "")), {
+        permanent: map.getZoom() < 10,
+        direction: "right",
+        offset: [7, 0],
+        className: "district-label",
+      });
+      marker.bindPopup(
+        label(
+          `${p.name}: representative district location, not a seizure coordinate.`,
+        ),
+      );
+    }
+  }, [
+    ready,
+    records,
+    selected,
+    onSelect,
+    forecast,
+    showHypotheses,
+    showPoints,
+    view.zoom,
+  ]);
+  useEffect(() => {
+    const e = engine.current;
+    if (!e) return;
+    const { L, map } = e;
+    e.locations.clearLayers();
+    if (localPoints && view.zoom >= 11) {
+      const bounds = map.getBounds();
+      const visible = locations
+        .filter(
+          (p) =>
+            p.kind !== "district reference" && bounds.contains([p.lat, p.lon]),
+        )
+        .slice(0, 800);
+      for (const p of visible) {
+        const marker = L.circleMarker([p.lat, p.lon], {
+          radius: view.zoom >= 14 ? 2.5 : 1.5,
+          color: "#b0b0b0",
+          weight: 0,
+          fillColor: "#b0b0b0",
+          fillOpacity: 0.8,
+        }).addTo(e.locations);
+        marker.bindTooltip(
+          label(`${p.name}${p.localName ? " / " + p.localName : ""}`),
+          {
+            permanent: view.zoom >= 14,
+            direction: "right",
+            className: "local-place-label",
+          },
+        );
+        marker.on("click", () => setChosen(p));
+      }
+    }
+    if (chosen)
+      L.circleMarker([chosen.lat, chosen.lon], {
+        radius: 9,
+        color: "#fff",
+        weight: 1.5,
+        fillOpacity: 0,
       })
-      .join(" ");
+        .bindTooltip(label(chosen.name), {
+          permanent: true,
+          direction: "top",
+          className: "selected-place-label",
+        })
+        .addTo(e.locations);
+  }, [ready, view, localPoints, locations, chosen]);
+  useEffect(() => {
+    const e = engine.current;
+    if (!e || previousSelected.current === selected) return;
+    previousSelected.current = selected;
+    const c = corridors.find((c) => c.id === selected);
+    if (c)
+      e.map.fitBounds(
+        [c.origin, ...c.transit, c.destination].map((id) => {
+          const p = places.find((p) => p.id === id)!;
+          return [p.lat, p.lon] as Leaflet.LatLngTuple;
+        }),
+        { padding: [70, 90], maxZoom: 10, animate: !reducedMotion() },
+      );
+  }, [ready, selected]);
+  useEffect(() => {
+    const e = engine.current;
+    if (!e || previousDistrict.current === focusedDistrict) return;
+    previousDistrict.current = focusedDistrict;
+    const p = places.find((p) => p.id === focusedDistrict);
+    if (p) e.map.setView([p.lat, p.lon], 10, { animate: !reducedMotion() });
+    else
+      e.map.fitBounds(KERALA, { padding: [32, 60], animate: !reducedMotion() });
+  }, [ready, focusedDistrict]);
+  useEffect(() => {
+    if (!expanded) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setExpanded(false);
+    };
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, [expanded]);
+  function locate(p: Location) {
+    setChosen(p);
+    setQuery(p.name);
+    setSearchOpen(false);
+    engine.current?.map.setView(
+      [p.lat, p.lon],
+      p.kind === "district reference" ? 10 : 14,
+      { animate: !reducedMotion() },
+    );
+  }
+  function reset() {
+    engine.current?.map.fitBounds(KERALA, {
+      padding: [32, 60],
+      animate: !reducedMotion(),
+    });
+    setChosen(null);
+    setQuery("");
+  }
   return (
-    <div className="map-stage">
+    <div className={`map-stage detailed-map ${expanded ? "map-expanded" : ""}`}>
+      <div
+        ref={container}
+        className="atlas leaflet-atlas"
+        role="region"
+        aria-label="Interactive street map of Kerala"
+        tabIndex={0}
+      />
       <div className="map-heading">
         <span>
-          <span className="signal-dot" /> Kerala & connecting districts
+          <Crosshair size={13} /> Kerala geographic workspace
         </span>
-        <small>District resolution · schematic connections</small>
+        <small>Street detail · evidence stays at district resolution</small>
       </div>
-      {mapError && (
-        <div className="map-error">
-          Boundary assets could not load. Connections remain available; reload
-          to restore geographic context.
+      <div className="map-search">
+        <div className="map-search-field">
+          <Search size={15} />
+          <input
+            aria-label="Find a Kerala place"
+            placeholder="Find a town, village or district"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setSearchOpen(true);
+            }}
+            onFocus={() => setSearchOpen(true)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setSearchOpen(false);
+              if (e.key === "Enter" && searchResults[0]) {
+                e.preventDefault();
+                locate(searchResults[0]);
+              }
+            }}
+          />
+          {query && (
+            <button
+              aria-label="Clear place search"
+              onClick={() => {
+                setQuery("");
+                setSearchOpen(false);
+                setChosen(null);
+              }}
+            >
+              <X size={13} />
+            </button>
+          )}
+        </div>
+        {searchOpen && query.trim() && (
+          <div className="map-search-results">
+            {searchResults.map((p) => (
+              <button key={p.id} onClick={() => locate(p)}>
+                <span>
+                  {p.name}
+                  <small>{p.localName || p.kind}</small>
+                </span>
+                <span>
+                  {p.kind === "district reference" ? "District" : "Locate"}
+                </span>
+              </button>
+            ))}
+            {!searchResults.length && (
+              <p>
+                No matching bundled place. Browse the street map or try a
+                district name.
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+      {(mapError || (street && tileState === "unavailable")) && (
+        <div className="map-error" role="status">
+          {mapError ||
+            "Some street tiles are unavailable. Bundled boundaries and fictional evidence remain visible."}
+          <button
+            onClick={() => {
+              engine.current?.tiles.redraw();
+              setTileState("loading");
+            }}
+          >
+            Retry
+          </button>
         </div>
       )}
-      <svg
-        className="atlas"
-        viewBox={narrow ? "180 0 600 830" : "0 0 900 830"}
-        aria-label="Interactive district corridor map of Kerala and neighbouring states"
-        onPointerDown={(e) => {
-          if ((e.target as Element).closest("[data-feature]")) return;
-          drag.current = { x: e.clientX, y: e.clientY, px: pan.x, py: pan.y };
-          e.currentTarget.setPointerCapture(e.pointerId);
-        }}
-        onPointerMove={(e) => {
-          if (drag.current) {
-            const rect = e.currentTarget.getBoundingClientRect();
-            setPan({
-              x:
-                drag.current.px +
-                ((e.clientX - drag.current.x) * 900) / rect.width,
-              y:
-                drag.current.py +
-                ((e.clientY - drag.current.y) * 830) / rect.height,
-            });
-          }
-        }}
-        onPointerUp={() => (drag.current = null)}
-        onPointerCancel={() => (drag.current = null)}
-      >
-        <defs>
-          <pattern
-            id="grid"
-            width="68.5"
-            height="68.5"
-            patternUnits="userSpaceOnUse"
-          >
-            <path
-              d="M68.5 0H0V68.5"
-              fill="none"
-              stroke="#294255"
-              strokeWidth=".5"
-              opacity=".45"
-            />
-          </pattern>
-          <filter id="route-glow">
-            <feGaussianBlur stdDeviation="4" />
-          </filter>
-        </defs>
-        <rect width="900" height="830" fill="#101e2c" />
-        <rect width="900" height="830" fill="url(#grid)" />
-        <g
-          transform={`translate(${450 + pan.x} ${415 + pan.y}) scale(${zoom}) translate(-450 -415)`}
-        >
-          {land.map((f, i) => (
-            <path
-              key={i}
-              d={shape(f)}
-              fill="#1c2d3d"
-              stroke="#32495a"
-              strokeWidth="1"
-            />
-          ))}
-          {districts.map((f, i) => (
-            <path
-              key={i}
-              d={shape(f)}
-              fill="#243e4c"
-              fillOpacity=".7"
-              stroke="#43606a"
-              strokeWidth=".8"
-            >
-              <title>{f.properties.name} · geographic context only</title>
-            </path>
-          ))}
-          <text x="450" y="115" className="state-label">
-            Karnataka
-          </text>
-          <text
-            x="690"
-            y="550"
-            className="state-label"
-            transform="rotate(-55 690 550)"
-          >
-            Tamil Nadu
-          </text>
-          <text
-            x="365"
-            y="580"
-            className="kerala-label"
-            transform="rotate(54 365 580)"
-          >
-            Kerala
-          </text>
-          <text
-            x="115"
-            y="545"
-            className="sea-label"
-            transform="rotate(-17 115 545)"
-          >
-            Arabian Sea
-          </text>
-          {showHypotheses &&
-            forecast.slice(0, 3).map((row) => {
-              const c = corridors.find((c) => c.id === row.corridorId)!;
-              return (
-                <path
-                  key={`f${c.id}`}
-                  d={path(c)}
-                  fill="none"
-                  stroke="#efbd73"
-                  strokeWidth="9"
-                  strokeDasharray="2 13"
-                  opacity=".65"
-                />
-              );
-            })}
-          {active.map((c) => {
-            const rows = records.filter((r) => r.corridorId === c.id),
-              documented = rows.some((r) => r.status === "documented"),
-              color =
-                c.id === selected
-                  ? "#8ae7d0"
-                  : documented
-                    ? "#62a8c8"
-                    : "#b19c7d";
-            return (
-              <g
-                key={c.id}
-                data-feature="route"
-                role="button"
-                tabIndex={0}
-                aria-label={`${corridorName(c.id)}, ${rows.length} synthetic records`}
-                onClick={() => onSelect(c.id)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    onSelect(c.id);
-                  }
-                }}
-                className="map-route"
-              >
-                {c.id === selected && (
-                  <path
-                    d={path(c)}
-                    stroke={color}
-                    strokeWidth="12"
-                    opacity=".25"
-                    filter="url(#route-glow)"
-                    fill="none"
-                  />
-                )}
-                <path
-                  d={path(c)}
-                  fill="none"
-                  stroke="transparent"
-                  strokeWidth="20"
-                />
-                <path
-                  d={path(c)}
-                  fill="none"
-                  stroke={color}
-                  strokeWidth={c.id === selected ? 3.5 : 1.8}
-                  opacity={c.id === selected ? 1 : 0.53}
-                  strokeDasharray={documented ? undefined : "6 6"}
-                  strokeLinejoin="round"
-                />
-                <title>
-                  {corridorName(c.id)} · {rows.length} fictional source records
-                </title>
-              </g>
-            );
-          })}
-          {showPoints &&
-            records
-              .filter((r) => !r.corridorId)
-              .map((r) => {
-                const p = places.find((p) => p.id === r.seizurePlace)!;
-                const [x, y] = project(p.lon, p.lat);
-                return (
-                  <rect
-                    key={r.id}
-                    x={x - 4}
-                    y={y - 4}
-                    width="8"
-                    height="8"
-                    fill="#c7a4d8"
-                    transform={`rotate(45 ${x} ${y})`}
-                  >
-                    <title>{r.id}: seizure only, movement unknown</title>
-                  </rect>
-                );
-              })}
-          {places
-            .filter((p) => visiblePlaces.has(p.id))
-            .map((p) => {
-              const [x, y] = project(p.lon, p.lat),
-                highlight =
-                  selected &&
-                  corridors.some(
-                    (c) =>
-                      c.id === selected &&
-                      [c.origin, ...c.transit, c.destination].includes(p.id),
-                  );
-              return (
-                <g key={p.id}>
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r={highlight ? 6 : 4}
-                    fill={highlight ? "#9cecd8" : "#7097ad"}
-                    stroke="#132335"
-                    strokeWidth="2"
-                  />
-                  <text
-                    x={x + 11}
-                    y={y + 4}
-                    className={`place-label ${highlight ? "bright" : ""}`}
-                  >
-                    {p.name.replace(" Urban", "")}
-                  </text>
-                </g>
-              );
-            })}
-        </g>
-      </svg>
       <div className="map-controls">
         <button
           aria-label="Zoom in"
-          onClick={() => setZoom((z) => Math.min(z + 0.25, 2.5))}
+          title="Zoom in (+)"
+          onClick={() => engine.current?.map.zoomIn()}
         >
           <Plus size={18} />
         </button>
         <button
           aria-label="Zoom out"
-          onClick={() => setZoom((z) => Math.max(z - 0.25, 0.65))}
+          title="Zoom out (−)"
+          onClick={() => engine.current?.map.zoomOut()}
         >
           <Minus size={18} />
         </button>
         <button
           aria-label="Reset map view"
-          onClick={() => {
-            setZoom(1);
-            setPan({ x: 0, y: 0 });
-          }}
+          title="Fit all of Kerala"
+          onClick={reset}
         >
           <LocateFixed size={18} />
         </button>
+        <button
+          aria-label={expanded ? "Exit expanded map" : "Expand map"}
+          title={expanded ? "Exit expanded map (Escape)" : "Expand map"}
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? <Minimize size={17} /> : <Maximize size={17} />}
+        </button>
       </div>
+      <details className="map-layer-menu">
+        <summary>
+          <Layers size={15} /> Layers
+        </summary>
+        <label>
+          <input
+            type="checkbox"
+            checked={street}
+            onChange={(e) => setStreet(e.target.checked)}
+          />{" "}
+          Street map <span>Online</span>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={districts}
+            onChange={(e) => setDistricts(e.target.checked)}
+          />{" "}
+          District boundaries
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={localPoints}
+            onChange={(e) => setLocalPoints(e.target.checked)}
+          />{" "}
+          Local place points
+        </label>
+        <small>
+          Place points appear at zoom 11+; labels at 14+. Geographic context
+          only.
+        </small>
+      </details>
       <div className="map-north">
-        <Compass size={26} />
+        <Compass size={24} />
         <span>N</span>
       </div>
       <div className="map-legend">
         <span>
-          <i className="line teal" />
+          <i className="line documented-line" />
           Documented
         </span>
         <span>
-          <i className="line dashed" />
-          Unreviewed / disputed
+          <i className="line unreviewed-line dashed" />
+          Unreviewed
+        </span>
+        <span>
+          <i className="line disputed-line dashed" />
+          Disputed
         </span>
         {showHypotheses && (
           <span>
-            <i className="line amber dashed" />
-            Model hypothesis
+            <i className="line hypothesis-line dashed" />
+            Hypothesis
           </span>
         )}
         <button
           onClick={() => setShowPoints(!showPoints)}
           className={showPoints ? "on" : ""}
         >
-          <Layers size={13} /> Seizure-only points
+          <Layers size={13} /> Seizure only
         </button>
+      </div>
+      <div className="map-readout">
+        <output
+          aria-label="Map zoom level"
+          data-zoom={view.zoom}
+          aria-live="polite"
+        >
+          Z {view.zoom.toFixed(2)}
+        </output>
+        <span>
+          {view.lat.toFixed(4)}° N / {view.lon.toFixed(4)}° E
+        </span>
+        <span className="map-gesture-hint">
+          Scroll to zoom · drag to pan · double-click to focus
+        </span>
       </div>
       <div className="map-credit">
         ©{" "}
@@ -379,16 +692,45 @@ export default function CorridorMap({
         >
           OpenStreetMap contributors
         </a>{" "}
-        /{" "}
+        ·{" "}
+        <a
+          href="https://carto.com/attributions"
+          target="_blank"
+          rel="noreferrer"
+        >
+          CARTO
+        </a>{" "}
+        ·{" "}
         <a
           href="https://github.com/opendatakerala/kl_district"
           target="_blank"
           rel="noreferrer"
         >
           Open Data Kerala
-        </a>
-        , ODbL · Natural Earth · <span>Not a street-level route</span>
+        </a>{" "}
+        / ODbL ·{" "}
+        <a href="https://www.geonames.org/" target="_blank" rel="noreferrer">
+          GeoNames / CC BY 4.0
+        </a>{" "}
+        · <span>Lines are schematic, not street journeys</span>
       </div>
+      {chosen && (
+        <div className="map-location-info">
+          <span>
+            {chosen.name}{" "}
+            <small>
+              {chosen.lat.toFixed(5)}, {chosen.lon.toFixed(5)} · Geographic
+              context
+            </small>
+          </span>
+          <button
+            aria-label="Dismiss selected place"
+            onClick={() => setChosen(null)}
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

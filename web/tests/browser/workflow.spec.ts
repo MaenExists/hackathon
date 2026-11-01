@@ -145,7 +145,11 @@ test("analyst UI, offline boundaries, evidence modal, forecast, saved brief and 
   await expect(
     page.getByRole("heading", { name: "Follow the evidence." }),
   ).toBeVisible();
-  await expect(page.locator(".atlas > g > path").first()).toBeVisible();
+  await expect(
+    page
+      .locator(".leaflet-overlay-pane path, .leaflet-evidence-pane path")
+      .first(),
+  ).toBeVisible();
   expect((await page.request.get("/data/kerala.geojson")).status()).toBe(200);
   await page.screenshot({
     path: "outputs/corridor-desktop.png",
@@ -206,4 +210,113 @@ test("analyst UI, offline boundaries, evidence modal, forecast, saved brief and 
   await page.getByRole("button", { name: "Zoom in" }).click();
   await page.getByRole("button", { name: "Reset map view" }).click();
   expect(errors).toEqual([]);
+});
+
+test("street map supports wheel zoom, pan, locality search, layers and expanded view", async ({
+  page,
+}) => {
+  await page.goto("/signin-with-chatgpt?return_to=/");
+  const map = page.getByRole("region", {
+    name: "Interactive street map of Kerala",
+  });
+  await expect(map).toHaveClass(/leaflet-container/);
+  await expect(page.locator('[data-corridor-id="c01"]')).toBeVisible();
+  const zoom = page.getByLabel("Map zoom level");
+  const initial = Number(await zoom.getAttribute("data-zoom"));
+  const box = (await map.boundingBox())!;
+  await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.55);
+  const scroll = await page.evaluate(() => window.scrollY);
+  await page.mouse.wheel(0, -240);
+  await expect
+    .poll(async () => Number(await zoom.getAttribute("data-zoom")))
+    .toBeGreaterThan(initial);
+  expect(await page.evaluate(() => window.scrollY)).toBe(scroll);
+  const closer = Number(await zoom.getAttribute("data-zoom"));
+  await page.mouse.wheel(0, 240);
+  await expect
+    .poll(async () => Number(await zoom.getAttribute("data-zoom")))
+    .toBeLessThan(closer);
+  const before = await page.locator(".map-readout").textContent();
+  await page.mouse.move(box.x + box.width * 0.55, box.y + box.height * 0.55);
+  await page.mouse.down();
+  await page.mouse.move(
+    box.x + box.width * 0.55 + 90,
+    box.y + box.height * 0.55 + 35,
+    { steps: 8 },
+  );
+  await page.mouse.up();
+  await expect
+    .poll(() => page.locator(".map-readout").textContent())
+    .not.toBe(before);
+  await page.getByLabel("Find a Kerala place").fill("Munnar");
+  await expect(
+    page.locator(".map-search-results button").first(),
+  ).toBeVisible();
+  await page.locator(".map-search-results button").first().click();
+  await expect
+    .poll(async () => Number(await zoom.getAttribute("data-zoom")))
+    .toBe(14);
+  await expect(page.locator(".map-location-info")).toContainText(
+    "Geographic context",
+  );
+  await expect(page.locator(".local-place-label").first()).toBeVisible();
+  await page.getByRole("button", { name: "Expand map", exact: true }).click();
+  await expect(page.locator(".map-stage")).toHaveClass(/map-expanded/);
+  await page.keyboard.press("Escape");
+  await expect(page.locator(".map-stage")).not.toHaveClass(/map-expanded/);
+  await page.locator(".map-layer-menu summary").click();
+  await page.getByRole("checkbox", { name: "Street map Online", exact: true }).uncheck();
+  await expect(page.locator(".street-tiles")).toHaveCount(0);
+  await expect(page.locator('[data-corridor-id="c01"]')).toBeAttached();
+  await page.getByRole("checkbox", { name: "Street map Online", exact: true }).check();
+  await expect(page.locator(".street-tiles")).toBeAttached();
+  await page
+    .getByRole("button", { name: "Reset map view", exact: true })
+    .click();
+  await expect
+    .poll(async () => Number(await zoom.getAttribute("data-zoom")))
+    .toBeLessThan(10);
+  await page.getByLabel("District", { exact: true }).selectOption("wayanad");
+  await expect
+    .poll(async () => Number(await zoom.getAttribute("data-zoom")))
+    .toBe(10);
+  const neutral = await page.evaluate(() =>
+    ["body", ".sidebar", ".topbar", ".panel", ".primary"].map((s) => {
+      const el = document.querySelector(s);
+      if (!el) return null;
+      const c = getComputedStyle(el);
+      return { background: c.backgroundColor, color: c.color };
+    }),
+  );
+  for (const item of neutral.filter(Boolean)) {
+    for (const value of [item!.background, item!.color]) {
+      const channels = value.match(/[\d.]+/g)!.slice(0, 3);
+      expect(channels[0]).toBe(channels[1]);
+      expect(channels[1]).toBe(channels[2]);
+    }
+  }
+});
+
+test("failed street tiles leave bundled boundaries, locality search and evidence usable", async ({
+  page,
+}) => {
+  await page.route("https://*.basemaps.cartocdn.com/**", (route) =>
+    route.abort(),
+  );
+  await page.goto("/signin-with-chatgpt?return_to=/");
+  await expect(page.locator(".map-error")).toContainText(
+    "street tiles are unavailable",
+  );
+  await expect(
+    page.locator(".leaflet-districts-pane path").first(),
+  ).toBeVisible();
+  await expect(page.locator('[data-corridor-id="c01"]')).toBeVisible();
+  await page.getByLabel("Find a Kerala place").fill("Munnar");
+  await page.locator(".map-search-results button").first().click();
+  await expect
+    .poll(async () =>
+      Number(await page.getByLabel("Map zoom level").getAttribute("data-zoom")),
+    )
+    .toBe(14);
+  await expect(page.locator(".local-place-label").first()).toBeVisible();
 });
