@@ -8,3 +8,12 @@ web/*.tsbuildinfo
 web/next-env.d.ts
 web/test-results/
 web/playwright-report/
+.venv-ml/
+ml/.venv/
+ml/.pytest_cache/
+ml/**/__pycache__/
+ml/src/*.egg-info/
+ml/data/
+ml/runs/
+ml/*.sqlite*
+*.joblib

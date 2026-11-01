@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "corridor-forecast"
+version = "0.1.0"
+description = "Availability-aware, aggregate documented-case forecasting"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "numpy==2.2.6",
+  "pandas==2.3.3",
+  "scikit-learn==1.7.2",
+  "scipy==1.16.3",
+  "joblib==1.5.2",
+  "defusedxml==0.7.1",
+]
+
+[project.optional-dependencies]
+test = ["pytest==8.4.2"]
+
+[project.scripts]
+corridor-ml = "corridor_ml.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
