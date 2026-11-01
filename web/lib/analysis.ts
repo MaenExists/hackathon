@@ -3,7 +3,7 @@ const DAY = 86_400_000;
 export const DEMO_AS_OF = '2026-11-01';
 export function eligible(records: CaseRecord[], cutoff: string): CaseRecord[] {
  const time = Date.parse(cutoff);
- return records.filter(r => r.status === 'documented' && r.corridorId !== null && Date.parse(r.availableDate) <= time && Date.parse(r.eventDate) < time);
+ return records.filter(r => r.status === 'documented' && r.corridorId !== null && (!r.reviewedAt || Date.parse(r.reviewedAt) <= time) && Date.parse(r.availableDate) <= time && Date.parse(r.eventDate) < time);
 }
 // Expected documented case count over 30 days. Not a probability of trafficking.
 export function forecast(records: CaseRecord[], corridorIds: string[], cutoff = DEMO_AS_OF): ForecastRow[] {

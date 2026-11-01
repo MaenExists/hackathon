@@ -19,3 +19,6 @@ test('cutoff day is held out; records available only later do not leak into trai
 test('duplicate similarity normalizes punctuation and does not imply corroboration',()=>{
  assert.equal(tokenSimilarity('Parcel transfer, evening','evening parcel transfer!'),1);assert.equal(tokenSimilarity('parcel route','unrelated information'),0);
 });
+test('records reviewed after the prediction cutoff are excluded',()=>{
+ const r={...row('late-review','2026-04-10'),reviewedAt:'2026-05-04'};assert.equal(forecast([r],['c01'],'2026-05-01')[0].support,0);
+});
