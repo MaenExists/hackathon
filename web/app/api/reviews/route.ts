@@ -1,7 +1,89 @@
-import { access,records,tipList,body,db,json,failure,sameOrigin,HttpError } from '../../../lib/server';
-import { reviewSchema } from '../../../lib/validation';
-export async function POST(req:Request){try{sameOrigin(req);const user=await access(true);const parsed=reviewSchema.safeParse(await body(req));if(!parsed.success)return json({error:parsed.error.issues.map(i=>i.message).join('; ')},400);const r=parsed.data,data=await records(user.userId);
- if(r.entityType==='case'){if(!data.some(x=>x.id===r.entityId))throw new HttpError(404,'Record not found.');if(!['documented','unreviewed','disputed'].includes(r.status))throw new HttpError(400,'Invalid case review status.');if(r.status==='documented'&&(!r.independent||!r.evidenceId||r.evidenceId===r.entityId||!data.some(x=>x.id===r.evidenceId&&x.status==='documented'&&x.corridorId===data.find(x=>x.id===r.entityId)?.corridorId)))throw new HttpError(400,'Link a separate documented record for the same corridor and confirm independent sources.');}
- else {const t=(await tipList(user.userId)).find(t=>t.id===r.entityId);if(!t)throw new HttpError(404,'Lead not found.');if(!['triaged','dismissed','corroborated'].includes(r.status))throw new HttpError(400,'Invalid lead review status.');if(r.status==='corroborated'&&(!r.independent||!data.some(x=>x.id===r.evidenceId&&x.status==='documented'&&x.seizurePlace===t.district)))throw new HttpError(400,'Link a documented record in the same district and confirm an independent evidence source.');}
- const id=crypto.randomUUID(),now=new Date().toISOString();await db().prepare('INSERT INTO reviews (id,owner_id,entity_id,entity_type,status,note,evidence_id,actor,created_at) VALUES (?,?,?,?,?,?,?,?,?)').bind(id,user.userId,r.entityId,r.entityType,r.status,r.note,r.evidenceId??null,user.displayName,now).run();return json({id,createdAt:now},201);
- }catch(e){return failure(e);}}
+import {
+  access,
+  records,
+  tipList,
+  body,
+  db,
+  json,
+  failure,
+  sameOrigin,
+  HttpError,
+} from "../../../lib/server";
+import { reviewSchema } from "../../../lib/validation";
+export async function POST(req: Request) {
+  try {
+    sameOrigin(req);
+    const user = await access(true);
+    const parsed = reviewSchema.safeParse(await body(req));
+    if (!parsed.success)
+      return json(
+        { error: parsed.error.issues.map((i) => i.message).join("; ") },
+        400,
+      );
+    const r = parsed.data,
+      data = await records(user.userId);
+    if (r.entityType === "case") {
+      if (!data.some((x) => x.id === r.entityId))
+        throw new HttpError(404, "Record not found.");
+      if (!["documented", "unreviewed", "disputed"].includes(r.status))
+        throw new HttpError(400, "Invalid case review status.");
+      if (
+        r.status === "documented" &&
+        (!r.independent ||
+          !r.evidenceId ||
+          r.evidenceId === r.entityId ||
+          !data.some(
+            (x) =>
+              x.id === r.evidenceId &&
+              x.status === "documented" &&
+              x.corridorId ===
+                data.find((x) => x.id === r.entityId)?.corridorId,
+          ))
+      )
+        throw new HttpError(
+          400,
+          "Link a separate documented record for the same corridor and confirm independent sources.",
+        );
+    } else {
+      const t = (await tipList(user.userId)).find((t) => t.id === r.entityId);
+      if (!t) throw new HttpError(404, "Lead not found.");
+      if (!["triaged", "dismissed", "corroborated"].includes(r.status))
+        throw new HttpError(400, "Invalid lead review status.");
+      if (
+        r.status === "corroborated" &&
+        (!r.independent ||
+          !data.some(
+            (x) =>
+              x.id === r.evidenceId &&
+              x.status === "documented" &&
+              x.seizurePlace === t.district,
+          ))
+      )
+        throw new HttpError(
+          400,
+          "Link a documented record in the same district and confirm an independent evidence source.",
+        );
+    }
+    const id = crypto.randomUUID(),
+      now = new Date().toISOString();
+    await db()
+      .prepare(
+        "INSERT INTO reviews (id,owner_id,entity_id,entity_type,status,note,evidence_id,actor,created_at) VALUES (?,?,?,?,?,?,?,?,?)",
+      )
+      .bind(
+        id,
+        user.userId,
+        r.entityId,
+        r.entityType,
+        r.status,
+        r.note,
+        r.evidenceId ?? null,
+        user.displayName,
+        now,
+      )
+      .run();
+    return json({ id, createdAt: now }, 201);
+  } catch (e) {
+    return failure(e);
+  }
+}
