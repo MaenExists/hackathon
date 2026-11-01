@@ -1,0 +1,22 @@
+[
+  {
+    "id": "SYN-IMPORT-001",
+    "corridorId": "c01",
+    "seizurePlace": "ernakulam",
+    "eventDate": "2026-10-22",
+    "availableDate": "2026-10-25",
+    "sourceDate": "2026-10-25",
+    "substance": "Cannabis",
+    "quantity": null,
+    "unit": "unknown",
+    "status": "unreviewed",
+    "precision": "district",
+    "source": "Fictional movement register / SYN-0001",
+    "excerpt": "Synthetic scenario SYN-0001: a district-level origin and destination with supporting fictional transport and recovery notes. Intermediate connections are schematic; no road, person or institution is identified.",
+    "reviewer": null,
+    "reviewedAt": null,
+    "confidence": "unknown",
+    "confidenceBasis": "Imported synthetic record pending analyst review.",
+    "synthetic": true
+  }
+]

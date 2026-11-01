@@ -1,0 +1,10 @@
+web/node_modules/
+web/dist/
+web/.wrangler/
+web/.vinext/
+web/.sites-runtime/
+web/outputs/
+web/*.tsbuildinfo
+web/next-env.d.ts
+web/test-results/
+web/playwright-report/
