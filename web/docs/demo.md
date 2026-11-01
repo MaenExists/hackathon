@@ -9,3 +9,5 @@
 5. Generate a health/recovery planning brief. Export Markdown. Show the questions about capacity and access, the suppressed small groups and the limitations. Switch to planner to demonstrate server-filtered access.
 
 **Closing:** “Evidence informs. People decide. The next step is authorized movement data and agency-led validation, not deployment for enforcement.”
+
+Geographic search: enter “Banerji Road”, choose Roads, and press Enter. Select the source feature to inspect its mapped extent and address. Then try “Lulu Mall Kochi” with All map features. The large search above the map has the same behavior; searching for roads does not hide case evidence. Use the Evidence library for source IDs and case filtering.

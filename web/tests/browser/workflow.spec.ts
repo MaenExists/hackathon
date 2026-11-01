@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { photonPlaces } from "../../lib/map-search";
 const sample = JSON.parse(
   readFileSync(
     new URL("../../public/sample-import.json", import.meta.url),
@@ -418,4 +419,128 @@ test("sourced place profiles, Kerala focus and transport/forecast color keys rem
     .getByRole("checkbox", { name: "Focus on Kerala", exact: true })
     .check();
   await expect(page.locator(".kerala-focus-mask")).toBeAttached();
+});
+
+test("both search inputs find live roads and destinations without hiding corridor evidence", async ({
+  page,
+}) => {
+  const raw = JSON.parse(
+    readFileSync(
+      new URL("../fixtures/photon-road.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  let queries: string[] = [];
+  await page.route("**/api/map-search?**", async (route) => {
+    const url = new URL(route.request().url());
+    queries.push(url.searchParams.get("q")!);
+    await route.fulfill({
+      json: {
+        results: photonPlaces(raw, "kerala", "roads", "2026-11-01T08:00:00Z"),
+        provider: "Photon / OpenStreetMap",
+        fetchedAt: "2026-11-01T08:00:00Z",
+        cached: false,
+        scope: url.searchParams.get("scope"),
+        category: url.searchParams.get("category"),
+      },
+    });
+  });
+  await page.goto("/signin-with-chatgpt?return_to=/");
+  await expect(page.locator('[data-corridor-id="c01"]')).toBeVisible();
+  const before = await page.locator(".map-statbar").textContent();
+  await page.getByLabel("Map search feature type").selectOption("roads");
+  await page
+    .getByLabel("Search map features", { exact: true })
+    .fill("Banerji Road");
+  expect(queries).toHaveLength(0);
+  await page.getByLabel("Search map features", { exact: true }).press("Enter");
+  await expect(
+    page.getByRole("option", { name: /Banerji Road/ }).first(),
+  ).toBeVisible();
+  expect(queries).toEqual(["Banerji Road"]);
+  expect(await page.locator(".map-statbar").textContent()).toBe(before);
+  await page
+    .getByRole("option", { name: /Banerji Road/ })
+    .first()
+    .click();
+  const profile = page.getByRole("region", {
+    name: "Place profile: Banerji Road",
+  });
+  await expect(profile).toBeVisible();
+  await expect(profile).toContainText("Ernakulam");
+  await expect(
+    profile.getByRole("link", { name: "View mapped feature" }),
+  ).toHaveAttribute("href", /openstreetmap.org\/way\//);
+  await expect(page.locator(".selected-feature-bounds")).toBeAttached();
+  await profile.getByRole("tab", { name: "Sources", exact: true }).click();
+  await expect(profile).toContainText("OpenStreetMap geographic feature");
+  await expect(
+    profile.getByRole("link", { name: "Open original OpenStreetMap feature" }),
+  ).toHaveAttribute("href", /openstreetmap.org/);
+  await page.getByRole("button", { name: "Dismiss selected place" }).click();
+  const mall = JSON.parse(
+    readFileSync(
+      new URL("../fixtures/photon-mall.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  await page.unroute("**/api/map-search?**");
+  await page.route("**/api/map-search?**", async (route) =>
+    route.fulfill({
+      json: {
+        results: photonPlaces(mall, "kerala", "all", "2026-11-01T08:00:00Z"),
+        provider: "Photon / OpenStreetMap",
+        fetchedAt: "2026-11-01T08:00:00Z",
+        cached: false,
+        scope: "kerala",
+        category: "all",
+      },
+    }),
+  );
+  await page.getByLabel("Map search feature type").selectOption("all");
+  await page.getByLabel("Find a Kerala place").fill("Lulu Mall Kochi");
+  await page.getByLabel("Find a Kerala place").press("Enter");
+  await expect(
+    page.getByRole("option", { name: /LuLu Mall, Kochi/ }).first(),
+  ).toBeVisible();
+  await page
+    .getByRole("option", { name: /LuLu Mall, Kochi/ })
+    .first()
+    .click();
+  await expect(
+    page.getByRole("region", { name: "Place profile: LuLu Mall, Kochi" }),
+  ).toBeVisible();
+});
+
+test("online search errors leave offline profiles usable and invalid API searches are rejected", async ({
+  page,
+  browser,
+}) => {
+  const anonymous = await browser.newContext();
+  expect(
+    (
+      await anonymous.request.get("http://127.0.0.1:5173/api/map-search?q=road")
+    ).status(),
+  ).toBe(401);
+  await anonymous.close();
+  await page.goto("/signin-with-chatgpt?return_to=/");
+  await expect(page.locator('[data-corridor-id="c01"]')).toBeVisible();
+  expect((await page.request.get("/api/map-search?q=a")).status()).toBe(400);
+  await page.route("**/api/map-search?**", (route) =>
+    route.fulfill({
+      status: 503,
+      json: { error: "Online map search is unavailable." },
+    }),
+  );
+  await page.getByLabel("Find a Kerala place").fill("Munnar");
+  await page
+    .getByRole("button", { name: "Search OpenStreetMap", exact: true })
+    .click();
+  await expect(page.locator(".map-search-error")).toContainText(
+    "Bundled suggestions remain available",
+  );
+  await page.locator(".map-search-results button").first().click();
+  await expect(
+    page.getByRole("region", { name: "Place profile: Munnar" }),
+  ).toBeVisible();
 });

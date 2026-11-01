@@ -1,12 +1,11 @@
 "use client";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Plus,
   Minus,
   LocateFixed,
   Layers,
   Compass,
-  Search,
   Maximize,
   Minimize,
   X,
@@ -18,11 +17,8 @@ import { places, corridors, corridorName } from "../data/geography";
 import type { CaseRecord, ForecastRow } from "../lib/types";
 
 import PlaceProfile from "./place-profile";
-import {
-  searchPlaces,
-  type PublicPlace as Location,
-  type PlaceDataset,
-} from "../lib/places";
+import MapFeatureSearch from "./map-feature-search";
+import { type PublicPlace as Location, type PlaceDataset } from "../lib/places";
 import {
   transportSignals,
   evidenceSignals,
@@ -66,6 +62,9 @@ export default function CorridorMap({
   showPoints,
   setShowPoints,
   focusedDistrict = "all",
+  searchText,
+  onSearchTextChange,
+  searchRequest,
 }: {
   records: CaseRecord[];
   selected: string;
@@ -75,6 +74,9 @@ export default function CorridorMap({
   showPoints: boolean;
   setShowPoints: (x: boolean) => void;
   focusedDistrict?: string;
+  searchText: string;
+  onSearchTextChange: (value: string) => void;
+  searchRequest: number;
 }) {
   const container = useRef<HTMLDivElement>(null),
     engine = useRef<Engine | null>(null);
@@ -89,16 +91,10 @@ export default function CorridorMap({
     [colorBy, setColorBy] = useState<"transport" | "evidence">("transport");
   const [transport, setTransport] = useState<Location[]>([]);
   const [locations, setLocations] = useState<Location[]>(fallbackLocations),
-    [query, setQuery] = useState(""),
-    [searchOpen, setSearchOpen] = useState(false),
     [chosen, setChosen] = useState<Location | null>(null);
   const [view, setView] = useState({ zoom: 7, lat: 10.5, lon: 76.3, tick: 0 });
   const previousSelected = useRef(selected),
     previousDistrict = useRef(focusedDistrict);
-  const searchResults = useMemo(
-    () => searchPlaces(locations, query),
-    [locations, query],
-  );
   useEffect(() => {
     let cancelled = false,
       observer: ResizeObserver | undefined;
@@ -117,11 +113,11 @@ export default function CorridorMap({
           zoomDelta: 1,
           wheelPxPerZoomLevel: 120,
           wheelDebounceTime: 30,
-          minZoom: 6,
+          minZoom: 5,
           maxZoom: 19,
           maxBounds: [
-            [5, 70],
-            [19, 84],
+            [5, 67],
+            [39, 99],
           ],
           maxBoundsViscosity: 0.6,
           zoomAnimation: !reducedMotion(),
@@ -493,6 +489,23 @@ export default function CorridorMap({
         marker.on("click", () => setChosen(p));
       }
     }
+    if (chosen?.bounds) {
+      const [south, north, west, east] = chosen.bounds;
+      L.rectangle(
+        [
+          [south, west],
+          [north, east],
+        ],
+        {
+          color: "#e5e5e5",
+          weight: 1,
+          dashArray: "4 5",
+          fill: false,
+          interactive: false,
+          className: "selected-feature-bounds",
+        },
+      ).addTo(e.locations);
+    }
     if (chosen)
       L.circleMarker([chosen.lat, chosen.lon], {
         radius: 9,
@@ -540,8 +553,24 @@ export default function CorridorMap({
   }, [expanded]);
   function locate(p: Location) {
     setChosen(p);
-    setQuery(p.name);
-    setSearchOpen(false);
+    onSearchTextChange(p.name);
+    if (p.dataProvider === "openstreetmap" && p.state !== "Kerala")
+      setFocusKerala(false);
+    if (p.bounds) {
+      const [south, north, west, east] = p.bounds;
+      engine.current?.map.fitBounds(
+        [
+          [south, west],
+          [north, east],
+        ],
+        {
+          padding: [65, 80],
+          maxZoom: p.kind === "road" ? 17 : 18,
+          animate: !reducedMotion(),
+        },
+      );
+      return;
+    }
     engine.current?.map.setView(
       [p.lat, p.lon],
       ["district reference", "district"].includes(p.kind) ? 10 : 14,
@@ -554,7 +583,8 @@ export default function CorridorMap({
       animate: !reducedMotion(),
     });
     setChosen(null);
-    setQuery("");
+    onSearchTextChange("");
+    setFocusKerala(true);
   }
   return (
     <div className={`map-stage detailed-map ${expanded ? "map-expanded" : ""}`}>
@@ -571,71 +601,13 @@ export default function CorridorMap({
         </span>
         <small>Street detail · evidence stays at district resolution</small>
       </div>
-      <div className="map-search">
-        <div className="map-search-field">
-          <Search size={15} />
-          <input
-            aria-label="Find a Kerala place"
-            placeholder="Town, district, station or airport"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setSearchOpen(true);
-            }}
-            onFocus={() => setSearchOpen(true)}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") setSearchOpen(false);
-              if (e.key === "Enter" && searchResults[0]) {
-                e.preventDefault();
-                locate(searchResults[0]);
-              }
-            }}
-          />
-          {query && (
-            <button
-              aria-label="Clear place search"
-              onClick={() => {
-                setQuery("");
-                setSearchOpen(false);
-                setChosen(null);
-              }}
-            >
-              <X size={13} />
-            </button>
-          )}
-        </div>
-        {searchOpen && query.trim() && (
-          <div className="map-search-results">
-            {searchResults.map((p) => (
-              <button key={p.id} onClick={() => locate(p)}>
-                <span>
-                  {p.name}
-                  <small>
-                    {[
-                      p.localName,
-                      p.district,
-                      p.transportType ?? p.featureLabel ?? p.kind,
-                    ]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </small>
-                </span>
-                <span>
-                  {p.kind === "district" || p.kind === "district reference"
-                    ? "District"
-                    : "Profile"}
-                </span>
-              </button>
-            ))}
-            {!searchResults.length && (
-              <p>
-                No matching bundled place. Browse the street map or try a
-                district name.
-              </p>
-            )}
-          </div>
-        )}
-      </div>
+      <MapFeatureSearch
+        places={locations}
+        query={searchText}
+        onQueryChange={onSearchTextChange}
+        onSelect={locate}
+        externalRequest={searchRequest}
+      />
       {(mapError || (street && tileState === "unavailable")) && (
         <div className="map-error" role="status">
           {mapError ||

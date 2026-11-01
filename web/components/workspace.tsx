@@ -158,6 +158,8 @@ export default function Workspace() {
     [error, setError] = useState(""),
     [tab, setTab] = useState<Tab>("map"),
     [selected, setSelected] = useState("c01");
+  const [mapQuery, setMapQuery] = useState(""),
+    [mapSearchRequest, setMapSearchRequest] = useState(0);
   const [search, setSearch] = useState(""),
     [substance, setSubstance] = useState("all"),
     [status, setStatus] = useState("all"),
@@ -527,20 +529,27 @@ export default function Workspace() {
                 </div>
               </div>
               <div className="filterbar">
-                <div className="searchbox">
+                <form
+                  className="searchbox primary-map-search"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setMapSearchRequest((n) => n + 1);
+                  }}
+                >
                   <Search size={16} />
                   <input
                     ref={searchRef}
-                    aria-label="Search records and corridors"
-                    placeholder="Find a corridor, district or record…"
-                    value={search}
-                    onChange={(e) => {
-                      setSearch(e.target.value);
-                      setPage(0);
-                    }}
+                    aria-label="Search map features"
+                    placeholder="Search roads, addresses, landmarks or destinations…"
+                    maxLength={180}
+                    value={mapQuery}
+                    onChange={(e) => setMapQuery(e.target.value)}
                   />
                   <kbd>/</kbd>
-                </div>
+                  <button type="submit" aria-label="Search map">
+                    Search
+                  </button>
+                </form>
                 <select
                   aria-label="Date range"
                   value={period}
@@ -621,6 +630,9 @@ export default function Workspace() {
                   </div>
                   <CorridorMap
                     records={filtered}
+                    searchText={mapQuery}
+                    onSearchTextChange={setMapQuery}
+                    searchRequest={mapSearchRequest}
                     focusedDistrict={district}
                     selected={selected}
                     onSelect={setSelected}
@@ -1554,6 +1566,11 @@ export default function Workspace() {
                     "OpenStreetMap street basemap",
                     "Detailed online roads and place labels, displayed in grayscale. Tile availability and public-map coverage vary. No case data or lead narratives are sent to the basemap provider.",
                     "https://operations.osmfoundation.org/policies/tiles/",
+                  ],
+                  [
+                    "Photon / OpenStreetMap search",
+                    "Live public-map search for roads, addresses, landmarks and destinations. Explicit submissions are cached and rate-limited; provider coverage and availability vary. Results include the original OSM object and mapped extent.",
+                    "https://github.com/komoot/photon",
                   ],
                   [
                     "GeoNames",

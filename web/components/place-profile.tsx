@@ -37,6 +37,7 @@ export default function PlaceProfile({
     [place, transport],
   );
   const sourced = Boolean(place.geonamesId);
+  const osm = place.dataProvider === "openstreetmap";
   return (
     <section
       className={`map-location-info place-profile ${collapsed ? "profile-collapsed" : ""} ${full ? "profile-expanded" : ""}`}
@@ -46,7 +47,8 @@ export default function PlaceProfile({
       <header className="place-profile-head">
         <div>
           <span className="public-data-label">
-            <MapPin size={11} /> Public geography
+            <MapPin size={11} />{" "}
+            {osm ? "OpenStreetMap feature" : "Public geography"}
           </span>
           <h3>{place.name}</h3>
           {place.localName && <p lang="ml">{place.localName}</p>}
@@ -112,7 +114,8 @@ export default function PlaceProfile({
             role="tabpanel"
             aria-labelledby={`${id}-${tab}`}
           >
-            {tab === "overview" && (
+            {tab === "overview" && osm && <MapFeatureOverview place={place} />}
+            {tab === "overview" && !osm && (
               <>
                 <div className="place-stat-grid">
                   <div>
@@ -227,24 +230,35 @@ export default function PlaceProfile({
               <>
                 <div className="source-provenance">
                   <h4>
-                    {sourced
-                      ? "GeoNames geographic record"
-                      : "District reference point"}
+                    {osm
+                      ? "OpenStreetMap geographic feature"
+                      : sourced
+                        ? "GeoNames geographic record"
+                        : "District reference point"}
                   </h4>
                   <p>
-                    {sourced
-                      ? "Fields are reproduced from the GeoNames India dump and administrative/feature-code tables. Unknown values remain unreported."
-                      : "This representative district point belongs to the demonstration geography. No sourced population or elevation is attached."}
+                    {osm
+                      ? "This feature comes from Photon’s OpenStreetMap search index. The point and bounding extent locate the mapped feature; they do not reconstruct a journey. Missing fields remain unknown."
+                      : sourced
+                        ? "Fields are reproduced from the GeoNames India dump and administrative/feature-code tables. Unknown values remain unreported."
+                        : "This representative district point belongs to the demonstration geography. No sourced population or elevation is attached."}
                   </p>
                   {place.sourceUrl && (
                     <a href={place.sourceUrl} target="_blank" rel="noreferrer">
-                      Open original GeoNames record <ExternalLink size={12} />
+                      {osm
+                        ? "Open original OpenStreetMap feature"
+                        : "Open original GeoNames record"}{" "}
+                      <ExternalLink size={12} />
                     </a>
                   )}
                   <dl className="place-facts">
                     <div>
                       <dt>Record ID</dt>
-                      <dd>{place.geonamesId ?? "Reference only"}</dd>
+                      <dd>
+                        {place.osmId
+                          ? `${place.osmType} ${place.osmId}`
+                          : (place.geonamesId ?? "Reference only")}
+                      </dd>
                     </div>
                     <div>
                       <dt>Record modified</dt>
@@ -260,24 +274,32 @@ export default function PlaceProfile({
                     </div>
                   </dl>
                   <p className="place-data-note">
-                    The record modification date does not date every individual
-                    field. GeoNames data can be incomplete or outdated. DEM
-                    elevation is modelled terrain, not a survey.
+                    {osm
+                      ? "Search results depend on the OpenStreetMap index and can be incomplete or outdated. Retrieval time is not a feature modification date. The selection box is the source extent, not road or route geometry."
+                      : "The record modification date does not date every individual field. GeoNames data can be incomplete or outdated. DEM elevation is modelled terrain, not a survey."}
                   </p>
                   <a
-                    href="https://www.geonames.org/"
+                    href={
+                      osm
+                        ? "https://www.openstreetmap.org/copyright"
+                        : "https://www.geonames.org/"
+                    }
                     target="_blank"
                     rel="noreferrer"
                   >
-                    GeoNames
+                    {osm ? "OpenStreetMap contributors" : "GeoNames"}
                   </a>{" "}
                   ·{" "}
                   <a
-                    href="https://creativecommons.org/licenses/by/4.0/"
+                    href={
+                      osm
+                        ? "https://opendatacommons.org/licenses/odbl/1-0/"
+                        : "https://creativecommons.org/licenses/by/4.0/"
+                    }
                     target="_blank"
                     rel="noreferrer"
                   >
-                    CC BY 4.0
+                    {osm ? "ODbL 1.0" : "CC BY 4.0"}
                   </a>
                 </div>
               </>
@@ -290,5 +312,66 @@ export default function PlaceProfile({
         </>
       )}
     </section>
+  );
+}
+
+function MapFeatureOverview({ place }: { place: PublicPlace }) {
+  const addressLabels: Record<string, string> = {
+    housenumber: "House number",
+    street: "Street",
+    district: "Suburb / district",
+    city: "City / town",
+    county: "County / area",
+    state: "State",
+    postcode: "Postcode",
+    country: "Country",
+  };
+  return (
+    <>
+      <div className="map-feature-kind">
+        {place.kind === "road"
+          ? "Mapped road"
+          : (place.featureLabel ?? "Mapped feature")}
+      </div>
+      {place.displayAddress && (
+        <p className="map-feature-address">{place.displayAddress}</p>
+      )}
+      <dl className="place-facts">
+        <div>
+          <dt>Feature</dt>
+          <dd>{place.featureLabel ?? place.kind}</dd>
+        </div>
+        {Object.entries(place.address ?? {}).map(([key, value]) => (
+          <div key={key}>
+            <dt>{addressLabels[key] ?? key}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+        <div>
+          <dt>Coordinates</dt>
+          <dd className="coordinate-value">
+            {place.lat.toFixed(5)}, {place.lon.toFixed(5)}
+          </dd>
+        </div>
+        <div>
+          <dt>OSM category</dt>
+          <dd>{place.sourceCategory ?? "Not reported"}</dd>
+        </div>
+      </dl>
+      {place.sourceUrl && (
+        <a
+          className="map-feature-source"
+          href={place.sourceUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          View mapped feature <ExternalLink size={11} />
+        </a>
+      )}
+      <p className="place-data-note">
+        OpenStreetMap source point{place.bounds ? " and mapped extent" : ""}. No
+        case evidence is inferred from this result.
+      </p>
+    </>
   );
 }
