@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import CorridorMap from "./corridor-map";
 import TipForm from "./tip-form";
+import ModelLab from "./model-lab";
 import { places, corridors, corridorName, placeName } from "../data/geography";
 import type {
   CaseRecord,
@@ -160,6 +161,9 @@ export default function Workspace() {
     [selected, setSelected] = useState("c01");
   const [mapQuery, setMapQuery] = useState(""),
     [mapSearchRequest, setMapSearchRequest] = useState(0);
+  const [forecastView, setForecastView] = useState<"trained" | "original">(
+    "trained",
+  );
   const [search, setSearch] = useState(""),
     [substance, setSubstance] = useState("all"),
     [status, setStatus] = useState("all"),
@@ -879,182 +883,210 @@ export default function Workspace() {
                   </div>
                   <h1>A hypothesis to investigate.</h1>
                   <p>
-                    A reproducible 30-day experiment. Evidence before
-                    confidence.
+                    Train, backtest and inspect aggregate forecasts. Evidence
+                    before confidence.
                   </p>
                 </div>
-                <span className="label-amber">Synthetic evaluation only</span>
+                <span className="label-amber">Experimental · human review</span>
               </div>
-              <div className="forecast-intro">
-                <div>
-                  <h2>What are we estimating?</h2>
-                  <p>
-                    The number of future <strong>documented cases</strong> per
-                    district corridor in the next 30 days, from the frozen 1
-                    November 2026 scenario. This is a count estimate, not a
-                    probability of actual trafficking.
-                  </p>
-                </div>
-                <div className="method-chip">
-                  <Network size={23} />
-                  <span>
-                    Weighted recent history
-                    <small>60% last 30d + 30% prior 30d + 10% prior 30d</small>
-                  </span>
-                </div>
+              <div
+                className="forecast-view-tabs"
+                aria-label="Forecast experiment"
+              >
+                <button
+                  aria-pressed={forecastView === "trained"}
+                  onClick={() => setForecastView("trained")}
+                >
+                  Trained pipeline
+                </button>
+                <button
+                  aria-pressed={forecastView === "original"}
+                  onClick={() => setForecastView("original")}
+                >
+                  Original scenario
+                </button>
               </div>
-              <div className="evaluation-summary">
-                <div>
-                  <small>Model mean absolute error</small>
-                  <strong>
-                    {mean("modelMae").toFixed(2)} <span>cases / corridor</span>
-                  </strong>
-                </div>
-                <div>
-                  <small>90-day baseline error</small>
-                  <strong>
-                    {mean("baselineMae").toFixed(2)}{" "}
-                    <span>cases / corridor</span>
-                  </strong>
-                </div>
-                <div>
-                  <small>Held-out windows</small>
-                  <strong>
-                    6 <span>chronological folds</span>
-                  </strong>
-                </div>
-                <div>
-                  <small>Real-world validation</small>
-                  <strong className="amber-text">Not established</strong>
-                </div>
-              </div>
-              <div className="split-content">
-                <section className="panel">
-                  <div className="panel-heading forecast-panel-heading">
-                    <h2>Next 30 days · corridor ranking</h2>
+              {forecastView === "trained" ? (
+                <ModelLab analyst={analyst} />
+              ) : (
+                <>
+                  <div className="forecast-intro">
                     <div>
-                      <span className="forecast-key">
-                        <span>
-                          <i />
-                          Model hypothesis
-                        </span>
-                        <span>
-                          <i />
-                          Baseline
-                        </span>
+                      <h2>What are we estimating?</h2>
+                      <p>
+                        The number of future <strong>documented cases</strong>{" "}
+                        per district corridor in the next 30 days, from the
+                        frozen 1 November 2026 scenario. This is a count
+                        estimate, not a probability of actual trafficking.
+                      </p>
+                    </div>
+                    <div className="method-chip">
+                      <Network size={23} />
+                      <span>
+                        Weighted recent history
+                        <small>
+                          60% last 30d + 30% prior 30d + 10% prior 30d
+                        </small>
                       </span>
-                      <small className="forecast-window">01–30 Nov 2026</small>
                     </div>
                   </div>
-                  <div className="table-wrap">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Connection</th>
-                          <th>Model estimate</th>
-                          <th>Baseline</th>
-                          <th>Last 30d</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data.forecast.map((r, i) => (
-                          <tr key={r.corridorId}>
-                            <td>
-                              <span className="rank">{i + 1}</span>
-                              <button
-                                className="text-button"
-                                onClick={() => {
-                                  if (analyst) {
-                                    setSelected(r.corridorId);
-                                    go("map");
-                                  }
-                                }}
-                              >
-                                {corridorName(r.corridorId)}
-                              </button>
-                            </td>
-                            <td>
-                              <span className="estimate-track">
-                                <i
-                                  style={{
-                                    width: `${(r.estimate / Math.max(...data.forecast.map((f) => f.estimate), 1)) * 100}%`,
-                                  }}
-                                />
-                                {r.estimate.toFixed(1)}
-                              </span>
-                            </td>
-                            <td>{r.baseline.toFixed(1)}</td>
-                            <td>{r.recent}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div className="evaluation-summary">
+                    <div>
+                      <small>Model mean absolute error</small>
+                      <strong>
+                        {mean("modelMae").toFixed(2)}{" "}
+                        <span>cases / corridor</span>
+                      </strong>
+                    </div>
+                    <div>
+                      <small>90-day baseline error</small>
+                      <strong>
+                        {mean("baselineMae").toFixed(2)}{" "}
+                        <span>cases / corridor</span>
+                      </strong>
+                    </div>
+                    <div>
+                      <small>Held-out windows</small>
+                      <strong>
+                        6 <span>chronological folds</span>
+                      </strong>
+                    </div>
+                    <div>
+                      <small>Real-world validation</small>
+                      <strong className="amber-text">Not established</strong>
+                    </div>
                   </div>
-                  <p className="table-footnote">
-                    Planner view suppresses rows with fewer than five cases in
-                    any training month. No calibrated interval is available.
-                    Ranking ties use corridor ID; uncertainty is not quantified.
-                    Counts are fictional.
-                  </p>
-                </section>
-                <section className="limitations-panel">
-                  <Info size={23} />
-                  <h2>What this cannot tell you</h2>
-                  {data.limitations.slice(0, 6).map((l, i) => (
-                    <p key={i}>{l}</p>
-                  ))}
-                </section>
-              </div>
-              <section className="panel">
-                <div className="panel-heading">
-                  <h2>Walk-forward evaluation</h2>
-                  <span>No shuffled train / test split</span>
-                </div>
-                <div className="table-wrap">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Prediction date</th>
-                        <th>Held-out through</th>
-                        <th>Model MAE</th>
-                        <th>Baseline MAE</th>
-                        <th>Top 3 captured</th>
-                        <th>Active corridors missed</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.evaluation.map((f) => (
-                        <tr key={f.cutoff}>
-                          <td>{f.cutoff}</td>
-                          <td>{f.end} (exclusive)</td>
-                          <td>{f.modelMae.toFixed(2)}</td>
-                          <td>{f.baselineMae.toFixed(2)}</td>
-                          <td>
-                            {f.captured} / {f.total} cases
-                          </td>
-                          <td>{f.misses}</td>
-                        </tr>
+                  <div className="split-content">
+                    <section className="panel">
+                      <div className="panel-heading forecast-panel-heading">
+                        <h2>Next 30 days · corridor ranking</h2>
+                        <div>
+                          <span className="forecast-key">
+                            <span>
+                              <i />
+                              Model hypothesis
+                            </span>
+                            <span>
+                              <i />
+                              Baseline
+                            </span>
+                          </span>
+                          <small className="forecast-window">
+                            01–30 Nov 2026
+                          </small>
+                        </div>
+                      </div>
+                      <div className="table-wrap">
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Connection</th>
+                              <th>Model estimate</th>
+                              <th>Baseline</th>
+                              <th>Last 30d</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {data.forecast.map((r, i) => (
+                              <tr key={r.corridorId}>
+                                <td>
+                                  <span className="rank">{i + 1}</span>
+                                  <button
+                                    className="text-button"
+                                    onClick={() => {
+                                      if (analyst) {
+                                        setSelected(r.corridorId);
+                                        go("map");
+                                      }
+                                    }}
+                                  >
+                                    {corridorName(r.corridorId)}
+                                  </button>
+                                </td>
+                                <td>
+                                  <span className="estimate-track">
+                                    <i
+                                      style={{
+                                        width: `${(r.estimate / Math.max(...data.forecast.map((f) => f.estimate), 1)) * 100}%`,
+                                      }}
+                                    />
+                                    {r.estimate.toFixed(1)}
+                                  </span>
+                                </td>
+                                <td>{r.baseline.toFixed(1)}</td>
+                                <td>{r.recent}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <p className="table-footnote">
+                        Planner view suppresses rows with fewer than five cases
+                        in any training month. No calibrated interval is
+                        available. Ranking ties use corridor ID; uncertainty is
+                        not quantified. Counts are fictional.
+                      </p>
+                    </section>
+                    <section className="limitations-panel">
+                      <Info size={23} />
+                      <h2>What this cannot tell you</h2>
+                      {data.limitations.slice(0, 6).map((l, i) => (
+                        <p key={i}>{l}</p>
                       ))}
-                    </tbody>
-                  </table>
-                </div>
-                <p className="table-footnote">
-                  Training uses only records available and reviewed before each
-                  cutoff. Targets use 30-day event windows, with labels frozen
-                  at 1 November. Late and missing reports can change the
-                  apparent outcome. Import and review exercises do not change
-                  this frozen experiment.
-                </p>
-              </section>
-              <section className="coverage-panel">
-                <h2>Coverage is a missing variable.</h2>
-                <p>
-                  Enforcement effort, reporting completeness and population
-                  coverage are unknown in this scenario. A high count can
-                  reflect more observation. No district risk, demographic or
-                  individual suspicion score is produced.
-                </p>
-              </section>
+                    </section>
+                  </div>
+                  <section className="panel">
+                    <div className="panel-heading">
+                      <h2>Walk-forward evaluation</h2>
+                      <span>No shuffled train / test split</span>
+                    </div>
+                    <div className="table-wrap">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Prediction date</th>
+                            <th>Held-out through</th>
+                            <th>Model MAE</th>
+                            <th>Baseline MAE</th>
+                            <th>Top 3 captured</th>
+                            <th>Active corridors missed</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.evaluation.map((f) => (
+                            <tr key={f.cutoff}>
+                              <td>{f.cutoff}</td>
+                              <td>{f.end} (exclusive)</td>
+                              <td>{f.modelMae.toFixed(2)}</td>
+                              <td>{f.baselineMae.toFixed(2)}</td>
+                              <td>
+                                {f.captured} / {f.total} cases
+                              </td>
+                              <td>{f.misses}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <p className="table-footnote">
+                      Training uses only records available and reviewed before
+                      each cutoff. Targets use 30-day event windows, with labels
+                      frozen at 1 November. Late and missing reports can change
+                      the apparent outcome. Import and review exercises do not
+                      change this frozen experiment.
+                    </p>
+                  </section>
+                  <section className="coverage-panel">
+                    <h2>Coverage is a missing variable.</h2>
+                    <p>
+                      Enforcement effort, reporting completeness and population
+                      coverage are unknown in this scenario. A high count can
+                      reflect more observation. No district risk, demographic or
+                      individual suspicion score is produced.
+                    </p>
+                  </section>
+                </>
+              )}
             </div>
           )}
           {tab === "records" && analyst && (

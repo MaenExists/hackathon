@@ -11,3 +11,5 @@
 **Closing:** “Evidence informs. People decide. The next step is authorized movement data and agency-led validation, not deployment for enforcement.”
 
 Geographic search: enter “Banerji Road”, choose Roads, and press Enter. Select the source feature to inspect its mapped extent and address. Then try “Lulu Mall Kochi” with All map features. The large search above the map has the same behavior; searching for roads does not hide case evidence. Use the Evidence library for source IDs and case filtering.
+
+Trained pipeline: open Forecast lab → Trained pipeline. Compare the candidate, selected method and baseline on the final holdout; switch Corridor model / Area model and inspect an abstained row. Expand the chronological folds to show training-label maturity. Open a completed local aggregate report to inspect it without an upload. Source data and training commands are in `ml/README.md`; these synthetic runs establish implementation behavior only. The original six-window heuristic demonstration remains under Original scenario.

@@ -1,0 +1,629 @@
+{
+  "schemaVersion": 1,
+  "runId": "00988e2c88f6cf40",
+  "synthetic": true,
+  "generatedAt": "2026-11-01T07:51:05.532698+00:00",
+  "asOf": "2026-10-19",
+  "targetType": "area",
+  "horizonDays": 28,
+  "target": "Future documented seizure cases by area",
+  "algorithm": "Poisson histogram gradient boosting",
+  "selectedModel": "model",
+  "selectionReason": "Gradient boosting must reduce selection MAE by at least 5% versus both baselines; otherwise retain the best baseline.",
+  "reportingDelayDays": 14,
+  "trainingRows": 1579,
+  "trainingLabelsThrough": "2026-10-19",
+  "selection": {
+    "origins": [
+      "2025-07-14",
+      "2025-08-25",
+      "2025-10-06"
+    ],
+    "metrics": {
+      "model": {
+        "mae": 2.87355,
+        "rmse": 4.09727,
+        "poisson_deviance": 1.67014,
+        "wape": 0.28484,
+        "rows": 34
+      },
+      "baseline": {
+        "mae": 3.8877,
+        "rmse": 5.01576,
+        "poisson_deviance": 2.75724,
+        "wape": 0.38537,
+        "rows": 34
+      },
+      "recent_baseline": {
+        "mae": 3.81373,
+        "rmse": 4.79549,
+        "poisson_deviance": 6.51942,
+        "wape": 0.37804,
+        "rows": 34
+      }
+    }
+  },
+  "calibration": {
+    "origins": [
+      "2025-11-17",
+      "2025-12-29",
+      "2026-02-09",
+      "2026-03-23"
+    ],
+    "rows": 52,
+    "nominalCoverage": 0.9,
+    "method": "Earlier absolute residual / sqrt(prediction+1), finite-sample 90th percentile; no time-series coverage guarantee."
+  },
+  "holdout": {
+    "origins": [
+      "2026-05-04",
+      "2026-06-15",
+      "2026-07-27",
+      "2026-09-07"
+    ],
+    "selected": {
+      "mae": 2.71839,
+      "rmse": 3.59335,
+      "poisson_deviance": 1.46925,
+      "wape": 0.32241,
+      "rows": 51
+    },
+    "model": {
+      "mae": 2.71839,
+      "rmse": 3.59335,
+      "poisson_deviance": 1.46925,
+      "wape": 0.32241,
+      "rows": 51
+    },
+    "baseline": {
+      "mae": 2.5407,
+      "rmse": 3.2567,
+      "poisson_deviance": 1.39227,
+      "wape": 0.30134,
+      "rows": 51
+    },
+    "recentBaseline": {
+      "mae": 3.15033,
+      "rmse": 4.2529,
+      "poisson_deviance": 9.41399,
+      "wape": 0.37364,
+      "rows": 51
+    },
+    "intervalCoverage": 0.9804,
+    "meanIntervalWidth": 12.235,
+    "folds": [
+      {
+        "origin": "2026-05-04",
+        "end": "2026-06-01",
+        "train_labels_through": "2026-05-04",
+        "train_rows": 1285,
+        "selected_mae": 3.08034,
+        "model_mae": 3.08034,
+        "baseline_mae": 2.1697,
+        "recent_baseline_mae": 1.9,
+        "top3_capture": 0.3803
+      },
+      {
+        "origin": "2026-06-15",
+        "end": "2026-07-13",
+        "train_labels_through": "2026-06-15",
+        "train_rows": 1345,
+        "selected_mae": 1.9829,
+        "model_mae": 1.9829,
+        "baseline_mae": 1.68998,
+        "recent_baseline_mae": 3.15385,
+        "top3_capture": 0.3786
+      },
+      {
+        "origin": "2026-07-27",
+        "end": "2026-08-24",
+        "train_labels_through": "2026-07-27",
+        "train_rows": 1411,
+        "selected_mae": 2.94555,
+        "model_mae": 2.94555,
+        "baseline_mae": 3.20346,
+        "recent_baseline_mae": 3.35714,
+        "top3_capture": 0.3798
+      },
+      {
+        "origin": "2026-09-07",
+        "end": "2026-10-05",
+        "train_labels_through": "2026-09-07",
+        "train_rows": 1495,
+        "selected_mae": 2.91566,
+        "model_mae": 2.91566,
+        "baseline_mae": 2.9329,
+        "recent_baseline_mae": 3.83333,
+        "top3_capture": 0.3701
+      }
+    ],
+    "byEntity": [
+      {
+        "entity_id": "area-alappuzha",
+        "name": "Alappuzha",
+        "mae": 1.15342,
+        "rmse": 1.33501,
+        "poisson_deviance": 0.79439,
+        "wape": 0.46137,
+        "rows": 4,
+        "actual_cases": 10,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-ernakulam",
+        "name": "Ernakulam",
+        "mae": 4.05519,
+        "rmse": 5.48649,
+        "poisson_deviance": 1.51874,
+        "wape": 0.26163,
+        "rows": 4,
+        "actual_cases": 62,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-idukki",
+        "name": "Idukki",
+        "mae": 3.13006,
+        "rmse": 3.72231,
+        "poisson_deviance": 1.48631,
+        "wape": 0.29117,
+        "rows": 4,
+        "actual_cases": 43,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-kannur",
+        "name": "Kannur",
+        "mae": 5.07404,
+        "rmse": 6.19883,
+        "poisson_deviance": 3.66414,
+        "wape": 0.32216,
+        "rows": 4,
+        "actual_cases": 63,
+        "interval_coverage": 0.75
+      },
+      {
+        "entity_id": "area-kasaragod",
+        "name": "Kasaragod",
+        "mae": 2.01289,
+        "rmse": 2.07903,
+        "poisson_deviance": 0.83999,
+        "wape": 0.31783,
+        "rows": 3,
+        "actual_cases": 19,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-kollam",
+        "name": "Kollam",
+        "mae": 1.44495,
+        "rmse": 2.51929,
+        "poisson_deviance": 1.22252,
+        "wape": 0.38532,
+        "rows": 4,
+        "actual_cases": 15,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-kottayam",
+        "name": "Kottayam",
+        "mae": 2.31556,
+        "rmse": 2.42425,
+        "poisson_deviance": 0.68662,
+        "wape": 0.28067,
+        "rows": 4,
+        "actual_cases": 33,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-kozhikode",
+        "name": "Kozhikode",
+        "mae": 3.86204,
+        "rmse": 4.21821,
+        "poisson_deviance": 1.86972,
+        "wape": 0.39952,
+        "rows": 3,
+        "actual_cases": 29,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-malappuram",
+        "name": "Malappuram",
+        "mae": 4.5174,
+        "rmse": 4.74097,
+        "poisson_deviance": 2.22234,
+        "wape": 0.45174,
+        "rows": 3,
+        "actual_cases": 30,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-palakkad",
+        "name": "Palakkad",
+        "mae": 1.73205,
+        "rmse": 2.24344,
+        "poisson_deviance": 1.10173,
+        "wape": 0.43301,
+        "rows": 3,
+        "actual_cases": 12,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-pathanamthitta",
+        "name": "Pathanamthitta",
+        "mae": 1.36983,
+        "rmse": 1.83794,
+        "poisson_deviance": 1.37061,
+        "wape": 0.42149,
+        "rows": 4,
+        "actual_cases": 13,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-thiruvananthapuram",
+        "name": "Thiruvananthapuram",
+        "mae": 4.73345,
+        "rmse": 4.85681,
+        "poisson_deviance": 1.7818,
+        "wape": 0.29584,
+        "rows": 4,
+        "actual_cases": 64,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-thrissur",
+        "name": "Thrissur",
+        "mae": 1.48153,
+        "rmse": 1.6695,
+        "poisson_deviance": 0.31445,
+        "wape": 0.15874,
+        "rows": 3,
+        "actual_cases": 28,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "area-wayanad",
+        "name": "Wayanad",
+        "mae": 1.17856,
+        "rmse": 1.4017,
+        "poisson_deviance": 1.44667,
+        "wape": 0.52381,
+        "rows": 4,
+        "actual_cases": 9,
+        "interval_coverage": 1.0
+      }
+    ]
+  },
+  "featureImportance": [
+    {
+      "feature": "observed_incoming_origin_13w",
+      "mae_increase": 1.01193,
+      "std": 0.38927
+    },
+    {
+      "feature": "mean_26w",
+      "mae_increase": 0.48392,
+      "std": 0.1996
+    },
+    {
+      "feature": "context_transport_flow_index",
+      "mae_increase": 0.19865,
+      "std": 0.0898
+    },
+    {
+      "feature": "week_sin",
+      "mae_increase": 0.13558,
+      "std": 0.09449
+    },
+    {
+      "feature": "destination=wayanad",
+      "mae_increase": 0.1239,
+      "std": 0.0373
+    },
+    {
+      "feature": "observed_stimulants_13w",
+      "mae_increase": 0.05706,
+      "std": 0.04075
+    },
+    {
+      "feature": "destination=thiruvananthapuram",
+      "mae_increase": 0.05168,
+      "std": 0.0164
+    },
+    {
+      "feature": "context_enforcement_checks",
+      "mae_increase": 0.0392,
+      "std": 0.00761
+    },
+    {
+      "feature": "destination=kottayam",
+      "mae_increase": 0.02959,
+      "std": 0.02285
+    },
+    {
+      "feature": "destination=kannur",
+      "mae_increase": 0.02824,
+      "std": 0.00544
+    },
+    {
+      "feature": "observed_other_13w",
+      "mae_increase": 0.02214,
+      "std": 0.00769
+    },
+    {
+      "feature": "log_mass_cannabis_13w",
+      "mae_increase": 0.01838,
+      "std": 0.03422
+    }
+  ],
+  "data": {
+    "data_mode": "synthetic",
+    "entities": 24,
+    "events": 4584,
+    "documented_events": 4584,
+    "movement_events": 2741,
+    "coverage_weeks": 3744,
+    "covariates": 7488,
+    "first_event": "2023-10-23",
+    "last_event": "2026-10-18",
+    "input_sha256": {
+      "covariates.csv": "828ee8771a1edda34b8b07643adede700363a03a0b76e4bba829927e0baf0e71",
+      "coverage.csv": "f603c9ec190e013f72b14ffed6cb68b30f7af047022263b9a5b4bbd0afd671ea",
+      "dataset.json": "04f30f037234fae19960c084ef3a5c9aee3ff7aa73a1651508cc0a8de4ba8970",
+      "entities.csv": "8e3b248ca7d682bdd55e78d267b8494b2be442f580eed56758727e432be242e3",
+      "events.csv": "515c9f10b06b4c2b4221e09dba5d60f21ee6ff1ccc43b9391762341f4997f6a9"
+    }
+  },
+  "software": {
+    "pipeline": "0.1.0",
+    "python": "3.12.13",
+    "sklearn": "1.7.2",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "source_sha256": "4c18408abaebd42e467c8a56eb7732eadda363ff84de3421971ef1bd76b4cf10"
+  },
+  "limitations": [
+    "The target is future documented cases, not the volume or probability of actual trafficking.",
+    "Seizures reflect reporting and enforcement. Coverage declarations cannot remove unmeasured selection bias.",
+    "A corridor is a documented origin/destination connection, not a predicted street-level journey. New routes are not invented.",
+    "Intervals are empirical ranges from earlier errors; temporal dependence and distribution changes can invalidate nominal coverage.",
+    "News requires independent corroboration and canonical-case deduplication. Raw news, community tips and individual consumer records are excluded.",
+    "Aggregate consumption and service indicators are contextual; they do not identify people or measure trafficking and treatment demand interchangeably.",
+    "Synthetic results test the pipeline only. Real data needs independent validation and human review before any operational use."
+  ],
+  "forecasts": [
+    {
+      "entityId": "area-ernakulam",
+      "name": "Ernakulam",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "ernakulam",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 17.737,
+      "baseline": 16.0,
+      "lower": 8,
+      "upper": 28,
+      "support13w": 49,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-kozhikode",
+      "name": "Kozhikode",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "kozhikode",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 17.547,
+      "baseline": 10.0,
+      "lower": 8,
+      "upper": 27,
+      "support13w": 32,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-kannur",
+      "name": "Kannur",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "kannur",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 17.339,
+      "baseline": 15.333,
+      "lower": 8,
+      "upper": 27,
+      "support13w": 50,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-thrissur",
+      "name": "Thrissur",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "thrissur",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 16.175,
+      "baseline": 11.333,
+      "lower": 7,
+      "upper": 26,
+      "support13w": 35,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-thiruvananthapuram",
+      "name": "Thiruvananthapuram",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "thiruvananthapuram",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 15.604,
+      "baseline": 18.333,
+      "lower": 6,
+      "upper": 25,
+      "support13w": 55,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-idukki",
+      "name": "Idukki",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "idukki",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 12.464,
+      "baseline": 11.667,
+      "lower": 4,
+      "upper": 21,
+      "support13w": 39,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-kottayam",
+      "name": "Kottayam",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "kottayam",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 10.371,
+      "baseline": 9.333,
+      "lower": 3,
+      "upper": 18,
+      "support13w": 32,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-malappuram",
+      "name": "Malappuram",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "malappuram",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 8.788,
+      "baseline": 9.333,
+      "lower": 2,
+      "upper": 16,
+      "support13w": 30,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-kollam",
+      "name": "Kollam",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "kollam",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 5.217,
+      "baseline": 4.667,
+      "lower": 0,
+      "upper": 11,
+      "support13w": 15,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-pathanamthitta",
+      "name": "Pathanamthitta",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "pathanamthitta",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 4.852,
+      "baseline": 3.0,
+      "lower": 0,
+      "upper": 11,
+      "support13w": 9,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-alappuzha",
+      "name": "Alappuzha",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "alappuzha",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 3.609,
+      "baseline": 2.0,
+      "lower": 0,
+      "upper": 9,
+      "support13w": 6,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-kasaragod",
+      "name": "Kasaragod",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "kasaragod",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 3.574,
+      "baseline": 5.667,
+      "lower": 0,
+      "upper": 9,
+      "support13w": 17,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-palakkad",
+      "name": "Palakkad",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "palakkad",
+      "status": "forecast",
+      "reason": null,
+      "estimate": 2.19,
+      "baseline": 3.0,
+      "lower": 0,
+      "upper": 7,
+      "support13w": 9,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "area-wayanad",
+      "name": "Wayanad",
+      "originId": null,
+      "destinationId": null,
+      "areaId": "wayanad",
+      "status": "abstained",
+      "reason": "Fewer than five known documented cases in the last thirteen weeks.",
+      "estimate": null,
+      "baseline": null,
+      "lower": null,
+      "upper": null,
+      "support13w": 3,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    }
+  ],
+  "monitoring": {
+    "operationallyValidated": false,
+    "alerts": [
+      "Synthetic pipeline demonstration; real-world performance is unestablished.",
+      "Selected method lost to a baseline in the final holdout. Review before use.",
+      "1 entities abstained due to sparse/stale/unknown coverage."
+    ]
+  },
+  "modelSha256": "51119e0704c8226bfa688e593957b75c9957885acea9f52b82e21295765461b5"
+}

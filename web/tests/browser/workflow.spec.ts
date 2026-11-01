@@ -185,6 +185,9 @@ test("analyst UI, offline boundaries, evidence modal, forecast, saved brief and 
   await expect(
     page.getByRole("heading", { name: "A hypothesis to investigate." }),
   ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Original scenario", exact: true })
+    .click();
   await expect(
     page.getByRole("heading", {
       name: "What this cannot tell you",
@@ -543,4 +546,82 @@ test("online search errors leave offline profiles usable and invalid API searche
   await expect(
     page.getByRole("region", { name: "Place profile: Munnar" }),
   ).toBeVisible();
+});
+
+test("trained forecasts expose coverage and local report inspection never uploads the file", async ({
+  page,
+}) => {
+  await page.goto("/signin-with-chatgpt?return_to=/");
+  await expect(page.locator('[data-corridor-id="c01"]')).toBeVisible();
+  await page.getByRole("button", { name: "Forecast lab", exact: true }).click();
+  const lab = page.getByTestId("model-lab");
+  await expect(
+    lab.getByRole("heading", { name: "A model you can train." }),
+  ).toBeVisible();
+  await expect(lab).toContainText("SYNTHETIC TRAINING RUN");
+  await lab.getByRole("button", { name: "Area model", exact: true }).click();
+  await expect(
+    lab.getByRole("heading", { name: "Learned forecast · seizure areas" }),
+  ).toBeVisible();
+  await lab.locator(".learned-forecast-table .text-button").first().click();
+  await expect(lab.locator(".model-inspector")).toContainText(
+    "Complete reporting weeks",
+  );
+  await lab
+    .getByText("Inspect chronological folds and area errors", { exact: true })
+    .click();
+  await expect(
+    lab.getByRole("columnheader", { name: "Training labels mature through" }),
+  ).toBeVisible();
+  const local = JSON.parse(
+    readFileSync(
+      new URL("../../data/model-corridor.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  local.runId = "LOCAL-FILE-PRIVACY-TEST";
+  local.privateRecords = [{ narrative: "Unrelated payload must be stripped" }];
+  const sent: string[] = [];
+  page.on("request", (req) => {
+    if (req.method() !== "GET" || req.url().includes(local.runId))
+      sent.push(req.url());
+  });
+  await lab
+    .getByLabel("Open local model report", { exact: true })
+    .setInputFiles({
+      name: "report.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(local)),
+    });
+  await expect(lab).toContainText("LOCAL-FILE-PRIVACY-TEST");
+  await expect(lab).toContainText("LOCAL JSON · SOURCE UNVERIFIED");
+  expect(sent).toEqual([]);
+  const downloaded = page.waitForEvent("download");
+  await lab
+    .getByRole("button", { name: "Download aggregate model report" })
+    .click();
+  const download = await downloaded;
+  const path = await download.path();
+  expect(
+    JSON.parse(readFileSync(path!, "utf8")).privateRecords,
+  ).toBeUndefined();
+  await lab
+    .getByLabel("Open local model report", { exact: true })
+    .setInputFiles({
+      name: "bad.json",
+      mimeType: "application/json",
+      buffer: Buffer.from('{"schemaVersion":999}'),
+    });
+  await expect(lab.getByRole("alert")).toContainText("Choose report.json");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await lab.getByRole("button", { name: "Area model", exact: true }).click();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth + 1,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: "outputs/trained-model-mobile.png",
+    fullPage: true,
+  });
 });

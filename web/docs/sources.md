@@ -47,3 +47,7 @@ The [Photon API](https://github.com/komoot/photon/blob/master/docs/api-v1.md) su
 Road and mall response fixtures under `tests/fixtures/` were retrieved on 1 November 2026 using explicit Banerji Road and LuLu Mall searches. They retain public source identity for reproducible tests; no credentials or personal case data are included. Searches may miss unnamed/unindexed objects, abbreviations, or newly changed map features.
 
 Nominatim was evaluated during research but is not used for runtime map search. Photon is the production search provider; the earlier cached Nominatim state-boundary download remains unchanged.
+
+## Forecast training demonstration
+
+`data/model-corridor.json` and `data/model-area.json` are aggregate reports produced by the local Python pipeline from the seed-42 generator in `ml/src/corridor_ml/demo.py`: 156 weeks, 24 registered entities and 4,584 entirely invented cases. The data is independent from `data/cases.json`; no departmental data or current news was used to train these demonstration models. Input hashes, training source hash, fitted-model hash, software versions, selection/calibration/holdout periods, error diagnostics and limitations accompany the reports. Raw generated data and executable models stay in ignored local directories. Regenerate using `ml/README.md`; the primary modeling references and explicit engineering decisions are documented in `ml/docs/DESIGN.md`.

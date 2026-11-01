@@ -1,0 +1,520 @@
+{
+  "schemaVersion": 1,
+  "runId": "53e4c4e3d4f09b1e",
+  "synthetic": true,
+  "generatedAt": "2026-11-01T07:50:41.002995+00:00",
+  "asOf": "2026-10-19",
+  "targetType": "corridor",
+  "horizonDays": 28,
+  "target": "Future documented cases involving a known origin/destination corridor",
+  "algorithm": "Poisson histogram gradient boosting",
+  "selectedModel": "model",
+  "selectionReason": "Gradient boosting must reduce selection MAE by at least 5% versus both baselines; otherwise retain the best baseline.",
+  "reportingDelayDays": 14,
+  "trainingRows": 1091,
+  "trainingLabelsThrough": "2026-10-19",
+  "selection": {
+    "origins": [
+      "2025-07-14",
+      "2025-08-25",
+      "2025-10-06"
+    ],
+    "metrics": {
+      "model": {
+        "mae": 3.42677,
+        "rmse": 4.37927,
+        "poisson_deviance": 2.534,
+        "wape": 0.4087,
+        "rows": 26
+      },
+      "baseline": {
+        "mae": 4.01282,
+        "rmse": 5.11784,
+        "poisson_deviance": 3.36585,
+        "wape": 0.47859,
+        "rows": 26
+      },
+      "recent_baseline": {
+        "mae": 3.89744,
+        "rmse": 4.53571,
+        "poisson_deviance": 15.87406,
+        "wape": 0.46483,
+        "rows": 26
+      }
+    }
+  },
+  "calibration": {
+    "origins": [
+      "2025-11-17",
+      "2025-12-29",
+      "2026-02-09",
+      "2026-03-23"
+    ],
+    "rows": 36,
+    "nominalCoverage": 0.9,
+    "method": "Earlier absolute residual / sqrt(prediction+1), finite-sample 90th percentile; no time-series coverage guarantee."
+  },
+  "holdout": {
+    "origins": [
+      "2026-05-04",
+      "2026-06-15",
+      "2026-07-27",
+      "2026-09-07"
+    ],
+    "selected": {
+      "mae": 2.07844,
+      "rmse": 2.51098,
+      "poisson_deviance": 1.1977,
+      "wape": 0.29437,
+      "rows": 33
+    },
+    "model": {
+      "mae": 2.07844,
+      "rmse": 2.51098,
+      "poisson_deviance": 1.1977,
+      "wape": 0.29437,
+      "rows": 33
+    },
+    "baseline": {
+      "mae": 3.13774,
+      "rmse": 3.68206,
+      "poisson_deviance": 2.36687,
+      "wape": 0.4444,
+      "rows": 33
+    },
+    "recentBaseline": {
+      "mae": 3.46465,
+      "rmse": 4.32633,
+      "poisson_deviance": 8.30445,
+      "wape": 0.4907,
+      "rows": 33
+    },
+    "intervalCoverage": 0.9697,
+    "meanIntervalWidth": 9.97,
+    "folds": [
+      {
+        "origin": "2026-05-04",
+        "end": "2026-06-01",
+        "train_labels_through": "2026-05-04",
+        "train_rows": 891,
+        "selected_mae": 2.74965,
+        "model_mae": 2.74965,
+        "baseline_mae": 3.3,
+        "recent_baseline_mae": 2.63333,
+        "top3_capture": 0.3898
+      },
+      {
+        "origin": "2026-06-15",
+        "end": "2026-07-13",
+        "train_labels_through": "2026-06-15",
+        "train_rows": 951,
+        "selected_mae": 1.76573,
+        "model_mae": 1.76573,
+        "baseline_mae": 2.0,
+        "recent_baseline_mae": 2.28571,
+        "top3_capture": 0.6471
+      },
+      {
+        "origin": "2026-07-27",
+        "end": "2026-08-24",
+        "train_labels_through": "2026-07-27",
+        "train_rows": 1005,
+        "selected_mae": 2.28099,
+        "model_mae": 2.28099,
+        "baseline_mae": 3.95455,
+        "recent_baseline_mae": 5.94444,
+        "top3_capture": 0.661
+      },
+      {
+        "origin": "2026-09-07",
+        "end": "2026-10-05",
+        "train_labels_through": "2026-09-07",
+        "train_rows": 1041,
+        "selected_mae": 1.50459,
+        "model_mae": 1.50459,
+        "baseline_mae": 3.28182,
+        "recent_baseline_mae": 3.63333,
+        "top3_capture": 0.4568
+      }
+    ],
+    "byEntity": [
+      {
+        "entity_id": "c01",
+        "name": "Bengaluru → Ernakulam",
+        "mae": 1.9505,
+        "rmse": 2.01547,
+        "poisson_deviance": 2.23636,
+        "wape": 1.11457,
+        "rows": 4,
+        "actual_cases": 7,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "c02",
+        "name": "Mysuru → Kozhikode",
+        "mae": 0.62339,
+        "rmse": 0.67345,
+        "poisson_deviance": 0.10097,
+        "wape": 0.11689,
+        "rows": 3,
+        "actual_cases": 16,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "c03",
+        "name": "Dakshina-Kannada → Kannur",
+        "mae": 2.6851,
+        "rmse": 2.834,
+        "poisson_deviance": 1.23397,
+        "wape": 0.28769,
+        "rows": 3,
+        "actual_cases": 28,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "c04",
+        "name": "Coimbatore → Thrissur",
+        "mae": 2.34035,
+        "rmse": 2.50645,
+        "poisson_deviance": 1.13238,
+        "wape": 0.413,
+        "rows": 3,
+        "actual_cases": 17,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "c05",
+        "name": "Bengaluru → Kozhikode",
+        "mae": 1.51481,
+        "rmse": 1.53224,
+        "poisson_deviance": 0.71341,
+        "wape": 0.45444,
+        "rows": 3,
+        "actual_cases": 10,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "c06",
+        "name": "Madurai → Idukki",
+        "mae": 1.65187,
+        "rmse": 1.95736,
+        "poisson_deviance": 0.65173,
+        "wape": 0.24472,
+        "rows": 4,
+        "actual_cases": 27,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "c07",
+        "name": "Ernakulam → Thiruvananthapuram",
+        "mae": 2.30684,
+        "rmse": 2.80717,
+        "poisson_deviance": 1.00149,
+        "wape": 0.19633,
+        "rows": 4,
+        "actual_cases": 47,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "c08",
+        "name": "Kozhikode → Ernakulam",
+        "mae": 2.33075,
+        "rmse": 2.83402,
+        "poisson_deviance": 0.93891,
+        "wape": 0.18898,
+        "rows": 3,
+        "actual_cases": 37,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "c09",
+        "name": "Coimbatore → Kottayam",
+        "mae": 1.9758,
+        "rmse": 2.48821,
+        "poisson_deviance": 1.13047,
+        "wape": 0.31197,
+        "rows": 3,
+        "actual_cases": 19,
+        "interval_coverage": 1.0
+      },
+      {
+        "entity_id": "c10",
+        "name": "Kannur → Malappuram",
+        "mae": 3.51369,
+        "rmse": 4.12139,
+        "poisson_deviance": 2.73852,
+        "wape": 0.42164,
+        "rows": 3,
+        "actual_cases": 25,
+        "interval_coverage": 0.6667
+      }
+    ]
+  },
+  "featureImportance": [
+    {
+      "feature": "context_transport_flow_index",
+      "mae_increase": 0.8049,
+      "std": 0.16953
+    },
+    {
+      "feature": "week_sin",
+      "mae_increase": 0.19599,
+      "std": 0.09545
+    },
+    {
+      "feature": "observed_incoming_origin_13w",
+      "mae_increase": 0.13411,
+      "std": 0.03149
+    },
+    {
+      "feature": "origin=bengaluru",
+      "mae_increase": 0.08342,
+      "std": 0.0487
+    },
+    {
+      "feature": "log_mass_opioids_13w",
+      "mae_increase": 0.06338,
+      "std": 0.04717
+    },
+    {
+      "feature": "distance_km",
+      "mae_increase": 0.0631,
+      "std": 0.20143
+    },
+    {
+      "feature": "destination=thiruvananthapuram",
+      "mae_increase": 0.05937,
+      "std": 0.0101
+    },
+    {
+      "feature": "observed_cannabis_13w",
+      "mae_increase": 0.05846,
+      "std": 0.02955
+    },
+    {
+      "feature": "observed_opioids_13w",
+      "mae_increase": 0.04016,
+      "std": 0.04826
+    },
+    {
+      "feature": "destination=malappuram",
+      "mae_increase": 0.03085,
+      "std": 0.01812
+    },
+    {
+      "feature": "mean_13w",
+      "mae_increase": 0.02353,
+      "std": 0.02832
+    },
+    {
+      "feature": "destination=kottayam",
+      "mae_increase": 0.01815,
+      "std": 0.01981
+    }
+  ],
+  "data": {
+    "data_mode": "synthetic",
+    "entities": 24,
+    "events": 4584,
+    "documented_events": 4584,
+    "movement_events": 2741,
+    "coverage_weeks": 3744,
+    "covariates": 7488,
+    "first_event": "2023-10-23",
+    "last_event": "2026-10-18",
+    "input_sha256": {
+      "covariates.csv": "828ee8771a1edda34b8b07643adede700363a03a0b76e4bba829927e0baf0e71",
+      "coverage.csv": "f603c9ec190e013f72b14ffed6cb68b30f7af047022263b9a5b4bbd0afd671ea",
+      "dataset.json": "04f30f037234fae19960c084ef3a5c9aee3ff7aa73a1651508cc0a8de4ba8970",
+      "entities.csv": "8e3b248ca7d682bdd55e78d267b8494b2be442f580eed56758727e432be242e3",
+      "events.csv": "515c9f10b06b4c2b4221e09dba5d60f21ee6ff1ccc43b9391762341f4997f6a9"
+    }
+  },
+  "software": {
+    "pipeline": "0.1.0",
+    "python": "3.12.13",
+    "sklearn": "1.7.2",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "source_sha256": "4c18408abaebd42e467c8a56eb7732eadda363ff84de3421971ef1bd76b4cf10"
+  },
+  "limitations": [
+    "The target is future documented cases, not the volume or probability of actual trafficking.",
+    "Seizures reflect reporting and enforcement. Coverage declarations cannot remove unmeasured selection bias.",
+    "A corridor is a documented origin/destination connection, not a predicted street-level journey. New routes are not invented.",
+    "Intervals are empirical ranges from earlier errors; temporal dependence and distribution changes can invalidate nominal coverage.",
+    "News requires independent corroboration and canonical-case deduplication. Raw news, community tips and individual consumer records are excluded.",
+    "Aggregate consumption and service indicators are contextual; they do not identify people or measure trafficking and treatment demand interchangeably.",
+    "Synthetic results test the pipeline only. Real data needs independent validation and human review before any operational use."
+  ],
+  "forecasts": [
+    {
+      "entityId": "c04",
+      "name": "Coimbatore → Thrissur",
+      "originId": "coimbatore",
+      "destinationId": "thrissur",
+      "areaId": null,
+      "status": "forecast",
+      "reason": null,
+      "estimate": 16.22,
+      "baseline": 9.818,
+      "lower": 9,
+      "upper": 24,
+      "support13w": 29,
+      "coveredWeeks13w": 11,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "c08",
+      "name": "Kozhikode → Ernakulam",
+      "originId": "kozhikode",
+      "destinationId": "ernakulam",
+      "areaId": null,
+      "status": "forecast",
+      "reason": null,
+      "estimate": 14.361,
+      "baseline": 14.667,
+      "lower": 7,
+      "upper": 22,
+      "support13w": 45,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "c07",
+      "name": "Ernakulam → Thiruvananthapuram",
+      "originId": "ernakulam",
+      "destinationId": "thiruvananthapuram",
+      "areaId": null,
+      "status": "forecast",
+      "reason": null,
+      "estimate": 13.493,
+      "baseline": 13.333,
+      "lower": 6,
+      "upper": 21,
+      "support13w": 40,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "c06",
+      "name": "Madurai → Idukki",
+      "originId": "madurai",
+      "destinationId": "idukki",
+      "areaId": null,
+      "status": "forecast",
+      "reason": null,
+      "estimate": 10.921,
+      "baseline": 9.818,
+      "lower": 4,
+      "upper": 17,
+      "support13w": 30,
+      "coveredWeeks13w": 11,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "c03",
+      "name": "Dakshina-Kannada → Kannur",
+      "originId": "dakshina-kannada",
+      "destinationId": "kannur",
+      "areaId": null,
+      "status": "forecast",
+      "reason": null,
+      "estimate": 10.19,
+      "baseline": 8.364,
+      "lower": 4,
+      "upper": 16,
+      "support13w": 30,
+      "coveredWeeks13w": 11,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "c02",
+      "name": "Mysuru → Kozhikode",
+      "originId": "mysuru",
+      "destinationId": "kozhikode",
+      "areaId": null,
+      "status": "forecast",
+      "reason": null,
+      "estimate": 8.9,
+      "baseline": 6.182,
+      "lower": 3,
+      "upper": 15,
+      "support13w": 19,
+      "coveredWeeks13w": 11,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "c10",
+      "name": "Kannur → Malappuram",
+      "originId": "kannur",
+      "destinationId": "malappuram",
+      "areaId": null,
+      "status": "forecast",
+      "reason": null,
+      "estimate": 8.858,
+      "baseline": 6.667,
+      "lower": 3,
+      "upper": 15,
+      "support13w": 21,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "c09",
+      "name": "Coimbatore → Kottayam",
+      "originId": "coimbatore",
+      "destinationId": "kottayam",
+      "areaId": null,
+      "status": "forecast",
+      "reason": null,
+      "estimate": 6.224,
+      "baseline": 6.333,
+      "lower": 1,
+      "upper": 11,
+      "support13w": 20,
+      "coveredWeeks13w": 12,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "c05",
+      "name": "Bengaluru → Kozhikode",
+      "originId": "bengaluru",
+      "destinationId": "kozhikode",
+      "areaId": null,
+      "status": "forecast",
+      "reason": null,
+      "estimate": 4.982,
+      "baseline": 3.636,
+      "lower": 0,
+      "upper": 10,
+      "support13w": 11,
+      "coveredWeeks13w": 11,
+      "staleMetrics": []
+    },
+    {
+      "entityId": "c01",
+      "name": "Bengaluru → Ernakulam",
+      "originId": "bengaluru",
+      "destinationId": "ernakulam",
+      "areaId": null,
+      "status": "abstained",
+      "reason": "Fewer than five known documented cases in the last thirteen weeks.",
+      "estimate": null,
+      "baseline": null,
+      "lower": null,
+      "upper": null,
+      "support13w": 1,
+      "coveredWeeks13w": 11,
+      "staleMetrics": []
+    }
+  ],
+  "monitoring": {
+    "operationallyValidated": false,
+    "alerts": [
+      "Synthetic pipeline demonstration; real-world performance is unestablished.",
+      "1 entities abstained due to sparse/stale/unknown coverage."
+    ]
+  },
+  "modelSha256": "494bcefa67d35907bba3e112d5b6b36db458a8365e6458908fceb0b078a399a1"
+}
