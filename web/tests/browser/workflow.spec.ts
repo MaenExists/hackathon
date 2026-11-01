@@ -336,3 +336,86 @@ test("failed street tiles leave bundled boundaries, locality search and evidence
     .toBe(14);
   await expect(page.locator(".local-place-label").first()).toBeVisible();
 });
+
+test("sourced place profiles, Kerala focus and transport/forecast color keys remain distinct", async ({
+  page,
+}) => {
+  await page.goto("/signin-with-chatgpt?return_to=/");
+  await expect(page.locator(".kerala-focus-mask")).toBeAttached();
+  await expect(page.locator(".kerala-state-outline")).toBeAttached();
+  await expect(page.locator(".kerala-focus-mask")).toHaveAttribute(
+    "fill-rule",
+    "evenodd",
+  );
+  await expect(page.locator('[data-corridor-id="c01"]')).toHaveAttribute(
+    "stroke",
+    "#438fff",
+  );
+  await expect(page.locator('[data-corridor-id="c04"]')).toHaveAttribute(
+    "stroke",
+    "#34d399",
+  );
+  await page.getByLabel("Color connections by").selectOption("evidence");
+  await expect(page.locator('[data-corridor-id="c04"]')).toHaveAttribute(
+    "stroke",
+    "#438fff",
+  );
+  await page
+    .getByRole("button", { name: "Model hypotheses Experimental" })
+    .click();
+  await expect(page.locator(".forecast-corridor").first()).toHaveAttribute(
+    "stroke",
+    "#c084fc",
+  );
+  await page.getByLabel("Find a Kerala place").fill("Munnar");
+  await page.locator(".map-search-results button").first().click();
+  const profile = page.getByRole("region", {
+    name: "Place profile: Munnar",
+    exact: true,
+  });
+  await expect(profile).toBeVisible();
+  await expect(profile).toContainText("Idukki");
+  await expect(profile).toContainText("Devikulam");
+  await expect(profile).toContainText("68,000");
+  await expect(profile).toContainText("1,470 m");
+  await expect(profile).toContainText("DEM estimate");
+  await expect(profile).toContainText(
+    "Population reference year is not supplied",
+  );
+  await profile.getByRole("tab", { name: "Sources", exact: true }).click();
+  await expect(
+    profile.getByRole("link", { name: "Open original GeoNames record" }),
+  ).toHaveAttribute("href", "https://www.geonames.org/1262463/");
+  await expect(profile).toContainText("2024-01-06");
+  await profile
+    .getByRole("tab", { name: "Nearby transport", exact: true })
+    .click();
+  await expect(profile.locator(".nearby-place").first()).toBeVisible();
+  await expect(profile).toContainText("straight-line");
+  await profile.getByRole("tab", { name: "Overview", exact: true }).click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(profile).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth + 1,
+    ),
+  ).toBeTruthy();
+  await profile
+    .getByRole("button", { name: "Expand place profile", exact: true })
+    .click();
+  await expect(profile).toHaveClass(/profile-expanded/);
+  await page.screenshot({
+    path: "outputs/place-profile-mobile.png",
+    fullPage: true,
+  });
+  await page.getByRole("button", { name: "Dismiss selected place" }).click();
+  await page.locator(".map-layer-menu summary").click();
+  await page
+    .getByRole("checkbox", { name: "Focus on Kerala", exact: true })
+    .uncheck();
+  await expect(page.locator(".kerala-focus-mask")).toHaveCount(0);
+  await page
+    .getByRole("checkbox", { name: "Focus on Kerala", exact: true })
+    .check();
+  await expect(page.locator(".kerala-focus-mask")).toBeAttached();
+});

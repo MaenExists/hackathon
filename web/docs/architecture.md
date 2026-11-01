@@ -16,7 +16,7 @@ flowchart LR
   W --> B[Aggregate draft brief]
 ```
 
-The atlas uses Leaflet. Online OpenStreetMap standard raster tiles supply detailed roads and labels; all tiles are visually grayscale. Bundled district polygons and 6,364 GeoNames locality points remain independent of the basemap. Only visible place points are drawn at zoom 11+, with labels at zoom 14+. Locality search is entirely browser-local; it never sends search terms, records or tips to the tile provider. Geographic precision does not increase the precision of synthetic district-level evidence.
+The atlas uses Leaflet. Online OpenStreetMap standard raster tiles supply detailed roads and labels; all tiles are visually grayscale. Bundled district polygons, a separate Kerala state outline and 6,364 GeoNames locality profiles remain independent of the basemap. Profiles retain source-linked district/subdistrict, reported population (reference year unknown), reported or modelled elevation, time zone and modification dates; missing facts are explicit. Fourteen district profiles and 194 catalogued transport features supply additional public geographic context. Nearby distances are geodesic, not road-network travel distances. Only visible place points are drawn at zoom 11+, with labels at zoom 14+. Locality search is entirely browser-local; it never sends search terms, records or tips to the tile provider. Geographic precision does not increase the precision of synthetic district-level evidence.
 
 The frozen forecast uses only the committed scenario, with event, availability and review cutoffs. New imports and review exercises affect the evidence workspace but do not silently change the experiment. This makes the presentation and evaluation reproducible. A production model would need versioned snapshots, explicit retraining and independent validation.
 
@@ -45,3 +45,9 @@ No real records, names, IDs, patients, students or live tracking are needed. The
 Anonymous local intake requires no account, but anonymity is not guaranteed. Hosting access logs can exist; the private hosted gate itself requires sign-in. Optional fictional contact is stored without field-level encryption. Production needs agreed retention/deletion, encryption and key-management decisions, abuse prevention, access auditing, membership roles, security review, independent privacy assessment and agency authorization.
 
 The five-record brief suppression threshold is demonstrative and not a privacy guarantee. Service planning needs independent local capacity/access information. Briefs are saved drafts; export is user initiated. No operational reports are sent automatically.
+
+## Geographic focus and color semantics
+
+The state focus layer is an even-odd polygon mask: a world exterior ring with Kerala polygon rings cut out. A separate state outline stays brighter than district lines. It sits below evidence and place markers, so cross-border corridors remain readable. Users can toggle focus without losing the street map.
+
+Connection colors default to transport mode (road blue, rail green, maritime cyan, unknown gray). A separate evidence-color mode restores reviewed/unreviewed/disputed colors. Solid/dashed/dotted patterns carry documented/unreviewed/disputed review status in either mode. Experimental forecast overlays and model-count bars use violet, with the baseline gray. Public place facts and transport references never enter the forecasting dataset.

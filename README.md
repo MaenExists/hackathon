@@ -28,7 +28,7 @@ The hosted version is owner-private, with ChatGPT sign-in. The intake page inher
 5. **Planning briefs:** generate and save an audience-specific draft for enforcement, prevention or recovery planning. Export Markdown. Raw sources, reviewer identities and tips are excluded; corridor groups below five are suppressed.
 6. **Switch role:** try the service-planner demonstration. Server responses exclude individual evidence, tips and review identities. Demo role switching is an interface exercise, not an agency authorization system.
 
-Use **Take the guided demo** for a five-stop presentation. Press `/` to focus atlas search. Scroll over the map to zoom toward the pointer, drag to pan, double-click to zoom, or use touch pinch. Search 6,364 Kerala localities and district references, toggle layers, and expand the map. Streets and basemap labels load online; bundled boundaries and locality points remain available when tiles fail.
+Use **Take the guided demo** for a five-stop presentation. Press `/` to focus atlas search. Scroll over the map to zoom toward the pointer, drag to pan, double-click to zoom, or use touch pinch. Search 6,364 Kerala localities, 14 sourced district profiles and 194 catalogued transport features. Open a place profile for district/subdistrict, reported population, elevation provenance, time zone, alternative names and source dates. Nearby transport distances are straight-line and limited to the Kerala catalogue. Toggle Kerala focus, transport/evidence colors, layers and expanded view. Streets and basemap labels load online; bundled boundaries and locality points remain available when tiles fail.
 
 ## Verify
 
@@ -57,6 +57,6 @@ GitHub Actions repeats these checks with an isolated local D1 database.
 
 ## Architecture
 
-React 19 + TypeScript, Vinext/Vite and a Cloudflare Worker API; SQLite locally and Cloudflare D1 when hosted. Drizzle maintains schema migrations. The geographic display uses Leaflet with monochrome OpenStreetMap street tiles, bundled district GeoJSON and a GeoNames gazetteer. Mouse, keyboard and touch navigation support zoom levels 6–19; evidence remains at district resolution. Deterministic analysis functions run on the server. No LLM key or opaque scoring service is required.
+React 19 + TypeScript, Vinext/Vite and a Cloudflare Worker API; SQLite locally and Cloudflare D1 when hosted. Drizzle maintains schema migrations. The geographic display uses Leaflet with monochrome OpenStreetMap street tiles, bundled district GeoJSON and a GeoNames gazetteer. Mouse, keyboard and touch navigation support zoom levels 6–19. A separate OpenStreetMap state boundary dims surroundings while preserving cross-border evidence. Road/rail/maritime colors and violet forecast hypotheses have explicit legends; evidence remains at district resolution. Deterministic analysis functions run on the server. No LLM key or opaque scoring service is required.
 
 See [architecture and security boundaries](web/docs/architecture.md), [API notes](web/docs/api.md), [source provenance](web/docs/sources.md), and [demo presentation](web/docs/demo.md).

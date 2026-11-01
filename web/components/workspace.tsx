@@ -779,7 +779,11 @@ export default function Workspace() {
                     <div className="detail-grid">
                       <div>
                         <small>Transport</small>
-                        <strong>{selectedCorridor.mode}</strong>
+                        <strong
+                          className={`transport-mode mode-${selectedCorridor.mode.toLowerCase()}`}
+                        >
+                          {selectedCorridor.mode}
+                        </strong>
                       </div>
                       <div>
                         <small>Precision</small>
@@ -914,9 +918,21 @@ export default function Workspace() {
               </div>
               <div className="split-content">
                 <section className="panel">
-                  <div className="panel-heading">
+                  <div className="panel-heading forecast-panel-heading">
                     <h2>Next 30 days · corridor ranking</h2>
-                    <small>01–30 Nov 2026</small>
+                    <div>
+                      <span className="forecast-key">
+                        <span>
+                          <i />
+                          Model hypothesis
+                        </span>
+                        <span>
+                          <i />
+                          Baseline
+                        </span>
+                      </span>
+                      <small className="forecast-window">01–30 Nov 2026</small>
+                    </div>
                   </div>
                   <div className="table-wrap">
                     <table>
@@ -1541,7 +1557,7 @@ export default function Workspace() {
                   ],
                   [
                     "GeoNames",
-                    "6,364 bundled Kerala locality references, CC BY 4.0. Local search and place points are geographic context, never case evidence. Coordinates represent localities, not verified addresses.",
+                    "6,364 locality profiles, 14 districts and 194 catalogued transport features. Source-linked administrative, population, elevation and time-zone fields, CC BY 4.0. Population years and operating status may be unknown. Geographic context only.",
                     "https://www.geonames.org/",
                   ],
                   [

@@ -3499,3 +3499,504 @@ a,
     color: #111;
   }
 }
+/* Kerala focus and sourced place profiles keep context separate from evidence. */
+.kerala-state-outline {
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.kerala-focus-mask {
+  pointer-events: none;
+}
+.logistics-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px 18px !important;
+  padding: 10px 12px !important;
+}
+.color-by-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 9px;
+  color: #aaa;
+  white-space: nowrap;
+}
+.detailed-map .color-by-control select {
+  display: inline;
+  width: auto;
+  margin: 0;
+  padding: 5px 21px 5px 7px;
+  border-color: #555;
+  background: #000;
+  font-size: 10px;
+  color: #ddd;
+}
+.map-legend-signals {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+.map-legend-signals > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.logistics-legend > small {
+  flex-basis: 100%;
+  font-size: 8px;
+  line-height: 1.5;
+  color: #aaa;
+}
+.line.forecast-line {
+  border-color: #c084fc;
+  border-top-style: dotted;
+  border-top-width: 3px;
+}
+.detailed-map .map-controls {
+  bottom: 155px;
+}
+.leaflet-control-scale {
+  margin-bottom: 145px !important;
+}
+.place-profile.map-location-info {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  left: auto;
+  right: 16px;
+  top: 118px;
+  bottom: 155px;
+  width: 310px;
+  max-width: calc(100% - 88px);
+  max-height: none;
+  padding: 0;
+  border: 1px solid #777;
+  background: #050505f5;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 5px 25px #0008;
+}
+.place-profile .place-profile-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid #333;
+  background: #050505;
+}
+.place-profile-head > div {
+  flex: 1;
+  min-width: 0;
+}
+.public-data-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 8px;
+  color: #a3a3a3;
+  margin-bottom: 8px;
+}
+.place-profile-head h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #f2f2f2;
+  line-height: 1.25;
+  word-break: break-word;
+  letter-spacing: -0.3px;
+}
+.place-profile-head p {
+  font-size: 11px;
+  color: #bcbcbc;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+.place-profile .place-profile-head small {
+  font-family: inherit;
+  font-size: 9px;
+  line-height: 1.5;
+  color: #999;
+  display: block;
+  margin-top: 6px;
+}
+.place-profile-head > button {
+  color: #bcbcbc;
+  padding: 1px;
+  border: 0;
+  background: none;
+  flex-shrink: 0;
+}
+.place-profile-head > button:hover {
+  color: #fff;
+}
+.place-profile-tabs {
+  display: flex;
+  background: #050505;
+  border-bottom: 1px solid #333;
+  flex-shrink: 0;
+}
+.place-profile .place-profile-tabs > button {
+  background: none;
+  flex: 1;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  padding: 11px 5px;
+  font-size: 10px;
+  color: #999;
+  white-space: nowrap;
+}
+.place-profile .place-profile-tabs > button[aria-selected="true"] {
+  color: #fff;
+  border-bottom-color: #e5e5e5;
+}
+.place-profile .place-profile-tabs > button:hover {
+  background: #171717;
+  color: #eee;
+}
+.place-profile-body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #777 #050505;
+  padding: 14px;
+  min-height: 0;
+  flex: 1;
+}
+.place-stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.place-profile .place-stat-grid small {
+  font-family: inherit;
+  font-size: 9px;
+  color: #aaa;
+  display: block;
+  margin: 0 0 7px;
+}
+.place-stat-grid strong {
+  font-size: 21px;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  font-weight: 500;
+  display: block;
+  font-variant-numeric: tabular-nums;
+}
+.place-stat-grid span {
+  font-size: 8px;
+  color: #aaa;
+  display: block;
+  margin-top: 5px;
+}
+.place-profile .place-data-note {
+  font-size: 9px;
+  line-height: 1.75;
+  color: #aaa;
+  margin: 8px 0 13px;
+}
+.place-facts {
+  margin: 14px 0;
+  font-size: 10px;
+}
+.place-facts > div {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 9px;
+  padding: 8px 0;
+  border-bottom: 1px solid #292929;
+  line-height: 1.5;
+}
+.place-facts dt {
+  color: #888;
+}
+.place-facts dd {
+  color: #d9d9d9;
+  margin: 0;
+  word-break: break-word;
+}
+.coordinate-value {
+  font-family: ui-monospace, monospace;
+  font-size: 9px;
+}
+.place-aliases h4,
+.source-provenance h4 {
+  font-size: 10px;
+  color: #bbb;
+  font-weight: 500;
+  margin: 17px 0 8px;
+}
+.place-aliases p,
+.source-provenance p {
+  font-size: 10px;
+  line-height: 1.75;
+  color: #aaa;
+}
+.source-provenance a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #ddd;
+  font-size: 10px;
+  margin: 9px 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.place-profile .place-profile-footer {
+  background: #050505;
+  border-top: 1px solid #333;
+  padding: 9px 14px;
+  font-size: 8px;
+  color: #999;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+.place-profile.profile-collapsed {
+  top: auto;
+  bottom: 155px;
+}
+.profile-collapsed .place-profile-head {
+  border: 0;
+}
+.profile-collapsed .public-data-label {
+  margin-bottom: 5px;
+}
+.nearby-place {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 13px 0;
+  border-bottom: 1px solid #333;
+}
+.nearby-place > div {
+  flex: 1;
+  min-width: 0;
+}
+.nearby-place strong {
+  font-size: 11px;
+  color: #ddd;
+  font-weight: 500;
+  line-height: 1.6;
+  display: block;
+}
+.place-profile .nearby-place small {
+  font-family: inherit;
+  color: #999;
+  font-size: 9px;
+  line-height: 1.5;
+  display: block;
+  margin-top: 5px;
+}
+.nearby-place a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8px;
+  color: #bcbcbc;
+  margin-top: 7px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.place-profile .nearby-place > button {
+  border: 1px solid #555;
+  border-radius: 3px;
+  padding: 5px 7px;
+  background: #000;
+  color: #ddd;
+  font-size: 9px;
+  flex-shrink: 0;
+}
+.transport-symbol {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.transport-air .transport-symbol {
+  color: #438fff;
+}
+.transport-rail .transport-symbol {
+  color: #34d399;
+}
+.transport-water .transport-symbol {
+  color: #22d3ee;
+}
+.place-empty {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #999;
+}
+.transport-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.transport-mode:before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  display: inline-block;
+  border-radius: 50%;
+  background: currentColor;
+}
+.mode-road {
+  color: #438fff !important;
+}
+.mode-rail {
+  color: #34d399 !important;
+}
+.mode-maritime {
+  color: #22d3ee !important;
+}
+.mode-unknown {
+  color: #aaa !important;
+}
+.forecast-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #aaa;
+  font-size: 9px;
+}
+.forecast-key span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.forecast-key i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c084fc;
+}
+.forecast-key span:last-child i {
+  background: #aaa;
+}
+.estimate-track {
+  color: #d7b3ff;
+}
+.estimate-track i {
+  background: #291a3d;
+  border-color: #c084fc;
+}
+.evaluation-summary > div:first-child strong {
+  color: #d7b3ff;
+}
+.evaluation-summary > div:first-child strong > span {
+  color: #aaa;
+}
+.forecast-window {
+  color: #ccc;
+  font-size: 9px;
+}
+.forecast-panel-heading {
+  flex-wrap: wrap;
+}
+.forecast-panel-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+@media (max-width: 1000px) {
+  .logistics-legend {
+    gap: 8px 12px !important;
+  }
+  .map-legend-signals {
+    gap: 10px;
+  }
+  .place-profile.map-location-info {
+    width: 280px;
+  }
+  .logistics-legend > small {
+    font-size: 7px;
+  }
+}
+@media (max-width: 760px) {
+  .detailed-map .map-controls {
+    bottom: 205px;
+  }
+  .detailed-map .logistics-legend {
+    bottom: 75px;
+    gap: 8px 10px !important;
+  }
+  .logistics-legend > small {
+    font-size: 8px;
+  }
+  .map-legend-signals {
+    font-size: 8px;
+    gap: 10px;
+  }
+  .place-profile.map-location-info {
+    top: auto;
+    bottom: 200px;
+    left: 65px;
+    right: 14px;
+    width: auto;
+    max-width: none;
+    max-height: 280px;
+  }
+  .place-profile-head h3 {
+    font-size: 16px;
+  }
+  .place-profile .place-profile-head {
+    padding: 11px 12px 9px;
+  }
+  .place-profile-head p {
+    font-size: 10px;
+  }
+  .place-profile-body {
+    padding: 12px;
+  }
+  .place-profile .place-profile-tabs > button {
+    font-size: 9px;
+    padding: 9px 4px;
+  }
+  .place-profile .place-profile-footer {
+    font-size: 7px;
+    padding: 7px 12px;
+  }
+  .place-stat-grid strong {
+    font-size: 18px;
+  }
+  .leaflet-control-scale {
+    margin-bottom: 190px !important;
+  }
+  .detailed-map .map-error {
+    top: 116px;
+  }
+  .place-profile.profile-collapsed {
+    bottom: 200px;
+  }
+  .map-layer-menu[open] {
+    z-index: 520;
+  }
+}
+@media (max-width: 760px) {
+  .place-profile.map-location-info:not(.profile-expanded):not(
+      .profile-collapsed
+    ) {
+    top: 120px;
+    max-height: none;
+  }
+}
+.place-profile.map-location-info.profile-expanded {
+  top: 12px;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  width: auto;
+  max-width: none;
+  max-height: none;
+  z-index: 600;
+}
+.profile-expanded .place-profile-body {
+  padding: 20px;
+}
+.profile-expanded .place-facts > div {
+  grid-template-columns: 120px minmax(0, 1fr);
+}

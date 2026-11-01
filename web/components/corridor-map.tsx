@@ -17,15 +17,20 @@ import type { GeoJsonObject } from "geojson";
 import { places, corridors, corridorName } from "../data/geography";
 import type { CaseRecord, ForecastRow } from "../lib/types";
 
-type Location = {
-  id: string;
-  name: string;
-  localName?: string;
-  aliases?: string;
-  kind: string;
-  lat: number;
-  lon: number;
-};
+import PlaceProfile from "./place-profile";
+import {
+  searchPlaces,
+  type PublicPlace as Location,
+  type PlaceDataset,
+} from "../lib/places";
+import {
+  transportSignals,
+  evidenceSignals,
+  FORECAST_COLOR,
+  reviewPattern,
+} from "../lib/map-signals";
+import type { Feature, Polygon, MultiPolygon } from "geojson";
+
 type Engine = {
   L: typeof Leaflet;
   map: Leaflet.Map;
@@ -33,16 +38,12 @@ type Engine = {
   evidence: Leaflet.LayerGroup;
   locations: Leaflet.LayerGroup;
   tiles: Leaflet.TileLayer;
+  focus: Leaflet.LayerGroup;
 };
 const KERALA: Leaflet.LatLngBoundsLiteral = [
   [8.15, 74.75],
   [12.85, 77.6],
 ];
-const SIGNALS = {
-  documented: "#438fff",
-  unreviewed: "#ffd000",
-  disputed: "#ff4545",
-};
 const fallbackLocations: Location[] = places.map((p) => ({
   ...p,
   kind: "district reference",
@@ -83,7 +84,10 @@ export default function CorridorMap({
   const [street, setStreet] = useState(true),
     [districts, setDistricts] = useState(true),
     [localPoints, setLocalPoints] = useState(true),
-    [expanded, setExpanded] = useState(false);
+    [expanded, setExpanded] = useState(false),
+    [focusKerala, setFocusKerala] = useState(true),
+    [colorBy, setColorBy] = useState<"transport" | "evidence">("transport");
+  const [transport, setTransport] = useState<Location[]>([]);
   const [locations, setLocations] = useState<Location[]>(fallbackLocations),
     [query, setQuery] = useState(""),
     [searchOpen, setSearchOpen] = useState(false),
@@ -91,23 +95,10 @@ export default function CorridorMap({
   const [view, setView] = useState({ zoom: 7, lat: 10.5, lon: 76.3, tick: 0 });
   const previousSelected = useRef(selected),
     previousDistrict = useRef(focusedDistrict);
-  const searchResults = useMemo(() => {
-    const term = query.trim().toLocaleLowerCase();
-    if (!term) return [];
-    return locations
-      .filter((p) =>
-        `${p.name} ${p.localName ?? ""} ${p.aliases ?? ""}`
-          .toLocaleLowerCase()
-          .includes(term),
-      )
-      .sort(
-        (a, b) =>
-          Number(!a.name.toLocaleLowerCase().startsWith(term)) -
-            Number(!b.name.toLocaleLowerCase().startsWith(term)) ||
-          a.name.localeCompare(b.name),
-      )
-      .slice(0, 7);
-  }, [query, locations]);
+  const searchResults = useMemo(
+    () => searchPlaces(locations, query),
+    [locations, query],
+  );
   useEffect(() => {
     let cancelled = false,
       observer: ResizeObserver | undefined;
@@ -137,6 +128,11 @@ export default function CorridorMap({
           fadeAnimation: !reducedMotion(),
         });
         map.fitBounds(KERALA, { padding: [32, 60], animate: false });
+        map.createPane("kerala-focus");
+        map.getPane("kerala-focus")!.style.zIndex = "320";
+        map.createPane("kerala-outline");
+        map.getPane("kerala-outline")!.style.zIndex = "365";
+        const focus = L.layerGroup().addTo(map);
         map.createPane("districts");
         map.getPane("districts")!.style.zIndex = "350";
         map.createPane("evidence");
@@ -188,12 +184,17 @@ export default function CorridorMap({
           evidence,
           locations: locationLayer,
           tiles,
+          focus,
         };
         observer = new ResizeObserver(() => map.invalidateSize({ pan: false }));
         observer.observe(container.current);
         setReady(true);
         const geographic = await Promise.allSettled(
-          ["/data/land.geojson", "/data/kerala.geojson"].map((url) =>
+          [
+            "/data/land.geojson",
+            "/data/kerala.geojson",
+            "/data/kerala-state.geojson",
+          ].map((url) =>
             fetch(url).then((r) => {
               if (!r.ok) throw Error();
               return r.json() as Promise<GeoJsonObject>;
@@ -201,7 +202,7 @@ export default function CorridorMap({
           ),
         );
         if (cancelled) return;
-        for (let i = 0; i < geographic.length; i++) {
+        for (let i = 0; i < 2; i++) {
           const result = geographic[i];
           if (result.status === "fulfilled")
             L.geoJSON(result.value, {
@@ -214,6 +215,46 @@ export default function CorridorMap({
                 fillOpacity: i ? 0.04 : 0.08,
               },
             }).addTo(boundaries);
+        }
+        const state = geographic[2];
+        if (state.status === "fulfilled") {
+          const feature = state.value as Feature<Polygon | MultiPolygon>;
+          const polygons =
+            feature.geometry.type === "Polygon"
+              ? [feature.geometry.coordinates]
+              : feature.geometry.coordinates;
+          const holes = polygons
+            .flat()
+            .map((ring) =>
+              ring.map(([lon, lat]) => [lat, lon] as Leaflet.LatLngTuple),
+            );
+          const world: Leaflet.LatLngTuple[] = [
+            [-85, -180],
+            [-85, 180],
+            [85, 180],
+            [85, -180],
+          ];
+          L.polygon([world, ...holes], {
+            pane: "kerala-focus",
+            stroke: false,
+            fillColor: "#000000",
+            fillOpacity: 0.73,
+            fillRule: "evenodd",
+            interactive: false,
+            className: "kerala-focus-mask",
+          }).addTo(focus);
+          L.geoJSON(feature, {
+            pane: "kerala-outline",
+            interactive: false,
+            style: {
+              color: "#e5f0ec",
+              weight: 2,
+              opacity: 0.94,
+              fillColor: "#ffffff",
+              fillOpacity: 0.025,
+              className: "kerala-state-outline",
+            },
+          }).addTo(focus);
         }
         if (geographic[1].status === "rejected")
           setMapError(
@@ -230,10 +271,18 @@ export default function CorridorMap({
     fetch("/data/kerala-places.json")
       .then((r) => {
         if (!r.ok) throw Error();
-        return r.json() as Promise<{ places: Location[] }>;
+        return r.json() as Promise<PlaceDataset>;
       })
       .then((data) => {
-        if (!cancelled) setLocations([...fallbackLocations, ...data.places]);
+        if (!cancelled) {
+          setLocations([
+            ...fallbackLocations.filter((p) => p.state !== "Kerala"),
+            ...data.districts,
+            ...data.places,
+            ...data.transport,
+          ]);
+          setTransport(data.transport);
+        }
       })
       .catch(() => {});
     return () => {
@@ -265,6 +314,12 @@ export default function CorridorMap({
   useEffect(() => {
     const e = engine.current;
     if (!e) return;
+    if (focusKerala) e.focus.addTo(e.map);
+    else e.focus.remove();
+  }, [focusKerala, ready]);
+  useEffect(() => {
+    const e = engine.current;
+    if (!e) return;
     const { L, map, evidence } = e;
     evidence.clearLayers();
     const coordinates = (
@@ -279,7 +334,8 @@ export default function CorridorMap({
         const c = corridors.find((c) => c.id === f.corridorId)!;
         L.polyline(coordinates(c), {
           pane: "evidence",
-          color: SIGNALS.unreviewed,
+          color: FORECAST_COLOR,
+          className: "forecast-corridor",
           weight: 8,
           opacity: 0.65,
           dashArray: "2 12",
@@ -310,10 +366,13 @@ export default function CorridorMap({
       );
       const line = L.polyline(coordinates(c), {
         pane: "evidence",
-        color: SIGNALS[status],
+        color:
+          colorBy === "transport"
+            ? transportSignals[c.mode].color
+            : evidenceSignals[status],
         weight: c.id === selected ? 3 : 1.5,
         opacity: c.id === selected ? 1 : 0.6,
-        dashArray: status === "documented" ? undefined : "7 6",
+        dashArray: reviewPattern[status],
         className: "map-route",
       }).addTo(evidence);
       line.bindTooltip(
@@ -332,6 +391,7 @@ export default function CorridorMap({
           `${corridorName(c.id)}, ${rows.length} synthetic records`,
         );
         element.setAttribute("data-corridor-id", c.id);
+        element.setAttribute("data-transport-mode", c.mode);
         element.addEventListener("keydown", (event) => {
           const key = (event as KeyboardEvent).key;
           if (key === "Enter" || key === " ") {
@@ -347,7 +407,7 @@ export default function CorridorMap({
         L.circleMarker([p.lat, p.lon], {
           pane: "evidence",
           radius: 4,
-          color: SIGNALS.unreviewed,
+          color: evidenceSignals.unreviewed,
           fillColor: "#000",
           fillOpacity: 1,
           weight: 2,
@@ -379,9 +439,12 @@ export default function CorridorMap({
         offset: [7, 0],
         className: "district-label",
       });
-      marker.bindPopup(
-        label(
-          `${p.name}: representative district location, not a seizure coordinate.`,
+      marker.on("click", () =>
+        setChosen(
+          locations.find((item) => item.referenceId === p.id) ?? {
+            ...p,
+            kind: "district reference",
+          },
         ),
       );
     }
@@ -394,6 +457,8 @@ export default function CorridorMap({
     showHypotheses,
     showPoints,
     view.zoom,
+    colorBy,
+    locations,
   ]);
   useEffect(() => {
     const e = engine.current;
@@ -405,7 +470,8 @@ export default function CorridorMap({
       const visible = locations
         .filter(
           (p) =>
-            p.kind !== "district reference" && bounds.contains([p.lat, p.lon]),
+            !["district reference", "district"].includes(p.kind) &&
+            bounds.contains([p.lat, p.lon]),
         )
         .slice(0, 800);
       for (const p of visible) {
@@ -478,7 +544,7 @@ export default function CorridorMap({
     setSearchOpen(false);
     engine.current?.map.setView(
       [p.lat, p.lon],
-      p.kind === "district reference" ? 10 : 14,
+      ["district reference", "district"].includes(p.kind) ? 10 : 14,
       { animate: !reducedMotion() },
     );
   }
@@ -510,7 +576,7 @@ export default function CorridorMap({
           <Search size={15} />
           <input
             aria-label="Find a Kerala place"
-            placeholder="Find a town, village or district"
+            placeholder="Town, district, station or airport"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -544,10 +610,20 @@ export default function CorridorMap({
               <button key={p.id} onClick={() => locate(p)}>
                 <span>
                   {p.name}
-                  <small>{p.localName || p.kind}</small>
+                  <small>
+                    {[
+                      p.localName,
+                      p.district,
+                      p.transportType ?? p.featureLabel ?? p.kind,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </small>
                 </span>
                 <span>
-                  {p.kind === "district reference" ? "District" : "Locate"}
+                  {p.kind === "district" || p.kind === "district reference"
+                    ? "District"
+                    : "Profile"}
                 </span>
               </button>
             ))}
@@ -627,10 +703,18 @@ export default function CorridorMap({
         <label>
           <input
             type="checkbox"
+            checked={focusKerala}
+            onChange={(e) => setFocusKerala(e.target.checked)}
+          />{" "}
+          Focus on Kerala
+        </label>
+        <label>
+          <input
+            type="checkbox"
             checked={localPoints}
             onChange={(e) => setLocalPoints(e.target.checked)}
           />{" "}
-          Local place points
+          Places & transport points
         </label>
         <small>
           Place points appear at zoom 11+; labels at 14+. Geographic context
@@ -641,31 +725,56 @@ export default function CorridorMap({
         <Compass size={24} />
         <span>N</span>
       </div>
-      <div className="map-legend">
-        <span>
-          <i className="line documented-line" />
-          Documented
-        </span>
-        <span>
-          <i className="line unreviewed-line dashed" />
-          Unreviewed
-        </span>
-        <span>
-          <i className="line disputed-line dashed" />
-          Disputed
-        </span>
-        {showHypotheses && (
-          <span>
-            <i className="line hypothesis-line dashed" />
-            Hypothesis
-          </span>
-        )}
-        <button
-          onClick={() => setShowPoints(!showPoints)}
-          className={showPoints ? "on" : ""}
-        >
-          <Layers size={13} /> Seizure only
-        </button>
+      <div className="map-legend logistics-legend">
+        <label className="color-by-control">
+          Color by{" "}
+          <select
+            aria-label="Color connections by"
+            value={colorBy}
+            onChange={(e) =>
+              setColorBy(e.target.value as "transport" | "evidence")
+            }
+          >
+            <option value="transport">Transport mode</option>
+            <option value="evidence">Evidence review</option>
+          </select>
+        </label>
+        <div className="map-legend-signals">
+          {colorBy === "transport"
+            ? Object.entries(transportSignals)
+                .filter(([mode]) => corridors.some((c) => c.mode === mode))
+                .map(([mode, signal]) => (
+                  <span key={mode}>
+                    <i className="line" style={{ borderColor: signal.color }} />
+                    {signal.label}
+                  </span>
+                ))
+            : Object.entries(evidenceSignals).map(([status, color]) => (
+                <span key={status}>
+                  <i
+                    className={`line ${status === "documented" ? "" : "dashed"}`}
+                    style={{ borderColor: color }}
+                  />
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </span>
+              ))}
+          {showHypotheses && (
+            <span>
+              <i className="line forecast-line" />
+              Forecast hypothesis
+            </span>
+          )}
+          <button
+            onClick={() => setShowPoints(!showPoints)}
+            className={showPoints ? "on" : ""}
+          >
+            Seizure only
+          </button>
+        </div>
+        <small>
+          Solid: documented · dashed: unreviewed · dotted: disputed. All
+          movements fictional.
+        </small>
       </div>
       <div className="map-readout">
         <output
@@ -706,21 +815,13 @@ export default function CorridorMap({
         · <span>Lines are schematic, not street journeys</span>
       </div>
       {chosen && (
-        <div className="map-location-info">
-          <span>
-            {chosen.name}{" "}
-            <small>
-              {chosen.lat.toFixed(5)}, {chosen.lon.toFixed(5)} · Geographic
-              context
-            </small>
-          </span>
-          <button
-            aria-label="Dismiss selected place"
-            onClick={() => setChosen(null)}
-          >
-            <X size={14} />
-          </button>
-        </div>
+        <PlaceProfile
+          key={chosen.id}
+          place={chosen}
+          transport={transport}
+          onLocate={locate}
+          onClose={() => setChosen(null)}
+        />
       )}
     </div>
   );
