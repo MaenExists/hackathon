@@ -37,6 +37,7 @@ if Path('/tmp/kerala-districts.geojson').exists():
     d=json.loads(Path('/tmp/kerala-districts.geojson').read_text())
     fs=[]
     for f in d['features']:
+        if f['geometry']['type'] not in ['Polygon','MultiPolygon'] or f['properties'].get('admin_level') != '5':continue
         fs.append({'type':'Feature','properties':{'name':f['properties'].get('name','District')},'geometry':geometry(f['geometry'])})
     Path('public/data/kerala.geojson').write_text(json.dumps({'type':'FeatureCollection','features':fs},separators=(',',':')))
 if Path('/tmp/countries.geojson').exists():
