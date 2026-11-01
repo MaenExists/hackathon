@@ -1,4 +1,4 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 export const imports = sqliteTable("imports", {
   id: text("id").primaryKey(),
   ownerId: text("owner_id").notNull(),
@@ -32,4 +32,15 @@ export const briefs = sqliteTable("briefs", {
   audience: text("audience").notNull(),
   content: text("content").notNull(),
   createdAt: text("created_at").notNull(),
+});
+
+export const mapSearchCache = sqliteTable("map_search_cache", {
+  key: text("key").primaryKey(),
+  payload: text("payload").notNull(),
+  fetchedAt: text("fetched_at").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+});
+export const mapSearchLimits = sqliteTable("map_search_limits", {
+  key: text("key").primaryKey(),
+  nextRequestAt: integer("next_request_at").notNull(),
 });

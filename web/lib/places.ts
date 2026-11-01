@@ -1,4 +1,11 @@
 export interface PublicPlace {
+  dataProvider?: "geonames" | "openstreetmap";
+  osmId?: number;
+  osmType?: "node" | "way" | "relation";
+  address?: Record<string, string>;
+  displayAddress?: string;
+  bounds?: [number, number, number, number];
+  sourceCategory?: string;
   id: string;
   name: string;
   lat: number;
