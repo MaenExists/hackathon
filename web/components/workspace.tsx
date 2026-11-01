@@ -1535,9 +1535,9 @@ export default function Workspace() {
                     "https://github.com/opendatakerala/kl_district",
                   ],
                   [
-                    "CARTO / OpenStreetMap",
+                    "OpenStreetMap street basemap",
                     "Detailed online roads and place labels, displayed in grayscale. Tile availability and public-map coverage vary. No case data or lead narratives are sent to the basemap provider.",
-                    "https://carto.com/attributions",
+                    "https://operations.osmfoundation.org/policies/tiles/",
                   ],
                   [
                     "GeoNames",

@@ -145,9 +145,8 @@ export default function CorridorMap({
           evidence = L.layerGroup().addTo(map),
           locationLayer = L.layerGroup().addTo(map);
         const tiles = L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
           {
-            subdomains: "abcd",
             maxZoom: 19,
             maxNativeZoom: 19,
             keepBuffer: 2,
@@ -680,7 +679,7 @@ export default function CorridorMap({
           {view.lat.toFixed(4)}° N / {view.lon.toFixed(4)}° E
         </span>
         <span className="map-gesture-hint">
-          Scroll to zoom · drag to pan · double-click to focus
+          Scroll to zoom · drag to pan · double-click to zoom
         </span>
       </div>
       <div className="map-credit">
@@ -691,14 +690,6 @@ export default function CorridorMap({
           rel="noreferrer"
         >
           OpenStreetMap contributors
-        </a>{" "}
-        ·{" "}
-        <a
-          href="https://carto.com/attributions"
-          target="_blank"
-          rel="noreferrer"
-        >
-          CARTO
         </a>{" "}
         ·{" "}
         <a

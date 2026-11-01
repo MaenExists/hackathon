@@ -6,7 +6,7 @@ The product vision is in [project.md](project.md), preserved unchanged.
 
 ## Run it
 
-Requires Node.js 22.13+ (Node 26 used in development) and npm. No API keys, agency data or paid services are needed. Street detail loads online from CARTO/OpenStreetMap; bundled district boundaries, locality search and evidence work without street tiles.
+Requires Node.js 22.13+ (Node 26 used in development) and npm. No API keys, agency data or paid services are needed. Street detail loads online from OpenStreetMap; bundled district boundaries, locality search and evidence work without street tiles.
 
 ```sh
 cd web
@@ -57,6 +57,6 @@ GitHub Actions repeats these checks with an isolated local D1 database.
 
 ## Architecture
 
-React 19 + TypeScript, Vinext/Vite and a Cloudflare Worker API; SQLite locally and Cloudflare D1 when hosted. Drizzle maintains schema migrations. The geographic display uses Leaflet with monochrome CARTO/OpenStreetMap street tiles, bundled district GeoJSON and a GeoNames gazetteer. Mouse, keyboard and touch navigation support zoom levels 6–19; evidence remains at district resolution. Deterministic analysis functions run on the server. No LLM key or opaque scoring service is required.
+React 19 + TypeScript, Vinext/Vite and a Cloudflare Worker API; SQLite locally and Cloudflare D1 when hosted. Drizzle maintains schema migrations. The geographic display uses Leaflet with monochrome OpenStreetMap street tiles, bundled district GeoJSON and a GeoNames gazetteer. Mouse, keyboard and touch navigation support zoom levels 6–19; evidence remains at district resolution. Deterministic analysis functions run on the server. No LLM key or opaque scoring service is required.
 
 See [architecture and security boundaries](web/docs/architecture.md), [API notes](web/docs/api.md), [source provenance](web/docs/sources.md), and [demo presentation](web/docs/demo.md).

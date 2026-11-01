@@ -6,6 +6,18 @@ const sample = JSON.parse(
     "utf8",
   ),
 )[0];
+// Exercise interaction without sending automated viewport traffic to community tile servers.
+test.beforeEach(async ({ page }) => {
+  await page.route("https://tile.openstreetmap.org/**", (route) =>
+    route.fulfill({
+      contentType: "image/png",
+      body: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aX1kAAAAASUVORK5CYII=",
+        "base64",
+      ),
+    }),
+  );
+});
 test("private records, import, review, duplicates, briefs and server-enforced planner view", async ({
   page,
   browser,
@@ -265,10 +277,14 @@ test("street map supports wheel zoom, pan, locality search, layers and expanded 
   await page.keyboard.press("Escape");
   await expect(page.locator(".map-stage")).not.toHaveClass(/map-expanded/);
   await page.locator(".map-layer-menu summary").click();
-  await page.getByRole("checkbox", { name: "Street map Online", exact: true }).uncheck();
+  await page
+    .getByRole("checkbox", { name: "Street map Online", exact: true })
+    .uncheck();
   await expect(page.locator(".street-tiles")).toHaveCount(0);
   await expect(page.locator('[data-corridor-id="c01"]')).toBeAttached();
-  await page.getByRole("checkbox", { name: "Street map Online", exact: true }).check();
+  await page
+    .getByRole("checkbox", { name: "Street map Online", exact: true })
+    .check();
   await expect(page.locator(".street-tiles")).toBeAttached();
   await page
     .getByRole("button", { name: "Reset map view", exact: true })
@@ -300,7 +316,7 @@ test("street map supports wheel zoom, pan, locality search, layers and expanded 
 test("failed street tiles leave bundled boundaries, locality search and evidence usable", async ({
   page,
 }) => {
-  await page.route("https://*.basemaps.cartocdn.com/**", (route) =>
+  await page.route("https://tile.openstreetmap.org/**", (route) =>
     route.abort(),
   );
   await page.goto("/signin-with-chatgpt?return_to=/");

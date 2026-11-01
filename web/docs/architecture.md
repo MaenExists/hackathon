@@ -16,7 +16,7 @@ flowchart LR
   W --> B[Aggregate draft brief]
 ```
 
-The atlas uses Leaflet. Online CARTO Dark Matter raster tiles supply detailed roads and labels; all tiles are visually grayscale. Bundled district polygons and 6,364 GeoNames locality points remain independent of the basemap. Only visible place points are drawn at zoom 11+, with labels at zoom 14+. Locality search is entirely browser-local; it never sends search terms, records or tips to the tile provider. Geographic precision does not increase the precision of synthetic district-level evidence.
+The atlas uses Leaflet. Online OpenStreetMap standard raster tiles supply detailed roads and labels; all tiles are visually grayscale. Bundled district polygons and 6,364 GeoNames locality points remain independent of the basemap. Only visible place points are drawn at zoom 11+, with labels at zoom 14+. Locality search is entirely browser-local; it never sends search terms, records or tips to the tile provider. Geographic precision does not increase the precision of synthetic district-level evidence.
 
 The frozen forecast uses only the committed scenario, with event, availability and review cutoffs. New imports and review exercises affect the evidence workspace but do not silently change the experiment. This makes the presentation and evaluation reproducible. A production model would need versioned snapshots, explicit retraining and independent validation.
 

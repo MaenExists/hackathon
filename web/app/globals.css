@@ -3044,7 +3044,7 @@ a,
   cursor: grabbing;
 }
 .street-tiles {
-  filter: grayscale(1) contrast(1.17) brightness(0.88);
+  filter: grayscale(1) invert(1) contrast(1.25) brightness(0.85);
 }
 .leaflet-container a {
   color: #bbb;
