@@ -4,106 +4,190 @@
 
 ## Project identity
 
-- **Name:** Undecided.
+- **Name:** Undecided. “Corridor” is the current working title.
 - **Purpose:** A hackathon project for the theme: “Create breakthrough ideas and futuristic technologies that could transform the fight against substance abuse.”
 - **Hackathon date:** 28 November 2026.
-- **Geographic focus:** Kerala, India, including relevant connections beyond Kerala when supported by data.
-- **Context:** Inspired by Kerala's Operation Toofan, an anti-drug initiative involving enforcement and related agencies. The project is proposed by the team; it is not presented as an official Operation Toofan system or agency partnership.
+- **Geographic focus:** Kerala, India, including inbound, outbound and transit connections beyond Kerala when supported by data.
+- **Primary product:** A forecasting model for drug logistics and movements, supported by a geographic analyst workspace.
+- **Context:** Inspired by Kerala's Operation Toofan. The project is proposed by the team; it is not an official agency system, Operation Toofan deployment or confirmed agency partnership.
 
-## Vision and problem
+## Primary goal and product alignment
 
-The team wants to help enforcement agencies, local authorities and service planners direct limited resources by understanding the logistics of the illegal drug market: how drugs move, where documented shipments originate, transit and end, and how patterns may change over time. Relevant information can be spread across case files, jurisdictions and agencies, making it difficult to see the larger picture or coordinate a response. The intended response includes interdiction, youth outreach, helpline visibility and rehabilitation capacity, depending on the evidence and the decisions of responsible authorities.
+**Build a forecasting model that learns historical drug logistics, movements and seizures across Kerala, combines those patterns with recent verified signals, and forecasts likely future movement areas, corridors and time windows where authorized enforcement agencies may have opportunities to intercept drugs. Forecast quality must be measured against later outcomes.**
 
-The ambition is an AI-assisted geographic intelligence platform, informally compared to a Palantir-like system for the anti-drug effort. Its core is **mapping documented movements and forecasting possible trafficking corridors** to inform resource planning across enforcement, prevention and recovery. Its signature feature is a traceable evidence trail behind every mapped connection. Case analysis and community intelligence support this objective. The wider aspiration is to reduce substance-related harm in Kerala, including harm affecting young people; technology alone cannot eliminate drug use or trafficking.
+The central questions are:
+
+1. Where and when might drug movement or related activity occur next?
+2. Which origins, transit connections, destinations and transport patterns could be involved?
+3. Which areas or connections warrant an agency's interception review, given the forecast, available evidence, observation coverage and uncertainty?
+4. How accurately did previous forecasts anticipate independently documented outcomes, and did they improve on simple recent-history methods?
+
+The team intends to gather as much permitted, usable historical information as possible and add timely cues as new information arrives. The model should learn recurring patterns, temporal changes and relationships between locations, transport and seizures, then update its forecasts as the evidence changes.
+
+**The forecasting model is the core of the project.** The map presents its geographic outputs; evidence tools make predictions inspectable; ingestion and news collection supply reviewed inputs; briefs help communicate results. Prevention, recovery and community features remain part of the project as supporting capabilities. Product decisions should first improve forecasting data, learning, evaluation, timeliness or analyst usefulness.
+
+The intended outcome is a useful, testable forecast of movement and potential interception opportunities. The current documented-case count model is an initial experiment toward that goal, not the final definition of the product.
 
 ## Intended users and workflow
 
-The primary user is a **district-level anti-narcotics analyst** in Kerala Police or Excise. Local-government prevention coordinators and authorized health or rehabilitation planners are intended recipients of appropriate aggregate findings; each role should see only information it is authorized to access. The proposed workflow is:
+The primary users are **authorized anti-narcotics analysts and enforcement personnel**, initially at district level in Kerala Police or Excise. They review forecasts alongside agency intelligence and operational knowledge. Prevention coordinators and authorized health or rehabilitation planners are secondary users of suitable aggregate findings.
 
-1. Bring together authorized case records and other relevant sources.
-2. Extract and review locations, times, documented movements and supporting evidence.
-3. Map known movements and analyze patterns across locations, time and jurisdictions.
-4. Estimate which corridors may warrant future analyst review, where the data supports a tested model.
-5. Let the analyst inspect each connection's sources, confidence, review history and limitations, then prepare a role-appropriate brief.
-6. Relevant authorities review the brief alongside service availability and local knowledge before deciding whether to adjust interdiction, youth awareness, helpline promotion or rehabilitation resources.
-7. Receive community tips privately, review and corroborate them, and use appropriately verified information to improve future analysis.
+The intended workflow is:
 
-For example, a fictional corridor may show increased documented activity near several school zones. An analyst can check the underlying records and their uncertainty, then share an aggregate finding with prevention and service planners to consider outreach or support. Proximity does not establish activity at a school or a need for a particular service: those decisions require independent local information and human judgment.
+1. Obtain authorized historical seizure, movement and logistics records, with source dates and reporting coverage.
+2. Normalize and deduplicate cases; review locations, movement claims, quantities, transport modes and unknowns.
+3. Build historical geographic and temporal features, train candidate models and compare them with simple baselines on later unseen periods.
+4. Collect recent case updates, permitted news and other relevant cues. Preserve when each signal became available and verify it before model use.
+5. Generate forecasts for defined future areas, connections and time windows, with uncertainty, evidence context and an assessment of data support.
+6. Let an analyst inspect the forecast on the map, compare it with historical observations, and prepare an agency-review brief about possible interception opportunities.
+7. Record later documented outcomes, reporting coverage and enforcement effort; measure forecast errors and use reviewed updates to improve the next model version.
+8. Share appropriate aggregate findings with prevention or recovery planners when supported by their separate local evidence.
 
-No live agency data access, integration or reporting arrangement has yet been confirmed. Any real-world use requires the relevant authorization and agency participation.
+No live agency data access, integration or reporting arrangement has been confirmed. Real-world evaluation and use require the relevant authorization and agency participation.
 
-## Core product capabilities
+## Forecasting scope and outputs
 
-### Route and logistics mapping
+### Intended movement and interception forecasts
 
-Display recorded seizure locations and documented origins, destinations, transit points and transport modes where available. Show movement at the geographic resolution supported by the evidence: district-level data should not be represented as a verified street-level journey. Distinguish documented movements, unverified claims and model-generated hypotheses. Users should be able to filter by time, geography, substance category, evidence status and source, and inspect the records behind a map feature.
+The system should ultimately forecast where and when drug movements are more likely to be observed, which logistical connections may be involved, and where an agency may find a relevant interception opportunity. The geographic scale and forecast horizon must match the available evidence. District-level records support district-level claims; more precise forecasts require suitably precise, validated data.
 
-### Evidence trail and resource planning
+A forecast should identify:
 
-Every mapped connection should be clickable and show its source records, evidence status, source dates, geographic precision and review history, including who reviewed it and when. Show an evidence-confidence assessment with its basis and an explicit unknown or unreviewed state when it cannot be assessed; do not present an unvalidated score as a measured probability. Access to individual records and reviewer identity must follow role permissions, while cross-agency summaries use suitable aggregation.
+- The prediction date, information cutoff and future time window.
+- The area or directed origin/destination corridor, and transport or transit context where supported.
+- The exact target being estimated: for example, future documented cases, a documented movement event, or an interception outcome under a defined observation regime.
+- The estimated count, relative ranking or probability appropriate to that target. Probabilities require validation and calibration; a ranking score is not automatically a probability.
+- An uncertainty range or an explicit statement that uncertainty cannot yet be established.
+- Relevant historical patterns, recent verified cues, source availability, coverage gaps and model version.
+- Whether the model has enough support to forecast, or should abstain.
 
-Help authorized users prepare resource-planning briefs for interdiction, outreach, helpline promotion and rehabilitation capacity. The platform provides evidence for discussion, not automatic resource allocation. Service planning needs its own local evidence, including capacity and access gaps; a trafficking indicator alone does not measure demand for treatment or identify people needing care.
+Candidate connections proposed by a future model must remain hypotheses until independently supported. Existing roads or transport links provide logistical context; their existence alone does not establish that drugs moved along them. New-corridor prediction requires its own evaluation rather than borrowing performance claims from already known corridors.
 
-### Pattern analysis and prediction
+### Current experiment and progression
 
-Analyze recurring connections and changes across geographic and time windows. The intended goal is to predict possible future trafficking corridors, but the exact prediction target depends on the available data and must be defined and validated explicitly. One candidate for an initial experiment is ranking corridors by the likelihood of a future **documented case** involving them during a defined period. This is not automatically a probability of actual trafficking: seizures and case records are incomplete and depend on enforcement and reporting.
+A trainable Python pipeline already supports two initial targets over **7 or 28 days**:
 
-Forecast only at an appropriate aggregate place or corridor level, never for individuals. Model results are decision support for trained analysts, not proof of wrongdoing or a sole basis for searches, arrests or other enforcement action. Show a simple baseline beside the model, backtest on held-out historical periods, and include a visible **“What this cannot tell you”** panel describing missing evidence, reporting and enforcement bias, and the difference between recorded cases and actual trafficking. Present uncertainty and avoid individual suspicion scores or using demographic characteristics such as gender or identity as proxies for criminality.
+1. **Area model:** future documented seizure-case counts in a defined area.
+2. **Corridor model:** future documented case counts involving an already known origin/destination connection.
 
-### Community intelligence
+These targets make the first learning and evaluation cycle possible while movement-level data is being sourced. They can reveal changes in documented patterns, but do not directly measure all trafficking or the probability that an interception will succeed. The current implementation does not discover unknown corridors or reconstruct exact future journeys.
 
-Provide a private channel through which members of the public can submit information about suspected activity or routes, including without creating an account. Contact details should be optional. Reports are unverified leads until reviewed and independently corroborated; they must not automatically alter predictions or enter model training. Support duplicate and coordinated-report detection without treating similar reports as independent confirmation. Keep source provenance and review status so later analysis can distinguish independently corroborated evidence from repeated allegations.
+As richer records become available, extend the targets and models toward the primary movement/interception goal. Select additional outputs, finer locations, shorter horizons, transport-network features or geographic/graph models according to data quality and held-out performance. Do not treat the present count model or its current algorithm as a permanent product ceiling.
 
-Kerala Police already operates the Yodhav reporting channel. Explore whether authorized cooperation with existing channels is more useful than a separate channel; no integration is assumed. Avoid a public feed of allegations and do not promise anonymity beyond the protections actually implemented.
+### Accuracy and operational usefulness
 
-## Data requirements and assumptions
+“Accurate” must refer to a defined prediction target, geographic resolution, forecast horizon and outcome dataset. Do not promise a fixed accuracy percentage before real-data evaluation.
 
-The team expects that obtaining useful data for the MVP may be feasible, but access, coverage, permissions and quality still need to be confirmed. The most valuable records contain actual movement information, not only the location of a seizure. Potential fields include:
+- For count forecasts, measure forecast error against later documented counts.
+- For area or corridor rankings, measure how many later documented events occur within the selected areas/connections, how many selected predictions are supported, and what was missed. State the number and geographic extent selected.
+- For movement or interception forecasts, evaluate against independently documented movement/interception outcomes and observation effort where available. A failed search, an unobserved location and a confirmed absence are different outcomes.
+- Measure useful lead time, uncertainty coverage, performance by area, and improvement over recent-history baselines.
+- Report false positives, missed events, coverage differences and changes in reporting or enforcement. Separate performance on synthetic data from performance on real records.
 
-- Case or source reference, responsible agency and case/evidence status.
-- Event date and date the information became available.
-- Seizure location, reported origin, destination and transit points, with geographic precision and uncertainty.
-- Transport mode, substance category and quantity where available.
-- Evidence references, corroboration and links between records.
-- Where available, aggregate enforcement activity and coverage to help interpret observed case patterns.
-- Where authorized and relevant, aggregated school-zone context, existing outreach, helpline reach and rehabilitation capacity to inform resource planning without identifying students or patients.
+Seizure records reflect both underlying activity and enforcement/reporting. A successful historical test of seizure counts alone does not establish accurate prediction of all movements or successful interception. Prospective agency-led evaluation is needed to establish operational usefulness.
 
-Public geographic data can provide boundaries and transport context, subject to its licence. Public aggregate statistics can provide background but do not by themselves establish routes. Missing origins, destinations or enforcement coverage should remain explicitly unknown rather than inferred as facts. Obtain permission before accessing or using real records and before displaying them in a public demonstration. Start with synthetic data when real data is unavailable or unsuitable for demonstration, and label it clearly.
+## Historical data and timely signals
 
-The MVP does not require personal names, IDs, gender, consumer records or live GPS tracking. Any future collection of sensitive information or use of real case files requires appropriate legal review, access controls, auditability, retention rules and agency authorization.
+### Historical training data
 
-## Technical direction
+Prioritize consistent records of seizures and actual documented movements, ideally covering multiple years across Kerala and relevant external connections. Required or valuable fields include:
 
-The following is a starting direction, not a fixed architecture or a claim that implementation already exists:
+- A canonical case identifier, source reference, responsible agency, evidence status and independent corroboration where applicable.
+- Event time/date, first availability date, verification date and withdrawal/correction history.
+- Seizure location, documented origin, destination and transit points, with geographic precision and uncertainty.
+- Substance category, quantity and explicit measurement unit.
+- Transport mode and documented logistics relationships or links between cases.
+- Reporting completeness by area/connection and time period, plus aggregate enforcement or observation effort where available.
+- Source permissions, coverage definitions, revisions and extraction dates.
 
-1. **Ingest and normalize:** Import authorized records, preserve their source and availability dates, normalize locations and mark unknown or disputed fields.
-2. **Represent movements:** Model locations as nodes and documented movements as connections, with time, evidence status and source attached. Keep seizure points separate from established routes.
-3. **Analyze:** Summarize documented patterns, temporal changes, data coverage and evidence quality.
-4. **Forecast experimentally:** Define a testable target supported by the data; begin with simple baselines before considering more complex geographic or graph-based models. Do not claim calibrated real-world probabilities without validation.
-5. **Review and report:** Provide an analyst interface for the map, evidence, uncertainty, private tip review and preparation of agency briefs. Analyst approval and an authorized reporting channel are needed before sharing operational reports.
+Use all suitable history within the authorized reporting universe; do not claim to possess every past case. Missing locations, endpoints or coverage remain unknown. Several reports of one case must not become several independent training events. Annual totals and public background statistics must not be expanded into invented case records or treated as proof of routes.
 
-A possible hackathon stack is React and Leaflet for the interface, Python and FastAPI for services, CSV or SQLite initially, and pandas/NetworkX for analysis. PostgreSQL/PostGIS may be appropriate as needs grow. An LLM may assist with extracting or summarizing case documents, but outputs need source references and human review. Technology choices remain open.
+### Recent and real-time cues
 
-## Validation and limitations
+The intended system incorporates newly available case updates, verified news, authorized movement/logistics updates and other timely aggregate signals. Real-time capability means an explicit ingestion and forecast-refresh process with visible latency and freshness; it does not imply an existing live agency feed.
 
-- Split evaluation chronologically and use only information available at each prediction date. Compare forecasts on later unseen periods with simple recent-history baselines; report uncertainty, misses and differences in coverage across districts.
-- Audit differences in data coverage, enforcement effort and model errors across locations, and assess feedback loops before use. Use aggregation thresholds and suppress small groups in shared outputs; select thresholds with the relevant agency and privacy expertise rather than assuming aggregation guarantees anonymity.
-- A successful backtest of future recorded cases does not prove detection of all trafficking, reliable street-level routes or reduced harm. Agency-led evaluation is needed before operational use.
-- Seizure and case data reflect both underlying activity and enforcement/reporting practices. Missing and biased observations can create feedback loops.
-- Community submissions are vulnerable to mistakes, duplication and manipulation. Raw reports must not be treated as independent ground truth.
-- Clearly distinguish prototype results, synthetic scenarios, verified observations and unvalidated forecasts.
+Preserve the event date, publication date, first-seen time, verification time and source identity as distinct fields. Deduplicate repeated or syndicated reports. A headline or repeated allegation is not independent confirmation. Unsupported claims remain in a review queue and do not automatically alter training labels or forecasts.
 
-## Hackathon scope and next steps
+The current RSS/Atom collector supports periodic metadata collection and review, but no feed is enabled by default and no collector automatically retrains the model. Future integration should support reviewed signal updates and controlled forecast refreshes without silently learning from unverified material. An LLM may later assist with extraction, but its output requires source references and human verification.
 
-The intended demonstration is an end-to-end route intelligence and resource-planning workflow: load documented or clearly synthetic movements, explore corridors on a map, inspect clickable evidence and review history, show a tested forecast alongside a baseline and limitations if the data supports it, review a fictional community tip, and prepare an aggregate brief for enforcement and service planners. Prioritize the route mapping and prediction experience; supporting features should make this core stronger.
+Aggregate transport activity, consumption surveys, enforcement effort, service measures or environmental conditions may be useful contextual features when relevant and available at prediction time. Their value must be tested. Consumption is an aggregate contextual measure, not an individual suspicion score or interchangeable measure of trafficking or treatment demand.
 
-First confirm the availability, quality and permitted use of movement-level data with potential agency partners while developing the data model and map in parallel. The team has not yet settled on a project name, data partner, final prediction target, model, or production architecture.
+## Supporting capabilities to retain
+
+### Geographic map and search
+
+Keep the detailed, navigable Kerala map, surrounding regional connections, scroll/touch zoom, geographic search and place profiles. Show historical seizures, documented movements and model forecasts as distinguishable layers. Retain filters for time, geography, substance, evidence status and source, and the historical timeline. Search roads, addresses, destinations and landmarks using available public geographic sources, with source attribution and explicit unknowns.
+
+Forecast overlays should help analysts inspect predicted areas, connections and time windows. A detailed basemap must not imply that a district-level observation or forecast identifies a verified street journey. Retain the predominantly black interface and use color for meaningful transport, evidence and forecast signals. Avoid branding that implies official agency status.
+
+### Evidence trail and analyst review
+
+Keep clickable sources, dates, geographic precision, documentation status, qualitative evidence assessments and review history behind mapped observations. Forecasts should expose their model version, information cutoff, validation results, supporting patterns and limitations. Distinguish evidence quality from model uncertainty; an unvalidated confidence score is not a measured probability.
+
+Access to individual records, source identities and reviewer information must follow appropriate permissions. The present analyst/planner role switch is a demonstration, not a production agency authorization system.
+
+### News and community intelligence
+
+Retain the news review inbox, duplicate checks and source provenance. Retain the private community-lead workflow, with optional contact details and human review. The intended public intake should support reporting without creating an account, subject to the approved access and privacy design. Raw community reports do not enter model training, including through an automatic status change. Any independently established case must enter through the structured, reviewed evidence pipeline rather than treating the tip itself as ground truth.
+
+Explore authorized cooperation with existing reporting channels such as Yodhav; no integration is assumed. Avoid a public feed of allegations, automatic reports to authorities or promises of anonymity beyond the protections actually implemented.
+
+### Briefs, prevention and recovery
+
+Keep editable, role-appropriate planning briefs and aggregate exports. Their primary forecasting use is to communicate a reviewed movement/interception hypothesis, the target period, supporting evidence and uncertainty to responsible agency personnel.
+
+Retain prevention, helpline, outreach and rehabilitation planning as secondary uses of appropriate aggregate findings. These decisions also require separate local evidence about need, service capacity and access. A forecast near a school or service does not establish activity there or identify people needing care. The platform supports human decisions and does not automatically allocate resources or authorize enforcement action.
+
+## Technical direction and current implementation
+
+Organize development around the forecasting lifecycle:
+
+1. **Ingest:** Authorized historical records and timely source updates, with provenance and review queues.
+2. **Normalize:** Canonical cases, consistent geography/time/units, documented movement relationships, coverage and explicit unknowns.
+3. **Build features:** Historical timing, substance/quantity patterns, geographic relationships, logistics context, coverage and verified recent cues available by the prediction cutoff.
+4. **Train and evaluate:** Baselines and candidate models, chronological validation, reporting-delay handling, uncertainty estimation and reproducible model versions.
+5. **Forecast and refresh:** Defined future targets, supported geographic resolution, freshness checks and abstention when evidence is insufficient.
+6. **Inspect and act through human review:** Map, evidence, ranked outputs and agency-review briefs.
+7. **Measure and improve:** Later outcomes, errors, coverage shifts, model monitoring and reviewed retraining.
+
+The existing implementation uses React/TypeScript and Leaflet for the website, a Cloudflare Worker API with D1 storage, and a separate local Python/pandas/scikit-learn training pipeline. The current candidate is Poisson histogram gradient boosting, compared with simple covered-history baselines. It produces versioned models, evaluation files and aggregate JSON/HTML reports. The website can inspect a local aggregate training report without uploading the source records or executable model.
+
+The current trained demonstrations use synthetic data. News collection, real-data training, a live inference service and future movement/interception models are distinct capabilities; do not describe them as an already connected, operational real-time prediction system. The stack may evolve when reliable data and inference requirements justify it. More complex models are justified by demonstrated value, not by their names.
+
+## Validation, data handling and limitations
+
+- Use only information available at each historical prediction date. Separate training, method selection, uncertainty calibration and final evaluation chronologically, accounting for reporting and verification delays.
+- Compare against simple baselines, preserve unseen evaluation periods, and report performance at the actual place/time resolution offered to analysts. Evaluate new locations/connections separately where generalization is claimed.
+- Treat missing or incomplete reporting as unknown, not zero. Audit differences in enforcement effort, source availability, coverage and errors across areas, including feedback loops from acting on earlier forecasts.
+- Preserve provenance, model/input versions and review history. Missing endpoints and unverified cues must not be silently converted into facts.
+- Forecast at aggregate place, area or corridor level. The MVP does not require personal names, IDs, gender, individual consumer records or live GPS tracking, and must not create individual suspicion scores or demographic proxies for criminality.
+- Use permitted data and appropriate access, retention and disclosure controls. Keep real source records out of the public demonstration; aggregate outputs require suitable disclosure review. A minimum-group threshold alone does not guarantee anonymity.
+- Forecasts are decision support, not proof of wrongdoing or a sole basis for searches, arrests or other enforcement action. Distinguish observations, unverified claims and model hypotheses throughout the product.
+- A demonstration on synthetic data establishes implementation behavior, not real-world prediction accuracy, operational readiness or reduced substance-related harm.
+
+## Hackathon priorities and next steps
+
+The demonstration should tell a forecasting story: **historical data → reviewed recent cues → learned patterns → future geographic forecast → measured accuracy and uncertainty → agency review of a possible interception opportunity.** Supporting screens should make that story understandable and inspectable.
+
+Prioritize work in this order:
+
+1. Confirm permitted sources, historical movement/seizure fields, reporting coverage and realistic arrival delays with potential data providers.
+2. Prepare real training/evaluation datasets, keeping seizure-only observations separate from documented routes.
+3. Train and test the initial models on real history; establish baseline performance, errors, uncertainty and where the system must abstain.
+4. Define and validate the next movement/interception target supported by those records. Expand beyond documented-case counts when the evidence permits.
+5. Integrate verified recent cues, forecast refreshes and freshness monitoring into a reproducible inference workflow.
+6. Make forecasts inspectable on the map with clear evidence and model context; retain the other supporting capabilities.
+7. Prepare a transparent hackathon demonstration, with agency-led prospective evaluation as the next step before operational use.
+
+The project name, data partner, operational accuracy and production deployment arrangements remain unsettled. The forecasting ambition is agreed; the current count-model experiment is a starting implementation toward it.
 
 ## Questions to prepare for
 
-- **Who uses it?** A district-level anti-narcotics analyst reviews evidence and prepares a brief; authorized local prevention and health planners use suitable aggregate findings with their own service data to decide on resources.
-- **Could it harm communities?** Limit geographic detail and small-group disclosure, audit coverage and model errors, distinguish allegations from corroborated evidence, and require human review before sharing or action. These measures reduce risks but do not guarantee fairness.
-- **Why use this alongside existing tools?** Its proposed differentiator is evidence-linked corridor analysis: each connection can be traced to sources and review history, with transparent baseline comparisons and limitations-first forecasting. Existing agency systems and their capabilities must be investigated before claiming a unique operational advantage.
+- **What are you building?** A Kerala-focused forecasting model that learns historical drug logistics, movement and seizure patterns and uses verified recent cues to forecast possible future movements and interception opportunities for agency review.
+- **What makes it useful?** Timely, geographically explicit forecasts with measurable performance, inspectable evidence, uncertainty and comparison with what simple recent-history methods would predict.
+- **What is implemented now?** A trainable, evaluated synthetic-data pipeline for future documented area/corridor case counts, plus the geographic, evidence, review and reporting workspace. Real-time agency integration and validated interception prediction are not yet established.
+- **How do you demonstrate accuracy?** Define the target and coverage, test on later unseen outcomes, compare baselines, report errors and misses, and distinguish recorded-case performance from actual movement/interception performance.
+- **Could it harm communities?** Biased observation and reporting can misdirect predictions. Limit detail and disclosure, audit coverage and errors, distinguish allegations from evidence, and require authorized human review. These measures reduce risk but do not guarantee fairness.
 
 ## Reference context
 
@@ -114,3 +198,4 @@ First confirm the availability, quality and permitted use of movement-level data
 - [UNODC: individual drug seizure data and limitations](https://dmp.unodc.org/downloadIDS)
 - [UNODC: individual seizure reporting guidelines](https://syntheticdrugs.unodc.org/uploads/syntheticdrugs/res/library/ait_html/UNODC_Guidelines_for_Individual_Drug_Seizures.pdf)
 - [UNODC: drug trafficking route methodology and data limitations](https://wdr.unodc.org/wdr2019/prelaunch/WDR-2019-Methodology-FINAL.pdf)
+- [Implemented training pipeline](ml/README.md), [current model design](ml/docs/DESIGN.md), and [data-collection guide](ml/docs/DATA_COLLECTION.md).
