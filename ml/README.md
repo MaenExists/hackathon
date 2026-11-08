@@ -53,3 +53,5 @@ Optional news collection:
 Reviewing news never creates a case or triggers training. No feed is enabled or unattended task installed by default. Stop the polling command with Ctrl-C. Run `.venv-ml/bin/python -m pytest ml/tests` for leakage, data-contract, news and end-to-end training checks.
 
 Read [the data-collection guide](docs/DATA_COLLECTION.md) for exact requested fields and [the design](docs/DESIGN.md) for targets, modeling choices, validation, readiness thresholds, limitations and primary references. No GPU, paid API or API key is required for training.
+
+For official meetings, use the [data-request note](docs/OFFICIAL_DATA_REQUEST.md) or its [printable PDF](docs/OFFICIAL_DATA_REQUEST.pdf). The [detailed data, training and application plan](docs/MODEL_DATA_TRAINING_PLAN.md) covers acquisition quantities, movement evidence, a measurable 50% research goal, raw-data cleaning, real-data evaluation, integration gaps and ongoing refinement. These are collection and implementation plans, not new accepted CLI schemas or a promise of accuracy.
