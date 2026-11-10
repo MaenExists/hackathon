@@ -17,3 +17,8 @@ ml/data/
 ml/runs/
 ml/*.sqlite*
 *.joblib
+
+# Local Excise acquisition (raw case reports never enter Git)
+raw data/
+tools/excise-collector/**/__pycache__/
+tools/excise-collector/.runtime/

@@ -1,0 +1,36 @@
+EXCISE REPORT COLLECTOR
+
+1. Copy this ENTIRE folder to a writable folder on the other computer.
+   Or copy ExciseCollector.zip and extract it there.
+
+2. Start it:
+   Windows: double-click Start-Windows.bat
+   macOS: open Start-macOS.command (or run: sh Start-macOS.command)
+   Linux: run: sh Start-Linux.sh
+
+   Python is included for common Windows, macOS and Linux computers.
+   First launch extracts the matching runtime. No Python installation is needed.
+   Keep the program's terminal window open while collecting.
+
+3. A browser opens. Keep the saved parameters or choose office/year/CR range.
+   The first security image appears automatically.
+
+4. TYPE THE SECURITY CODE AND PRESS ENTER.
+   The PDF is saved if published, then the next image appears automatically.
+   Repeat. No per-case button click is needed.
+   A wrong code produces a fresh image for the SAME case.
+   Unfamiliar errors or network failures pause rather than invent missing records.
+
+5. Everything is saved in "raw data" INSIDE THIS FOLDER.
+   Original PDFs are under raw data/documents.
+   Query metadata and the manifest identify the case references and file paths.
+   Copy the whole folder again to transfer your files AND collection progress.
+   Stop the program before moving/copying it.
+
+CAPTCHA CODES MUST BE ENTERED BY A HUMAN. THEY ARE NOT BYPASSED.
+The portal has no discovered bulk-export link; an office-wide sweep can involve
+many unavailable numbers. All offices for 2025-2026 is 669,330 possible searches.
+Choosing one office first is more practical. Unavailable is not proof of no case.
+
+Internet is needed for the portal. See README.md for supported systems, commands,
+troubleshooting, data layout, verification, and limitations.

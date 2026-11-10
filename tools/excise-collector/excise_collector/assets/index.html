@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Excise report collector</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<header><a class="wordmark" href="/">Corridor <span>Data tools</span></a><a href="https://eroll.keralaexcise.gov.in/crreport" target="_blank" rel="noreferrer">View source portal ↗</a></header>
+<main>
+<div class="intro"><h1>Excise report collector</h1><p>Original NDPS reports, one reliable collection queue.</p><p id="folder" class="folder"></p></div>
+<div id="notice" role="status" aria-live="polite" hidden></div>
+<div class="workspace">
+<aside>
+<details open><summary>Collection scope</summary>
+<p class="muted">2025 crosses two office systems. Both are included unless you choose one.</p>
+<form id="scope">
+<label>Office <input name="office" id="office" list="offices" placeholder="All offices, or search by name" autocomplete="off"></label><datalist id="offices"></datalist>
+<label>Years <select name="years"><option value="both">2025 and 2026</option><option value="2025">2025</option><option value="2026">2026</option></select></label>
+<label>Registration period <select name="era"><option value="all">Both office systems</option><option value="before">Before 1 June 2025</option><option value="after">From 1 June 2025</option></select></label>
+<div class="range"><label>First CR <input name="start" type="number" min="1" max="999" value="1" required></label><label>Last CR <input name="end" type="number" min="1" max="999" value="999" required></label></div>
+<p class="muted small">Switch scope at any time. Earlier searches and downloads stay saved.</p>
+<button type="submit" class="secondary">Use these parameters and start</button>
+</form>
+<button id="discover" class="text-button">Refresh office catalogue</button>
+</details>
+<div class="coverage"><h2>Search coverage</h2><progress id="progress" max="1" value="0" aria-label="Checked searches"></progress><p id="coverage">Loading saved progress…</p><dl><div><dt>Saved queries</dt><dd id="saved">0</dd></div><div><dt>Reports unavailable</dt><dd id="unavailable">0</dd></div><div><dt>Need review</dt><dd id="review">0</dd></div><div><dt>Still unchecked</dt><dd id="remaining">0</dd></div></dl><p id="requests" class="muted small"></p></div>
+<p class="muted small">A missing report does not end a series or establish zero cases. This checks the selected range within the portal’s current 1–999 form limit.</p>
+</aside>
+<section class="collection" aria-labelledby="task-title">
+<div class="task-top"><h2 id="task-title">Next case search</h2><button id="pause" class="text-button" disabled>Pause</button></div>
+<div id="empty"><div class="reference">CR <span>—</span></div><p>Choose a scope, then prepare the next search.</p><p class="muted">You enter the security code. The collector fills the form, saves the PDF if published, and remembers the result.</p><button id="next">Prepare next search</button></div>
+<div id="active" hidden><div id="reference" class="reference"></div><p id="office-name" class="office-name"></p><p id="period" class="muted"></p>
+<form id="security" autocomplete="off"><div class="challenge"><img id="security-image" alt="Security code from the Excise portal; enter the characters below" width="180" height="50"><button id="refresh" type="button" class="text-button">New image</button></div>
+<label>Security code <input name="code" id="code" maxlength="64" required autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="code-help"></label><p id="code-help" class="muted small">Type the code and press Enter. The next image appears automatically. Codes are never saved or reused.</p>
+<button type="submit">Check case and save report</button><label class="check"><input id="auto-next" type="checkbox" checked> Keep preparing the next security image</label></form>
+</div>
+<div id="last-result" hidden></div>
+<div class="source-note"><span class="dot"></span><p>Public Excise occurrence reports, not a complete case register. Original files stay local and do not enter the forecasting model automatically.</p></div>
+</section>
+</div>
+<section class="register"><div class="register-heading"><h2>Collection register</h2><p class="muted">Latest 30 queries. Full history is saved locally.</p></div><div class="table-wrap"><table><thead><tr><th>Case</th><th>Office</th><th>Result</th><th>Action</th></tr></thead><tbody id="register"></tbody></table></div><p id="no-results" class="muted">No case searches submitted yet.</p></section>
+</main><footer>Independent research collection tool. Source: Kerala Excise E-Roll. <span>NDPS / 2025–2026</span></footer>
+</body></html>

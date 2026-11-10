@@ -32,6 +32,8 @@ Use **Take the guided demo** for a five-stop presentation. Press `/` to focus ge
 
 The Forecast lab now includes a trainable Python pipeline with separate area and documented-corridor targets, chronological model selection, empirical uncertainty ranges and a final holdout. Open its synthetic training reports or inspect a completed local aggregate report without uploading it. See [ML setup](ml/README.md), [what data to collect](ml/docs/DATA_COLLECTION.md) and [model design](ml/docs/DESIGN.md). Real data remains local and must be validated before claims about forecasting accuracy; the atlas's original frozen heuristic remains available separately.
 
+For public source acquisition, the independent [Excise report collector](tools/excise-collector/README.md) queues 2025–2026 NDPS report searches and saves original PDFs, provenance and resumable progress in the ignored `raw data/` folder. Its local workbench automates downloads around human-entered portal security codes. Portable Windows, macOS and Linux launchers are included; source documents do not enter training automatically.
+
 ## Verify
 
 ```sh
