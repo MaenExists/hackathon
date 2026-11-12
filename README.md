@@ -4,6 +4,8 @@ An independent hackathon prototype for understanding **documented movements**, i
 
 The product vision is in [project.md](project.md), preserved unchanged.
 
+For a new session, start with [CONTEXT.md](CONTEXT.md) and [AGENTS.md](AGENTS.md). The context explains the current implementation, the separate sibling data collector, training readiness and where to continue. Cross-project context is in the [workspace handoff](../CONTEXT.md) when that folder is available.
+
 ## Run it
 
 Requires Node.js 22.13+ (Node 26 used in development) and npm. No API keys, agency data or paid services are needed. Street detail loads online from OpenStreetMap; bundled district boundaries, locality search and evidence work without street tiles.

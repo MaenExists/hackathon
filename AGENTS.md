@@ -2,6 +2,7 @@
 
 ## Project context
 
+- Read [CONTEXT.md](CONTEXT.md) for the implementation map, sibling collection system, current real-data limitations and continuation references. For cross-project work, also read the [workspace handoff](../CONTEXT.md) when present.
 - Read [`project.md`](project.md) before working on the project. It contains the agreed project vision, product scope, technical direction, data assumptions and references.
 - Do not edit `project.md` unless the project owner explicitly asks for that file to be edited. Add evolving agent guidance and brief working context here, or use other appropriate files when the owner requests them.
 - The project name is undecided. Do not imply the project is an official agency system or claim agency data access or partnerships that have not been confirmed.
