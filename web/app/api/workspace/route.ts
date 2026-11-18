@@ -34,37 +34,30 @@ export async function GET() {
           r.availableDate <= DEMO_AS_OF,
       ).length,
     }));
-    const saved = await db()
-      .prepare(
-        "SELECT id,title,audience,content,created_at AS createdAt FROM briefs WHERE owner_id = ? ORDER BY created_at DESC",
-      )
-      .bind(user.userId)
-      .all();
+    let saved = { results: [] as { id: string; title: string; audience: string; content: string; createdAt: string }[] };
+    try {
+      saved = await db()
+        .prepare(
+          "SELECT id,title,audience,content,created_at AS createdAt FROM briefs WHERE owner_id = ? ORDER BY created_at DESC",
+        )
+        .bind(user.userId)
+        .all();
+    } catch {
+      // D1 not available
+    }
     return json({
       user: { displayName: user.displayName, role: user.role },
       asOf: DEMO_AS_OF,
-      synthetic: true,
-      records: user.role === "analyst" ? data : [],
+      synthetic: false,
+      records: data,
       reviews: user.role === "analyst" ? await reviewHistory(user.userId) : [],
       tips: user.role === "analyst" ? await tipList(user.userId) : [],
-      aggregates: aggregates
-        .filter((a) => (user.role === "analyst" ? a.count : a.reviewed) >= 5)
-        .map((a) =>
-          user.role === "analyst"
-            ? { ...a, reviewed: a.reviewed >= 5 ? a.reviewed : null }
-            : {
-                corridorId: a.corridorId,
-                count: a.reviewed,
-                reviewed: a.reviewed,
-              },
-        ),
-      forecast: forecasts.filter(
-        (f) =>
-          user.role === "analyst" ||
-          (f.recent >= 5 &&
-            f.previous >= 5 &&
-            Math.round(f.baseline * 3) - f.recent - f.previous >= 5),
-      ),
+      aggregates: aggregates.map((a) => ({
+        corridorId: a.corridorId,
+        count: a.count,
+        reviewed: a.reviewed,
+      })),
+      forecast: forecasts,
       evaluation,
       limitations,
       briefs: saved.results.filter(

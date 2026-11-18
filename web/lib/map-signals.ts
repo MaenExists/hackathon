@@ -1,3 +1,9 @@
+export const substanceSignals = {
+  Cannabis: "#10b981",
+  Stimulants: "#f59e0b",
+  Opioids: "#ef4444",
+  Other: "#a855f7",
+};
 export const transportSignals = {
   Road: { color: "#438fff", label: "Road" },
   Rail: { color: "#34d399", label: "Rail" },

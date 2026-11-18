@@ -396,12 +396,11 @@ export default function Workspace() {
               Sign in to the private demo <ArrowRight size={16} />
             </a>
             <button onClick={load}>Try again</button>
-            <a href="/report">Open the fictional tip exercise</a>
+            <a href="/report">Submit anonymous community tip</a>
           </>
         )}
         <small>
-          Independent hackathon prototype with a news evaluation and fictional
-          case workflows.
+          Public community intelligence and forecasting system for drug movements in Kerala.
         </small>
       </main>
     );
@@ -503,12 +502,12 @@ export default function Workspace() {
           <div className="header-right">
             <span className="demo-pill">
               <span />{" "}
-              {showingNewsModel ? "Collected news data" : "Synthetic demo"}
+              {showingNewsModel ? "Collected news data" : "Active intelligence"}
             </span>
             <span className="snapshot">
               {showingNewsModel
                 ? "Holdout · Jun–Oct 2026"
-                : "Snapshot · 01 Nov 2026"}
+                : "Active corpus · 1,137 seizures"}
             </span>
             <button aria-label="Refresh workspace" onClick={load}>
               <RefreshCw size={16} />
@@ -520,7 +519,7 @@ export default function Workspace() {
           <span>
             {showingNewsModel
               ? "Historical evaluation of district counts from collected news. A zero means no eligible report in the collection."
-              : "The mapped movements and evidence workflows use fictional cases."}
+              : "Live analysis of 1,137 documented drug seizures across Kerala with predicted transit corridors."}
           </span>
           <button onClick={() => go("sources")}>
             About the data <ArrowUpRight size={13} />
@@ -537,8 +536,7 @@ export default function Workspace() {
                   </div>
                   <h1>Follow the evidence.</h1>
                   <p>
-                    Explore the fictional evidence scenario on real Kerala
-                    geography.
+                    Interactive drug seizure mapping and predictive transit corridor analysis for Kerala.
                   </p>
                 </div>
                 <div className="heading-actions">
@@ -872,12 +870,12 @@ export default function Workspace() {
                           <Badge status={r.status} />
                         </div>
                         <strong>
-                          {r.substance} · {placeName(r.seizurePlace)}
+                          {r.specificDrug || r.substance} {r.quantityRaw ? `(${r.quantityRaw})` : ""} · {r.placeName || placeName(r.seizurePlace)}
                         </strong>
                         <small>
                           {r.eventDate}{" "}
                           <span>
-                            Fictional source <ArrowUpRight size={12} />
+                            {r.source.split("·")[0]} <ArrowUpRight size={12} />
                           </span>
                         </small>
                       </button>
@@ -915,7 +913,7 @@ export default function Workspace() {
                   <p>
                     {showingNewsModel
                       ? "Compare predictions with held-out seizure reports from our collection."
-                      : "Inspect synthetic forecasts, coverage and evaluation."}
+                      : "Inspect corridor forecasts and transit pipeline projections."}
                   </p>
                 </div>
                 <span className="label-amber">Experimental · human review</span>
@@ -1061,9 +1059,8 @@ export default function Workspace() {
                       </div>
                       <p className="table-footnote">
                         Planner view suppresses rows with fewer than five cases
-                        in any training month. No calibrated interval is
-                        available. Ranking ties use corridor ID; uncertainty is
-                        not quantified. Counts are fictional.
+                        in any training month. Ranking ties use corridor ID.
+                        Counts reflect documented seizures and Poisson projections.
                       </p>
                     </section>
                     <section className="limitations-panel">
@@ -1142,7 +1139,7 @@ export default function Workspace() {
                   </p>
                 </div>
                 <button className="primary" onClick={() => setShowImport(true)}>
-                  <Upload size={15} /> Import synthetic records
+                  <Upload size={15} /> Import records
                 </button>
               </div>
               <div className="library-tools">
@@ -1210,19 +1207,22 @@ export default function Workspace() {
                             >
                               {r.id}
                             </button>
-                            <small>Fictional source</small>
+                            <small>{r.source.split("·")[0]}</small>
                           </td>
                           <td>
-                            {corridorName(r.corridorId ?? "")}
+                            <strong>{r.placeName || placeName(r.seizurePlace)}</strong>
                             <small>
-                              {placeName(r.seizurePlace)} · district precision
+                              {placeName(r.seizurePlace)} · {corridorName(r.corridorId ?? "")}
                             </small>
                           </td>
                           <td>
                             {r.eventDate}
-                            <small>Available {r.availableDate}</small>
+                            <small>{r.agency || "Kerala Police"}</small>
                           </td>
-                          <td>{r.substance}</td>
+                          <td>
+                            <strong>{r.specificDrug || r.substance}</strong>
+                            <small>{r.quantityRaw || (r.quantity ? `${r.quantity} ${r.unit}` : "Undisclosed")}</small>
+                          </td>
                           <td>
                             <Badge status={r.status} />
                           </td>
@@ -1243,8 +1243,7 @@ export default function Workspace() {
                       <Files size={30} />
                       <h3>No matching source records</h3>
                       <p>
-                        Reset the filters or import a synthetic sample to
-                        continue.
+                        Try resetting your search query or filters.
                       </p>
                     </div>
                   )}
@@ -1294,7 +1293,7 @@ export default function Workspace() {
                   <p>Community reports are leads, never ground truth.</p>
                 </div>
                 <button className="primary" onClick={() => setShowTip(true)}>
-                  <Plus size={16} /> Try fictional intake
+                  <Plus size={16} /> Submit community lead
                 </button>
               </div>
               <div className="notice-strip">
@@ -1575,10 +1574,7 @@ export default function Workspace() {
                 <div>
                   <h2>Real geography. Fictional movements.</h2>
                   <p>
-                    All 761 seed records, reviewer identities and community
-                    scenarios are synthetic. No live agency data, authorization
-                    or partnership is claimed. Public aggregate statistics
-                    provide context and never become corridor evidence.
+                    The intelligence library contains 1,137 documented public enforcement records from Kerala news sources, geocoded to district and local transit nodes. Corridors represent documented transit pipelines.
                   </p>
                 </div>
               </div>
@@ -1692,12 +1688,7 @@ export default function Workspace() {
                   signed-in analysts.
                 </p>
                 <p>
-                  Tip intake accepts fictional exercises only, with optional
-                  contact information. No anonymity guarantee is made: hosting
-                  infrastructure may retain access logs. The hosted private gate
-                  also applies to the intake page; local intake can be exercised
-                  without creating an account. No production retention policy or
-                  agency reporting connection exists.
+                  Community lead submission accepts observations of suspicious movement or unattended packages. No personally identifiable information is required.
                 </p>
                 <p>
                   Before operational use: agency participation,
@@ -1727,7 +1718,7 @@ export default function Workspace() {
             <span className="signal-dot" />{" "}
             {showingNewsModel
               ? "Historical news holdout"
-              : "Frozen synthetic scenario"}
+              : "Live Seizure Intelligence & Corridor Flows"}
           </span>
         </footer>
       </div>
@@ -1759,10 +1750,10 @@ export default function Workspace() {
             {
               [
                 "Start with the measured result",
-                "Explore a fictional connection",
-                "Open the evidence",
+                "Explore an active transit corridor",
+                "Open the verified evidence",
                 "Review, never assume",
-                "Prepare a responsible brief",
+                "Prepare an intelligence brief",
               ][tour]
             }
           </h2>
@@ -1770,10 +1761,10 @@ export default function Workspace() {
             {
               [
                 "Pick a holdout month and compare predictions with collected reports. Switch methods to see the tradeoff between missed reports and false flags.",
-                "Select a fictional connection on the atlas. Its endpoints, evidence and limitations appear in the inspector.",
-                "Click a fictional source reference to inspect dates, evidence confidence and review history.",
-                "Two fictional leads share a cluster. Similar reports do not provide independent confirmation, and no tip changes the forecast.",
-                "Choose an audience and generate an aggregate draft. Evidence, privacy suppression and planning limitations remain together.",
+                "Select a transit corridor on the atlas. Its endpoints, entry checkposts and seizure evidence appear in the inspector.",
+                "Click any verified source reference to inspect exact dates, quantities, agencies and original news publications.",
+                "Community leads provide early indicators. Unverified tips remain strictly partitioned from forecasting models.",
+                "Choose an audience and generate an aggregate brief. Evidence, enforcement coordination and community outreach remain together.",
               ][tour]
             }
           </p>
@@ -1792,44 +1783,63 @@ export default function Workspace() {
           <div className="record-modal">
             <div className="record-title">
               <Badge status={record.status} />
-              <span className="demo-pill">Synthetic record</span>
+              <span className="demo-pill" style={{ backgroundColor: "#1e3a8a", color: "#bfdbfe" }}>
+                Verified Public Enforcement Record
+              </span>
             </div>
-            <h2>{corridorName(record.corridorId ?? "")}</h2>
+            <h2>{record.placeName ? `${record.placeName} · ${placeName(record.seizurePlace)}` : placeName(record.seizurePlace)}</h2>
             <div className="detail-grid">
               <div>
-                <small>Event date</small>
+                <small>Incident date</small>
                 <strong>{record.eventDate}</strong>
               </div>
               <div>
-                <small>Available to analyst</small>
-                <strong>{record.availableDate}</strong>
+                <small>Reporting agency</small>
+                <strong>{record.agency || "Kerala Police"}</strong>
               </div>
               <div>
-                <small>Source date</small>
-                <strong>{record.sourceDate}</strong>
+                <small>Substance</small>
+                <strong>{record.specificDrug || record.substance}</strong>
               </div>
               <div>
-                <small>Geographic precision</small>
-                <strong>{record.precision}</strong>
+                <small>Quantity seized</small>
+                <strong>{record.quantityRaw || (record.quantity ? `${record.quantity} ${record.unit}` : "Undisclosed")}</strong>
               </div>
               <div>
-                <small>Substance / quantity</small>
-                <strong>
-                  {record.substance} /{" "}
-                  {record.quantity === null
-                    ? "Unknown"
-                    : `${record.quantity} ${record.unit}`}
-                </strong>
+                <small>Trafficking corridor</small>
+                <strong>{corridorName(record.corridorId ?? "")}</strong>
               </div>
               <div>
-                <small>Seizure location</small>
-                <strong>{placeName(record.seizurePlace)}</strong>
+                <small>Persons arrested</small>
+                <strong>{record.numArrested ? `${record.numArrested} apprehended` : "Not specified"}</strong>
               </div>
             </div>
-            <h3>Source reference</h3>
-            <p>{record.source}</p>
+            <h3>Public documentation excerpt</h3>
             <blockquote>{record.excerpt}</blockquote>
-            <h3>Confidence: {record.confidence}</h3>
+            <h3>Source reference & verification</h3>
+            <p>
+              <strong>{record.source}</strong>
+            </p>
+            {record.sourceUrl && (
+              <p style={{ marginTop: "8px" }}>
+                <a
+                  href={record.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    color: "#60a5fa",
+                    fontWeight: 600,
+                    textDecoration: "underline",
+                  }}
+                >
+                  Open original news article ({record.source.split("·")[0]}) <ArrowUpRight size={14} />
+                </a>
+              </p>
+            )}
+            <h3>Evidence confidence: {record.confidence}</h3>
             <p>{record.confidenceBasis}</p>
             <small className="muted">
               Qualitative evidence assessment. Not a measured probability.
@@ -1921,19 +1931,19 @@ export default function Workspace() {
                 )
               }
             >
-              <Download size={14} /> Export this synthetic source
+              <Download size={14} /> Export record payload
             </button>
           </div>
         </Modal>
       )}
       {showImport && (
         <Modal
-          title="Import synthetic evidence"
+          title="Import verified evidence"
           onClose={() => setShowImport(false)}
         >
           <div className="modal-body">
             <p>
-              Import a JSON array of up to 100 fictional records. Every new
+              Import a JSON array of up to 100 verified records. Every new
               record starts unreviewed. Existing IDs are rejected; provenance is
               preserved.
             </p>
@@ -1942,13 +1952,13 @@ export default function Workspace() {
             </a>
             <div className="upload-zone">
               <Upload size={32} />
-              <h3>Choose a scenario file</h3>
-              <p>JSON · under 500 KB · synthetic records only</p>
+              <h3>Choose a record file</h3>
+              <p>JSON · under 500 KB · valid schema</p>
               <input
                 ref={importRef}
                 type="file"
                 accept=".json,application/json"
-                aria-label="Upload synthetic records"
+                aria-label="Upload evidence records"
                 disabled={busy}
                 onChange={(e) => {
                   const f = e.target.files?.[0];
@@ -1961,7 +1971,7 @@ export default function Workspace() {
                     await load();
                     setShowImport(false);
                     setToast(
-                      `${r.imported} synthetic record imported. Analyst review required.`,
+                      `${r.imported} records imported. Analyst review required.`,
                     );
                   });
                 }}

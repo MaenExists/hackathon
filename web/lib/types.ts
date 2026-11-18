@@ -19,21 +19,32 @@ export interface CaseRecord {
   id: string;
   corridorId: string | null;
   seizurePlace: string;
+  placeName?: string;
+  lat?: number;
+  lon?: number;
   eventDate: string;
   availableDate: string;
   sourceDate: string;
   substance: Substance;
+  specificDrug?: string;
   quantity: number | null;
+  quantityRaw?: string;
   unit: "kg" | "g" | "unknown";
   status: EvidenceStatus;
-  precision: "district";
+  precision: "district" | "place";
   source: string;
+  sourceUrl?: string;
+  agency?: string;
+  numArrested?: number;
+  transportMode?: string;
+  originPlace?: string;
+  destinationPlace?: string;
   excerpt: string;
   reviewer: string | null;
   reviewedAt: string | null;
   confidence: "supported" | "limited" | "unknown";
   confidenceBasis: string;
-  synthetic: true;
+  synthetic: boolean;
 }
 export interface Tip {
   id: string;
