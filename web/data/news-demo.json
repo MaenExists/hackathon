@@ -1,0 +1,777 @@
+{
+  "version": "news-district-month-v1",
+  "selected": "district_history",
+  "threshold": 0.5,
+  "inputObservations": 1137,
+  "eligibleObservations": 458,
+  "fitEvents": 390,
+  "modelSha256": "0d95dd9b64ae26baa5f9c34b6eed97cb2a33bca1509220271188ec58a2154f92",
+  "split": {
+    "start": "2023-12",
+    "validation_start": "2026-01",
+    "test_start": "2026-06",
+    "test_end": "2026-10"
+  },
+  "months": [
+    "2026-06",
+    "2026-07",
+    "2026-08",
+    "2026-09",
+    "2026-10"
+  ],
+  "methods": [
+    {
+      "id": "district_history",
+      "validationMae": 0.79029,
+      "mae": 0.74476,
+      "rmse": 0.95477,
+      "accuracy": 0.7,
+      "precision": 0.7142857142857143,
+      "recall": 0.6944444444444444,
+      "f1": 0.704225352112676,
+      "confusion": {
+        "tp": 25,
+        "fp": 10,
+        "fn": 11,
+        "tn": 24
+      },
+      "top_3_events": 33
+    },
+    {
+      "id": "district_recent_3m",
+      "validationMae": 0.90952,
+      "mae": 0.71905,
+      "rmse": 1.01497,
+      "accuracy": 0.6428571428571429,
+      "precision": 0.8666666666666667,
+      "recall": 0.3611111111111111,
+      "f1": 0.5098039215686274,
+      "confusion": {
+        "tp": 13,
+        "fp": 2,
+        "fn": 23,
+        "tn": 32
+      },
+      "top_3_events": 33
+    },
+    {
+      "id": "poisson_district_calendar",
+      "validationMae": 1.1245,
+      "mae": 0.80616,
+      "rmse": 0.98974,
+      "accuracy": 0.6428571428571429,
+      "precision": 0.6170212765957447,
+      "recall": 0.8055555555555556,
+      "f1": 0.6987951807228916,
+      "confusion": {
+        "tp": 29,
+        "fp": 18,
+        "fn": 7,
+        "tn": 16
+      },
+      "top_3_events": 33
+    }
+  ],
+  "rows": [
+    {
+      "month": "2026-06",
+      "district": "Alappuzha",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.7,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.8912304649955209
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Ernakulam",
+      "observed": 4,
+      "expected": {
+        "district_history": 2.966666666666667,
+        "district_recent_3m": 4.0,
+        "poisson_district_calendar": 2.6395760407353315
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Idukki",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.26666666666666666,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.6474650821770094
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Kannur",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.3333333333333333,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.6823821491218865
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Kasaragod",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.5333333333333333,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.7928728357789309
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Kollam",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.43333333333333335,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.7365700223217602
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Kottayam",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.5,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.7738743743050103
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Kozhikode",
+      "observed": 3,
+      "expected": {
+        "district_history": 2.2,
+        "district_recent_3m": 2.6666666666666665,
+        "poisson_district_calendar": 1.9828776586918833
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Malappuram",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.5666666666666667,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.8120988772655284
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Palakkad",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.8333333333333334,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.9738122377558431
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Pathanamthitta",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.4666666666666667,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.7551059463946549
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Thiruvananthapuram",
+      "observed": 2,
+      "expected": {
+        "district_history": 0.8666666666666667,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.994979330533895
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Thrissur",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.8666666666666667,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.994979330533895
+      }
+    },
+    {
+      "month": "2026-06",
+      "district": "Wayanad",
+      "observed": 1,
+      "expected": {
+        "district_history": 1.4666666666666666,
+        "district_recent_3m": 1.6666666666666667,
+        "poisson_district_calendar": 1.4086122030373767
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Alappuzha",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.7,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.8467242087722175
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Ernakulam",
+      "observed": 6,
+      "expected": {
+        "district_history": 2.966666666666667,
+        "district_recent_3m": 4.0,
+        "poisson_district_calendar": 2.507760924214994
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Idukki",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.26666666666666666,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.6151319787039846
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Kannur",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.3333333333333333,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.648305357580453
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Kasaragod",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.5333333333333333,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.753278361658422
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Kollam",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.43333333333333335,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.6997871974213329
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Kottayam",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.5,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.7352286451246905
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Kozhikode",
+      "observed": 1,
+      "expected": {
+        "district_history": 2.2,
+        "district_recent_3m": 2.6666666666666665,
+        "poisson_district_calendar": 1.8838567380620566
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Malappuram",
+      "observed": 3,
+      "expected": {
+        "district_history": 0.5666666666666667,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.7715442933168993
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Palakkad",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.8333333333333334,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.9251820139593889
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Pathanamthitta",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.4666666666666667,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.7173974747411983
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Thiruvananthapuram",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.8666666666666667,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.9452920647133141
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Thrissur",
+      "observed": 2,
+      "expected": {
+        "district_history": 0.8666666666666667,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.9452920647133141
+      }
+    },
+    {
+      "month": "2026-07",
+      "district": "Wayanad",
+      "observed": 3,
+      "expected": {
+        "district_history": 1.4666666666666666,
+        "district_recent_3m": 1.6666666666666667,
+        "poisson_district_calendar": 1.3382689438132114
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Alappuzha",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.7,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.7945097085824712
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Ernakulam",
+      "observed": 3,
+      "expected": {
+        "district_history": 2.966666666666667,
+        "district_recent_3m": 4.0,
+        "poisson_district_calendar": 2.3531161391755626
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Idukki",
+      "observed": 2,
+      "expected": {
+        "district_history": 0.26666666666666666,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.5771989557834143
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Kannur",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.3333333333333333,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.6083266492056407
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Kasaragod",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.5333333333333333,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.7068263377877705
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Kollam",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.43333333333333335,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.6566337852784094
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Kottayam",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.5,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.6898896837100446
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Kozhikode",
+      "observed": 1,
+      "expected": {
+        "district_history": 2.2,
+        "district_recent_3m": 2.6666666666666665,
+        "poisson_district_calendar": 1.767685927084975
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Malappuram",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.5666666666666667,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.7239658737649074
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Palakkad",
+      "observed": 2,
+      "expected": {
+        "district_history": 0.8333333333333334,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.8681292972153138
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Pathanamthitta",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.4666666666666667,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.6731580988110897
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Thiruvananthapuram",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.8666666666666667,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.886999231957404
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Thrissur",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.8666666666666667,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.886999231957404
+      }
+    },
+    {
+      "month": "2026-08",
+      "district": "Wayanad",
+      "observed": 2,
+      "expected": {
+        "district_history": 1.4666666666666666,
+        "district_recent_3m": 1.6666666666666667,
+        "poisson_district_calendar": 1.2557426108033274
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Alappuzha",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.7,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.7497452261546329
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Ernakulam",
+      "observed": 3,
+      "expected": {
+        "district_history": 2.966666666666667,
+        "district_recent_3m": 4.0,
+        "poisson_district_calendar": 2.22053622866607
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Idukki",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.26666666666666666,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.5446782549858971
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Kannur",
+      "observed": 3,
+      "expected": {
+        "district_history": 0.3333333333333333,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.5740521434260492
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Kasaragod",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.5333333333333333,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.6670021357224669
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Kollam",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.43333333333333335,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.6196375456791937
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Kottayam",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.5,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.6510197312223848
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Kozhikode",
+      "observed": 1,
+      "expected": {
+        "district_history": 2.2,
+        "district_recent_3m": 2.6666666666666665,
+        "poisson_district_calendar": 1.6680904850580782
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Malappuram",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.5666666666666667,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.6831759912947177
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Palakkad",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.8333333333333334,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.819216919870522
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Pathanamthitta",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.4666666666666667,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.6352308418375419
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Thiruvananthapuram",
+      "observed": 3,
+      "expected": {
+        "district_history": 0.8666666666666667,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.8370236796091453
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Thrissur",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.8666666666666667,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.8370236796091453
+      }
+    },
+    {
+      "month": "2026-09",
+      "district": "Wayanad",
+      "observed": 0,
+      "expected": {
+        "district_history": 1.4666666666666666,
+        "district_recent_3m": 1.6666666666666667,
+        "poisson_district_calendar": 1.1849912185573026
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Alappuzha",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.7,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.7234009029736773
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Ernakulam",
+      "observed": 4,
+      "expected": {
+        "district_history": 2.966666666666667,
+        "district_recent_3m": 4.0,
+        "poisson_district_calendar": 2.1425116917936813
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Idukki",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.26666666666666666,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.5255395136129336
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Kannur",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.3333333333333333,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.5538812711596119
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Kasaragod",
+      "observed": 2,
+      "expected": {
+        "district_history": 0.5333333333333333,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.6435652144685846
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Kollam",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.43333333333333335,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.5978649072028532
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Kottayam",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.5,
+        "district_recent_3m": 0.3333333333333333,
+        "poisson_district_calendar": 0.6281443949105212
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Kozhikode",
+      "observed": 1,
+      "expected": {
+        "district_history": 2.2,
+        "district_recent_3m": 2.6666666666666665,
+        "poisson_district_calendar": 1.6094776212472137
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Malappuram",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.5666666666666667,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.6591707579483891
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Palakkad",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.8333333333333334,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.7904315211250488
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Pathanamthitta",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.4666666666666667,
+        "district_recent_3m": 0.0,
+        "poisson_district_calendar": 0.6129102907915426
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Thiruvananthapuram",
+      "observed": 1,
+      "expected": {
+        "district_history": 0.8666666666666667,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.8076125922737414
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Thrissur",
+      "observed": 0,
+      "expected": {
+        "district_history": 0.8666666666666667,
+        "district_recent_3m": 0.6666666666666666,
+        "poisson_district_calendar": 0.8076125922737414
+      }
+    },
+    {
+      "month": "2026-10",
+      "district": "Wayanad",
+      "observed": 0,
+      "expected": {
+        "district_history": 1.4666666666666666,
+        "district_recent_3m": 1.6666666666666667,
+        "poisson_district_calendar": 1.1433533520671337
+      }
+    }
+  ]
+}
