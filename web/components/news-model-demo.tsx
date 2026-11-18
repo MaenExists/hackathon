@@ -4,10 +4,12 @@ import { useState } from "react";
 import demo from "../data/news-demo.json";
 
 type Method = keyof (typeof demo.rows)[number]["expected"];
-const methodNames: Record<Method, string> = {
+const methodNames: Record<string, string> = {
   district_history: "Historical district average",
   district_recent_3m: "Recent three-month average",
-  poisson_district_calendar: "Poisson model",
+  poisson_district_calendar: "Poisson model v1",
+  poisson_linear: "Poisson GLM",
+  hist_gradient_boosting: "HistGradientBoosting (Poisson)",
 };
 const selectedMethod = demo.selected as Method;
 const percent = (value: number) => `${(value * 100).toFixed(1)}%`;
