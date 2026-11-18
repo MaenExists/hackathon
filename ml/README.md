@@ -55,3 +55,22 @@ Reviewing news never creates a case or triggers training. No feed is enabled or 
 Read [the data-collection guide](docs/DATA_COLLECTION.md) for exact requested fields and [the design](docs/DESIGN.md) for targets, modeling choices, validation, readiness thresholds, limitations and primary references. No GPU, paid API or API key is required for training.
 
 For official meetings, use the [data-request note](docs/OFFICIAL_DATA_REQUEST.md) or its [printable PDF](docs/OFFICIAL_DATA_REQUEST.pdf). The [detailed data, training and application plan](docs/MODEL_DATA_TRAINING_PLAN.md) covers acquisition quantities, movement evidence, a measurable 50% research goal, raw-data cleaning, real-data evaluation, integration gaps and ongoing refinement. These are collection and implementation plans, not new accepted CLI schemas or a promise of accuracy.
+
+## Exploratory news snapshot model
+
+Run the local district-month experiment from the Main repository root with the sibling collector's canonical CSV and a new run directory.
+
+```sh
+PYTHONPATH=ml/src .venv-ml/bin/python -m corridor_ml.news_experiment train \
+  --events ../Data-Collection-system/data/events_clean.csv \
+  --out ml/runs/news-district-month-v1
+```
+
+The run writes aggregate metrics, holdout predictions for both cohorts and a local model bundle. Use the model you trained locally to reproduce a held-out month's district scores.
+
+```sh
+PYTHONPATH=ml/src .venv-ml/bin/python -m corridor_ml.news_experiment predict \
+  --model ml/runs/news-district-month-v1/model.joblib --month 2026-10
+```
+
+The target is the monthly count of dated seizures in the collected news snapshot. District-months with zero collected records describe absence in that corpus. The experiment uses publication dates as a retrospective availability proxy and retains the separate coverage and corroboration requirements of the area and corridor pipeline.
