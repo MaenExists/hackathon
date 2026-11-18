@@ -4745,3 +4745,32 @@ a,
     font-size: 11px;
   }
 }
+
+.public-model-demo {
+  max-width: 1230px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 42px) 48px;
+}
+.public-model-demo > header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+.public-model-demo > header strong {
+  display: block;
+  color: #eee;
+  font-size: 22px;
+}
+.public-model-demo > header span {
+  color: var(--muted);
+}
+.public-model-workspace {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 11px;
+}

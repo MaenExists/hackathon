@@ -1,5 +1,7 @@
 # Corridor hackathon walkthrough
 
+Open `/demo` for the public model replay. The full atlas and review walkthrough uses the signed-in workspace.
+
 Open the local workspace and sign in to the private demo. Choose **See model results** or **Take the guided demo**. To begin on the model screen after local sign-in, use `/signin-with-chatgpt?return_to=/%3Fdemo%3Dmodel`.
 
 1. **Show the result.** Open **Forecast lab → News model v1**. Corridor predicts monthly counts in its collected seizure news archive. The test spans June–October 2026, with all 14 Kerala districts and 70 district-months. The selected historical district average scored **70.0% accuracy, 71.4% precision, 69.4% recall and 0.745 mean absolute count error**.
