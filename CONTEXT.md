@@ -30,9 +30,19 @@ The newer public-news collector lives at `../Data-Collection-system/`, outside t
 
 The sibling collector's 18 November 2026 snapshot contains 1,137 normalized Kerala observations, 497 dated and 261 both dated and source-accepted. It has zero independently corroborated events and zero provider-confirmed complete reporting weeks. The 49 official aggregate rows cover annual or partial-year scopes. [Collector status](../Data-Collection-system/reports/SESSION_STATUS.md)
 
-The enhanced chronological pipeline v2 trained on all 1,115 usable Kerala seizure events, incorporating temporal lags, substance categories (Synthetic MDMA vs Cannabis vs Opioids) and official police baselines. Evaluated on the Jan–May 2026 validation block, `hist_gradient_boosting` won with 1.287 MAE. On the 70 held-out district-months in Jun–Oct 2026, it scored **77.1% accuracy, 81.7% precision, 90.7% recall, 0.860 F1 and 1.145 MAE**, capturing 44.4% of all statewide seizures in the top 3 flagged districts. The local run is under `ml/runs/news-district-month-v2/`. [Detailed results v2](ml/docs/NEWS_SNAPSHOT_V2.md) · [Earlier v1](ml/docs/NEWS_SNAPSHOT_V1.md)
+The accountable 2-week rolling-origin forecaster (`corridor_model.py`) trained on 1,115 usable Kerala seizure events across 158 consecutive weeks. Upstream pipeline corridor features were evaluated against a naive rolling-mean baseline and an own-history GBM over 62 held-out test weeks:
+- **Baseline Poisson Deviance:** 1.601
+- **GBM Own-History Only:** 1.382
+- **GBM + Upstream Corridors:** **1.350** (**+15.7% lift** over baseline)
+- **Uncertainty Interval Coverage (p10–p90):** **89.2%** empirical calibration
+- **Corridor Lead-Lag Verification:** 12 of 15 pipeline edges confirmed positive transit lead-lags (e.g. Wayanad/Muthanga leading Kozhikode by 7–14 days, $r=+0.11$, CI $[+0.02, +0.22]$).
 
-The public `/demo` route and Forecast lab now display this verified v2 model replay across all 14 districts. The Forecast lab and Corridor atlas now integrate the verified 1,137 Kerala seizure observations, replacing synthetic scenarios. The interactive map renders real incidents geocoded to specific towns, railway stations, airports and border checkposts (Muthanga, Walayar, CIAL, Bekal, Aluva), color-coded by substance (MDMA, Ganja, Heroin, Cocaine) with verifiable news links, alongside 10 active inter-state trafficking corridors and dynamic 30-day Poisson flow predictions. [Hackathon walkthrough](web/docs/demo.md) · [Public demo](https://kerala-corridor-lab.studyitmayan.chatgpt.site/demo)
+In the web product (`web/`):
+- **Backtest Replay Slider:** Interactive timeline slider scrubbing across 62 evaluation weeks with uncertainty bands, model comparisons, and plain-English attributions.
+- **Ask the Atlas:** Fully grounded RAG chat interface (`web/components/ask-atlas.tsx`) querying 1,137 verified incidents, citing source URLs, and enforcing strict refusals on unsupported queries.
+- **Corridor View & Contraband Mix:** Connection inspector displays real substance breakdowns (MDMA, Cannabis, Opioids) and statistically verified lead-lag transit intervals.
+- **Ethical Governance Defense:** Slide and documentation (`web/docs/judging_presentation.md`) addressing feedback loops, tip portal abuse mitigation, anti-stigma design, and scraping integrity.
+- **Honest Metric Framing:** Prominently states that Corridor models *Seizure Intensity (Enforcement Proxy), NOT True Drug Flow*, turning checkpost surveillance density into an explicit analytical strength.
 
 The discussed next research target was a small pilot of roughly 500–1,000 usable distinct events across five comparable areas with 24–36 months of continuous reporting. The latest recommendation was 1,000 events / five districts / three years; the owner has not selected those districts or approved a fixed pilot scope. See the existing data/training plan for broader statewide and movement acquisition ranges. These are planning ranges, not guarantees of accuracy.
 

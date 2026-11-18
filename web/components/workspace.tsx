@@ -28,11 +28,14 @@ import {
   PanelLeftClose,
   Plus,
   RefreshCw,
+  Sparkles,
 } from "lucide-react";
 import CorridorMap from "./corridor-map";
 import TipForm from "./tip-form";
 import ModelLab from "./model-lab";
 import NewsModelDemo from "./news-model-demo";
+import AskAtlas from "./ask-atlas";
+import backtestData from "../data/corridor-backtest.json";
 import { places, corridors, corridorName, placeName } from "../data/geography";
 import type {
   CaseRecord,
@@ -61,10 +64,11 @@ type Data = {
   briefs: Brief[];
   asOf: string;
 };
-type Tab = "map" | "forecast" | "records" | "tips" | "briefs" | "sources";
+type Tab = "map" | "forecast" | "ask" | "records" | "tips" | "briefs" | "sources";
 const nav = [
   { id: "map", name: "Corridor atlas", icon: Map },
   { id: "forecast", name: "Forecast lab", icon: ChartNoAxesCombined },
+  { id: "ask", name: "Ask the Atlas", icon: Sparkles },
   { id: "records", name: "Evidence library", icon: Files },
   { id: "tips", name: "Community leads", icon: MessageSquare },
   { id: "briefs", name: "Planning briefs", icon: FileText },
@@ -844,6 +848,46 @@ export default function Workspace() {
                         </strong>
                       </div>
                     </div>
+                    {/* Contraband Mix Breakdown */}
+                    <div style={{ marginTop: "0.75rem", padding: "0.6rem", background: "rgba(0,0,0,0.2)", borderRadius: "6px" }}>
+                      <small style={{ color: "var(--muted)", textTransform: "uppercase", fontSize: "0.68rem", fontWeight: 600 }}>Contraband Mix (Evidence Ledger)</small>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem", marginTop: "0.3rem" }}>
+                        {(() => {
+                          const counts: Record<string, number> = {};
+                          corridorRecords.forEach((r) => {
+                            const k = r.specificDrug || r.substance;
+                            counts[k] = (counts[k] || 0) + 1;
+                          });
+                          const total = corridorRecords.length || 1;
+                          const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 4);
+                          if (!entries.length) return <span style={{ fontSize: "0.72rem", color: "var(--muted)" }}>No seizures in current filters</span>;
+                          return entries.map(([k, v]) => (
+                            <span key={k} style={{ fontSize: "0.72rem", padding: "0.15rem 0.4rem", borderRadius: "4px", background: "rgba(56, 189, 248, 0.15)", color: "#7dd3fc" }}>
+                              {k}: {Math.round((v / total) * 100)}% ({v})
+                            </span>
+                          ));
+                        })()}
+                      </div>
+                    </div>
+                    {/* Corridor Transit Lead-Lag Hypothesis */}
+                    {(() => {
+                      const match = backtestData.lead_lags.find((l) =>
+                        selectedCorridor.transit.some((t) => t.toLowerCase().includes(l.upstream.toLowerCase())) ||
+                        selectedCorridor.destination.toLowerCase().includes(l.downstream.toLowerCase()) ||
+                        selectedCorridor.origin.toLowerCase().includes(l.upstream.toLowerCase())
+                      );
+                      if (!match) return null;
+                      return (
+                        <div style={{ marginTop: "0.5rem", padding: "0.5rem 0.6rem", background: match.hypothesis_supported ? "rgba(16, 185, 129, 0.1)" : "rgba(255,255,255,0.03)", borderLeft: `3px solid ${match.hypothesis_supported ? "#10b981" : "#64748b"}`, borderRadius: "4px" }}>
+                          <div style={{ fontSize: "0.72rem", fontWeight: 600, color: match.hypothesis_supported ? "#34d399" : "#94a3b8" }}>
+                            Statistical Transit Lag: {match.upstream} → {match.downstream} ({match.optimal_lag_days})
+                          </div>
+                          <div style={{ fontSize: "0.7rem", color: "var(--muted)", marginTop: "2px" }}>
+                            {match.interpretation}
+                          </div>
+                        </div>
+                      );
+                    })()}
                     <p className="confidence-footnote">
                       *Qualitative source assessment, not a measured
                       probability.
@@ -1125,6 +1169,11 @@ export default function Workspace() {
               )}
             </div>
           )}
+          {tab === "ask" && (
+            <div className="content-page" style={{ height: "calc(100vh - 4.5rem)", padding: "1.25rem" }}>
+              <AskAtlas onSelectRecord={openRecord} />
+            </div>
+          )}
           {tab === "records" && analyst && (
             <div className="content-page">
               <div className="page-heading">
@@ -1214,6 +1263,20 @@ export default function Workspace() {
                             <small>
                               {placeName(r.seizurePlace)} · {corridorName(r.corridorId ?? "")}
                             </small>
+                            <span
+                              style={{
+                                display: "inline-block",
+                                marginTop: "2px",
+                                fontSize: "0.68rem",
+                                padding: "0.1rem 0.35rem",
+                                borderRadius: "3px",
+                                background: r.precision === "place" ? "rgba(56, 189, 248, 0.15)" : "rgba(148, 163, 184, 0.15)",
+                                color: r.precision === "place" ? "#38bdf8" : "#94a3b8",
+                                fontWeight: 500,
+                              }}
+                            >
+                              {r.precision === "place" ? "Locality / Exact" : "District Centroid"}
+                            </span>
                           </td>
                           <td>
                             {r.eventDate}
@@ -1812,6 +1875,14 @@ export default function Workspace() {
               <div>
                 <small>Persons arrested</small>
                 <strong>{record.numArrested ? `${record.numArrested} apprehended` : "Not specified"}</strong>
+              </div>
+              <div>
+                <small>Geocoding precision</small>
+                <strong>{record.precision === "place" ? "Locality / Exact Match" : "District Centroid"}</strong>
+              </div>
+              <div>
+                <small>Coordinates</small>
+                <strong>{record.lat && record.lon ? `${record.lat.toFixed(3)}°N, ${record.lon.toFixed(3)}°E` : "Approximate"}</strong>
               </div>
             </div>
             <h3>Public documentation excerpt</h3>
