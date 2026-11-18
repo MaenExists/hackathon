@@ -32,6 +32,7 @@ import {
 import CorridorMap from "./corridor-map";
 import TipForm from "./tip-form";
 import ModelLab from "./model-lab";
+import NewsModelDemo from "./news-model-demo";
 import { places, corridors, corridorName, placeName } from "../data/geography";
 import type {
   CaseRecord,
@@ -161,9 +162,9 @@ export default function Workspace() {
     [selected, setSelected] = useState("c01");
   const [mapQuery, setMapQuery] = useState(""),
     [mapSearchRequest, setMapSearchRequest] = useState(0);
-  const [forecastView, setForecastView] = useState<"trained" | "original">(
-    "trained",
-  );
+  const [forecastView, setForecastView] = useState<
+    "news" | "trained" | "original"
+  >("news");
   const [search, setSearch] = useState(""),
     [substance, setSubstance] = useState("all"),
     [status, setStatus] = useState("all"),
@@ -204,6 +205,8 @@ export default function Workspace() {
   }
   useEffect(() => {
     load();
+    if (new URLSearchParams(window.location.search).get("demo") === "model")
+      setTab("forecast");
   }, []);
   useEffect(() => {
     if (!toast) return;
@@ -346,7 +349,8 @@ export default function Workspace() {
   }
   function startTour() {
     setTour(0);
-    setTab("map");
+    setForecastView("news");
+    setTab("forecast");
     setPeriod("2026-08-03");
     setMonth(10);
     setSelected("c01");
@@ -365,8 +369,9 @@ export default function Workspace() {
       return;
     }
     setTour(n);
-    setTab((["map", "records", "forecast", "tips", "briefs"] as Tab[])[n]);
+    setTab((["forecast", "map", "records", "tips", "briefs"] as Tab[])[n]);
   }
+  const showingNewsModel = tab === "forecast" && forecastView === "news";
   if (!data)
     return (
       <main className="loading-screen">
@@ -381,7 +386,11 @@ export default function Workspace() {
           <>
             <a
               className="button primary"
-              href="/signin-with-chatgpt?return_to=/"
+              href={
+                showingNewsModel
+                  ? "/signin-with-chatgpt?return_to=/%3Fdemo%3Dmodel"
+                  : "/signin-with-chatgpt?return_to=/"
+              }
               target="_top"
             >
               Sign in to the private demo <ArrowRight size={16} />
@@ -391,8 +400,8 @@ export default function Workspace() {
           </>
         )}
         <small>
-          Independent hackathon prototype. Synthetic records. No agency
-          affiliation.
+          Independent hackathon prototype with a news evaluation and fictional
+          case workflows.
         </small>
       </main>
     );
@@ -493,9 +502,14 @@ export default function Workspace() {
           </div>
           <div className="header-right">
             <span className="demo-pill">
-              <span /> Synthetic data
+              <span />{" "}
+              {showingNewsModel ? "Collected news data" : "Synthetic demo"}
             </span>
-            <span className="snapshot">Snapshot · 01 Nov 2026</span>
+            <span className="snapshot">
+              {showingNewsModel
+                ? "Holdout · Jun–Oct 2026"
+                : "Snapshot · 01 Nov 2026"}
+            </span>
             <button aria-label="Refresh workspace" onClick={load}>
               <RefreshCw size={16} />
             </button>
@@ -504,8 +518,9 @@ export default function Workspace() {
         <div className="demo-banner">
           <Info size={14} />
           <span>
-            Every mapped movement is fictional. Real geography, transparent
-            methods, human review.
+            {showingNewsModel
+              ? "Historical evaluation of district counts from collected news. A zero means no eligible report in the collection."
+              : "The mapped movements and evidence workflows use fictional cases."}
           </span>
           <button onClick={() => go("sources")}>
             About the data <ArrowUpRight size={13} />
@@ -521,9 +536,20 @@ export default function Workspace() {
                     Regional analysis
                   </div>
                   <h1>Follow the evidence.</h1>
-                  <p>Documented connections. Every source within reach.</p>
+                  <p>
+                    Explore the fictional evidence scenario on real Kerala
+                    geography.
+                  </p>
                 </div>
                 <div className="heading-actions">
+                  <button
+                    onClick={() => {
+                      setForecastView("news");
+                      go("forecast");
+                    }}
+                  >
+                    <ChartNoAxesCombined size={15} /> See model results
+                  </button>
                   <button onClick={() => setShowImport(true)}>
                     <Upload size={15} /> Import records
                   </button>
@@ -881,10 +907,15 @@ export default function Workspace() {
                   <div className="location-kicker">
                     <Activity size={14} /> Transparent forecasting
                   </div>
-                  <h1>A hypothesis to investigate.</h1>
+                  <h1>
+                    {showingNewsModel
+                      ? "Kerala district model"
+                      : "A hypothesis to investigate."}
+                  </h1>
                   <p>
-                    Train, backtest and inspect aggregate forecasts. Evidence
-                    before confidence.
+                    {showingNewsModel
+                      ? "Compare predictions with held-out seizure reports from our collection."
+                      : "Inspect synthetic forecasts, coverage and evaluation."}
                   </p>
                 </div>
                 <span className="label-amber">Experimental · human review</span>
@@ -894,10 +925,16 @@ export default function Workspace() {
                 aria-label="Forecast experiment"
               >
                 <button
+                  aria-pressed={forecastView === "news"}
+                  onClick={() => setForecastView("news")}
+                >
+                  News model v1
+                </button>
+                <button
                   aria-pressed={forecastView === "trained"}
                   onClick={() => setForecastView("trained")}
                 >
-                  Trained pipeline
+                  Synthetic pipeline
                 </button>
                 <button
                   aria-pressed={forecastView === "original"}
@@ -906,7 +943,9 @@ export default function Workspace() {
                   Original scenario
                 </button>
               </div>
-              {forecastView === "trained" ? (
+              {forecastView === "news" ? (
+                <NewsModelDemo />
+              ) : forecastView === "trained" ? (
                 <ModelLab analyst={analyst} />
               ) : (
                 <>
@@ -1685,7 +1724,10 @@ export default function Workspace() {
           <span>Corridor · independent hackathon prototype</span>
           <span>Evidence informs. People decide.</span>
           <span>
-            <span className="signal-dot" /> Frozen synthetic scenario
+            <span className="signal-dot" />{" "}
+            {showingNewsModel
+              ? "Historical news holdout"
+              : "Frozen synthetic scenario"}
           </span>
         </footer>
       </div>
@@ -1716,9 +1758,9 @@ export default function Workspace() {
           <h2>
             {
               [
-                "Start with a connection",
+                "Start with the measured result",
+                "Explore a fictional connection",
                 "Open the evidence",
-                "Challenge the forecast",
                 "Review, never assume",
                 "Prepare a responsible brief",
               ][tour]
@@ -1727,9 +1769,9 @@ export default function Workspace() {
           <p>
             {
               [
-                "Select a route on the map. Its district endpoints, source records and limitations appear in the inspector. Try the timeline to see the fictional scenario develop.",
-                "Click a source reference to inspect dates, evidence confidence and review history. Unknowns remain explicit.",
-                "Compare weighted history with a simple baseline and examine six chronological evaluation windows. These are synthetic results.",
+                "Pick a holdout month and compare predictions with collected reports. Switch methods to see the tradeoff between missed reports and false flags.",
+                "Select a fictional connection on the atlas. Its endpoints, evidence and limitations appear in the inspector.",
+                "Click a fictional source reference to inspect dates, evidence confidence and review history.",
                 "Two fictional leads share a cluster. Similar reports do not provide independent confirmation, and no tip changes the forecast.",
                 "Choose an audience and generate an aggregate draft. Evidence, privacy suppression and planning limitations remain together.",
               ][tour]

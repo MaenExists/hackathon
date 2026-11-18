@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Corridor | Kerala intelligence lab",
   description:
-    "Independent synthetic-data prototype for evidence-linked corridor analysis and resource planning.",
+    "Kerala news model evaluation and a fictional evidence review and planning workspace.",
   icons: { icon: "/favicon.svg" },
 };
 export default function RootLayout({

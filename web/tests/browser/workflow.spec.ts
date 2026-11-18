@@ -183,7 +183,7 @@ test("analyst UI, offline boundaries, evidence modal, forecast, saved brief and 
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await page.getByRole("button", { name: "Forecast lab", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "A hypothesis to investigate." }),
+    page.getByRole("heading", { name: "Kerala district model" }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Original scenario", exact: true })
@@ -211,6 +211,11 @@ test("analyst UI, offline boundaries, evidence modal, forecast, saved brief and 
   await page.getByRole("button", { name: "Take the guided demo" }).click();
   await expect(
     page.getByRole("region", { name: "Guided demonstration" }),
+  ).toBeVisible();
+  await expect(page.getByTestId("news-model")).toBeVisible();
+  await page.getByRole("button", { name: "Next stop", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Follow the evidence." }),
   ).toBeVisible();
   await page.getByRole("button", { name: "End guided demo" }).click();
   await page.setViewportSize({ width: 390, height: 844 });
@@ -554,6 +559,9 @@ test("trained forecasts expose coverage and local report inspection never upload
   await page.goto("/signin-with-chatgpt?return_to=/");
   await expect(page.locator('[data-corridor-id="c01"]')).toBeVisible();
   await page.getByRole("button", { name: "Forecast lab", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Synthetic pipeline", exact: true })
+    .click();
   const lab = page.getByTestId("model-lab");
   await expect(
     lab.getByRole("heading", { name: "A model you can train." }),
@@ -624,4 +632,41 @@ test("trained forecasts expose coverage and local report inspection never upload
     path: "outputs/trained-model-mobile.png",
     fullPage: true,
   });
+});
+
+test("news model replays the measured holdout and compares methods on mobile", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/signin-with-chatgpt?return_to=/%3Fdemo%3Dmodel");
+  const lab = page.getByTestId("news-model");
+  await expect(lab).toContainText("70.0%");
+  await expect(lab).toContainText("71.4%");
+  await expect(lab).toContainText("0.745");
+  await expect(lab).toContainText("49 of 70 decisions correct");
+  await expect(lab.locator(".news-model-districts tbody tr")).toHaveCount(14);
+  const month = lab.getByLabel("Test month");
+  await month.selectOption("2026-10");
+  await expect(lab.getByRole("table", { name: /October 2026/ })).toBeVisible();
+  await lab
+    .getByLabel("Method", { exact: true })
+    .selectOption("poisson_district_calendar");
+  await expect(lab).toContainText("61.7%");
+  await expect(lab).toContainText(
+    "18 false flags and 7 missed district-months",
+  );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth + 1,
+    ),
+  ).toBeTruthy();
+  await page.screenshot({
+    path: "outputs/news-model-mobile.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await lab
+    .getByLabel("Method", { exact: true })
+    .selectOption("district_history");
+  await page.screenshot({ path: "outputs/news-model-desktop.png" });
 });
