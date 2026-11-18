@@ -1,15 +1,26 @@
-# Five-minute demonstration
+# Corridor hackathon walkthrough
 
-**Opening:** “We start with a connection, and end with a question a planner can responsibly ask. All movements in this demonstration are fictional.”
+Open the local workspace and sign in to the private demo. Choose **See model results** or **Take the guided demo**. To begin on the model screen after local sign-in, use `/signin-with-chatgpt?return_to=/%3Fdemo%3Dmodel`.
 
-1. Atlas: select Bengaluru Urban → Ernakulam. Show intermediate districts and source records. “These connect districts, not streets.” Filter to unreviewed evidence, then restore all evidence. Turn on model hypotheses to distinguish the experimental overlay.
-2. Open a source card. Point to event date, availability, geographic precision and qualitative confidence. Open the analyst review form. “A confidence label needs a basis, not an impressive percentage.” Download and import the sample, then find `SYN-IMPORT-001` in the evidence library.
-3. Play the timeline. Open Forecast lab. Compare model error against the simple baseline and inspect the six folds. “This forecasts future documented cases in a synthetic scenario. Real-world utility remains unvalidated.”
-4. Open Community leads. The two Ernakulam examples share a cluster. Review one as triaged, explain why repetition is not corroboration, and show the fictional intake form. “No tip enters the forecast.”
-5. Generate a health/recovery planning brief. Export Markdown. Show the questions about capacity and access, the suppressed small groups and the limitations. Switch to planner to demonstrate server-filtered access.
+1. **Show the result.** Open **Forecast lab → News model v1**. Corridor predicts monthly counts in its collected seizure news archive. The test spans June–October 2026, with all 14 Kerala districts and 70 district-months. The selected historical district average scored **70.0% accuracy, 71.4% precision, 69.4% recall and 0.745 mean absolute count error**.
+2. **Replay a test month.** Pick October and compare predicted and observed counts using the paired bars. Change the method to **Poisson model**. Precision drops to 61.7% and recall rises to 80.6% across the same five test months. The validation table explains why the historical average was chosen. A district-month with zero means zero eligible reports in this collection.
+3. **Show the evidence workflow.** Open **Corridor atlas** and select Bengaluru Urban → Ernakulam in the fictional scenario. Inspect its endpoints and source cards, then open the **Evidence library**. Geography is real and the example case records are fictional.
+4. **Show how a lead is reviewed.** Open **Community leads** and inspect an example. Then generate a **Planning brief** for a selected audience. Lead review and brief generation demonstrate the workflow with fictional records.
+5. **Close on the next milestone.** The current result measures a retrospective news archive. Publication dates approximate past availability. Independent seizure outcomes and confirmed reporting coverage are needed for a prospective evaluation. The synthetic area and corridor pipeline demonstrates how those records would be evaluated.
 
-**Closing:** “Evidence informs. People decide. The next step is authorized movement data and agency-led validation, not deployment for enforcement.”
+## Speaker notes
 
-Geographic search: enter “Banerji Road”, choose Roads, and press Enter. Select the source feature to inspect its mapped extent and address. Then try “Lulu Mall Kochi” with All map features. The large search above the map has the same behavior; searching for roads does not hide case evidence. Use the Evidence library for source IDs and case filtering.
+- **What does 71.4% precision mean?** Twenty-five of the 35 flagged district-months contained at least one eligible report. The test had 36 district-months with reports, and the model caught 25.
+- **Why use the simpler model?** It had the lowest validation count error. The recent three-month average had slightly lower test count error and much lower recall. The Poisson model produced more true positives and more false flags. Selection stayed fixed before testing.
+- **How much data went into it?** The starting snapshot had 1,137 observations. Filtering yielded 458 dated seizures for the experiment, and 390 published by the cutoff went into the final fit. The test contained 67 observations.
+- **Can this predict trafficking routes?** The real-data result covers district-month counts in the news archive. The map shows a fictional corridor workflow. Route accuracy requires documented movements and prospective outcomes.
 
-Trained pipeline: open Forecast lab → Trained pipeline. Compare the candidate, selected method and baseline on the final holdout; switch Corridor model / Area model and inspect an abstained row. Expand the chronological folds to show training-label maturity. Open a completed local aggregate report to inspect it without an upload. Source data and training commands are in `ml/README.md`; these synthetic runs establish implementation behavior only. The original six-window heuristic demonstration remains under Original scenario.
+## Rehearse and verify
+
+Run the local setup and browser suite described in the [project README](../../README.md). Run the exporter from Main to verify that the bundled demo matches the saved model run.
+
+```sh
+.venv-ml/bin/python web/scripts/export-news-demo.py ml/runs/news-district-month-v1 --check
+```
+
+The export includes aggregate district-month predictions and selected evaluation metrics. Case narratives, source URLs, event-level rows and executable models are kept in local artifacts. [Full model evaluation](../../ml/docs/NEWS_SNAPSHOT_V1.md)

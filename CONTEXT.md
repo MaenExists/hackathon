@@ -14,7 +14,7 @@ Three capabilities must stay distinct:
 | `ml/` | Local Python training/forecast/evaluation pipeline, chronological selection/calibration/holdout, uncertainty and abstention | Synthetic training runs do not validate a real-data movement model |
 | `tools/excise-collector/` | Separate resumable official-report acquisition tool, PDF/provenance storage and portable launchers | Downloaded documents are not automatically clean cases or training inputs |
 
-The newer public-news collector lives at `../Data-Collection-system/`, outside this Git repository. It is a separate tool, not a replacement for `tools/excise-collector/`. A local district-month experiment uses its canonical CSV. Website ingestion and the production area/corridor pipeline remain separate.
+The newer public-news collector lives at `../Data-Collection-system/`, outside this Git repository. It is a separate tool, not a replacement for `tools/excise-collector/`. A local district-month experiment uses its canonical CSV. The Forecast lab reads a checked aggregate export from that experiment.
 
 ## Where to work and read
 
@@ -32,7 +32,7 @@ The sibling collector's 18 November 2026 snapshot contains 1,137 normalized Kera
 
 The user requested an initial model on available data. The separate news snapshot experiment used 458 eligible seizure observations. A historical district mean was selected on validation MAE and scored 70.0% accuracy, 71.4% precision, 69.4% recall and 0.745 count MAE on 70 held-out district-months. These metrics describe the collected news corpus, reconstructed with publication dates as an availability proxy. The saved bundle also contains the fitted Poisson candidate. The local run is under `ml/runs/news-district-month-v1/`. [Experiment results](ml/docs/NEWS_SNAPSHOT_V1.md)
 
-The production area/corridor pipeline still requires the coverage and corroboration contract below. The experiment has no product integration.
+The Forecast lab defaults to **News model v1** and offers a five-month holdout replay with all three methods. The guided demo opens there before visiting the fictional atlas and review workflow. Generate or verify the aggregate bundle with `web/scripts/export-news-demo.py` and the local run directory. The production area/corridor pipeline still requires the coverage and corroboration contract below. [Hackathon walkthrough](web/docs/demo.md)
 
 The discussed next research target was a small pilot of roughly 500–1,000 usable distinct events across five comparable areas with 24–36 months of continuous reporting. The latest recommendation was 1,000 events / five districts / three years; the owner has not selected those districts or approved a fixed pilot scope. See the existing data/training plan for broader statewide and movement acquisition ranges. These are planning ranges, not guarantees of accuracy.
 
