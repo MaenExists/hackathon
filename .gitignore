@@ -12,6 +12,8 @@ web/playwright-report/
 ml/.venv/
 ml/.pytest_cache/
 ml/**/__pycache__/
+**/__pycache__/
+tools/kanoon_cache/
 ml/src/*.egg-info/
 ml/data/
 ml/runs/

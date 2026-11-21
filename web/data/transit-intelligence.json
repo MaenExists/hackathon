@@ -1,0 +1,789 @@
+{
+  "gateways": {
+    "muthanga": {
+      "name": "Muthanga Checkpost",
+      "district": "Wayanad",
+      "corridor": "c01",
+      "lat": 11.666,
+      "lon": 76.368
+    },
+    "walayar": {
+      "name": "Walayar Checkpost",
+      "district": "Palakkad",
+      "corridor": "c02",
+      "lat": 10.824,
+      "lon": 76.852
+    },
+    "thalappady": {
+      "name": "Thalappady Border",
+      "district": "Kasaragod",
+      "corridor": "c03",
+      "lat": 12.784,
+      "lon": 74.887
+    },
+    "kumily": {
+      "name": "Kumily Checkpost",
+      "district": "Idukki",
+      "corridor": "c06",
+      "lat": 9.605,
+      "lon": 77.168
+    },
+    "aryankavu": {
+      "name": "Aryankavu Checkpost",
+      "district": "Kollam",
+      "corridor": "c09",
+      "lat": 8.978,
+      "lon": 77.147
+    },
+    "amaravila": {
+      "name": "Amaravila Checkpost",
+      "district": "Thiruvananthapuram",
+      "corridor": "c07",
+      "lat": 8.35,
+      "lon": 77.08
+    },
+    "nedumbassery": {
+      "name": "Nedumbassery CIAL",
+      "district": "Ernakulam",
+      "corridor": "c05",
+      "lat": 10.152,
+      "lon": 76.386
+    },
+    "aluva_rail": {
+      "name": "Aluva Railway Hub",
+      "district": "Ernakulam",
+      "corridor": "c04",
+      "lat": 10.109,
+      "lon": 76.354
+    },
+    "palakkad_rail": {
+      "name": "Palakkad Railway Hub",
+      "district": "Palakkad",
+      "corridor": "c10",
+      "lat": 10.786,
+      "lon": 76.655
+    }
+  },
+  "origin_hubs": [
+    "Bengaluru",
+    "Andhra Pradesh",
+    "Odisha",
+    "Mangalore",
+    "Goa",
+    "Coimbatore",
+    "Chennai",
+    "Madurai",
+    "Delhi",
+    "Mumbai",
+    "Overseas Air"
+  ],
+  "scenarios": [
+    {
+      "origin_node": "muthanga",
+      "substance": "mdma",
+      "quantity_g": 80.0,
+      "is_commercial": true,
+      "transport_mode": "road_private",
+      "predicted_destinations": [
+        {
+          "district": "Wayanad",
+          "probability": 65.6,
+          "rank": 1,
+          "waypoint_path": [
+            "muthanga",
+            "Wayanad"
+          ],
+          "distance_km": 20.0,
+          "estimated_transit_hours": 0.5,
+          "arrival_window": "0.5 \u2013 0.7 hrs"
+        },
+        {
+          "district": "Kozhikode",
+          "probability": 22.0,
+          "rank": 2,
+          "waypoint_path": [
+            "muthanga",
+            "Wayanad",
+            "Kozhikode"
+          ],
+          "distance_km": 105.0,
+          "estimated_transit_hours": 3.0,
+          "arrival_window": "2.4 \u2013 4.1 hrs"
+        },
+        {
+          "district": "Malappuram",
+          "probability": 6.0,
+          "rank": 3,
+          "waypoint_path": [
+            "muthanga",
+            "Wayanad",
+            "Malappuram"
+          ],
+          "distance_km": 120.0,
+          "estimated_transit_hours": 3.5,
+          "arrival_window": "2.8 \u2013 4.7 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "muthanga",
+        "Wayanad"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along muthanga -> Wayanad.",
+        "Alert Excise & Police highway patrol units at Wayanad bypass junctions within arrival window 0.5 \u2013 0.7 hrs.",
+        "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Wayanad: HIGH.",
+        "Advisory to college campuses, hostels, and youth centers in Wayanad: elevated synthetic party drug transit alert.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Wayanad transit corridors."
+      ],
+      "scenario_title": "Muthanga Checkpost \u00b7 MDMA Private Vehicle (NH 766)"
+    },
+    {
+      "origin_node": "walayar",
+      "substance": "mdma",
+      "quantity_g": 150.0,
+      "is_commercial": true,
+      "transport_mode": "road_private",
+      "predicted_destinations": [
+        {
+          "district": "Palakkad",
+          "probability": 29.3,
+          "rank": 1,
+          "waypoint_path": [
+            "walayar",
+            "Palakkad"
+          ],
+          "distance_km": 25.0,
+          "estimated_transit_hours": 0.6,
+          "arrival_window": "0.5 \u2013 0.8 hrs"
+        },
+        {
+          "district": "Thiruvananthapuram",
+          "probability": 20.1,
+          "rank": 2,
+          "waypoint_path": [
+            "walayar",
+            "Palakkad",
+            "palakkad_rail",
+            "Ernakulam",
+            "Alappuzha",
+            "Kollam",
+            "Thiruvananthapuram"
+          ],
+          "distance_km": 380.0,
+          "estimated_transit_hours": 8.6,
+          "arrival_window": "6.9 \u2013 11.6 hrs"
+        },
+        {
+          "district": "Kottayam",
+          "probability": 15.3,
+          "rank": 3,
+          "waypoint_path": [
+            "walayar",
+            "Palakkad",
+            "palakkad_rail",
+            "Ernakulam",
+            "Kottayam"
+          ],
+          "distance_km": 230.0,
+          "estimated_transit_hours": 4.8,
+          "arrival_window": "3.8 \u2013 6.5 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "walayar",
+        "Palakkad"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along walayar -> Palakkad.",
+        "Alert Excise & Police highway patrol units at Palakkad bypass junctions within arrival window 0.5 \u2013 0.8 hrs.",
+        "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Palakkad: HIGH.",
+        "Advisory to college campuses, hostels, and youth centers in Palakkad: elevated synthetic party drug transit alert.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Palakkad transit corridors."
+      ],
+      "scenario_title": "Walayar Checkpost \u00b7 MDMA Interstate Highway (NH 544)"
+    },
+    {
+      "origin_node": "walayar",
+      "substance": "ganja",
+      "quantity_g": 75000.0,
+      "is_commercial": true,
+      "transport_mode": "road_private",
+      "predicted_destinations": [
+        {
+          "district": "Thrissur",
+          "probability": 40.8,
+          "rank": 1,
+          "waypoint_path": [
+            "walayar",
+            "Palakkad",
+            "palakkad_rail",
+            "Thrissur"
+          ],
+          "distance_km": 100.0,
+          "estimated_transit_hours": 2.0,
+          "arrival_window": "1.6 \u2013 2.7 hrs"
+        },
+        {
+          "district": "Palakkad",
+          "probability": 29.0,
+          "rank": 2,
+          "waypoint_path": [
+            "walayar",
+            "Palakkad"
+          ],
+          "distance_km": 25.0,
+          "estimated_transit_hours": 0.6,
+          "arrival_window": "0.5 \u2013 0.8 hrs"
+        },
+        {
+          "district": "Ernakulam",
+          "probability": 23.0,
+          "rank": 3,
+          "waypoint_path": [
+            "walayar",
+            "Palakkad",
+            "palakkad_rail",
+            "Ernakulam"
+          ],
+          "distance_km": 165.0,
+          "estimated_transit_hours": 3.0,
+          "arrival_window": "2.4 \u2013 4.1 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "walayar",
+        "Palakkad",
+        "palakkad_rail",
+        "Thrissur"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along walayar -> Palakkad -> palakkad_rail.",
+        "Alert Excise & Police highway patrol units at Thrissur bypass junctions within arrival window 1.6 \u2013 2.7 hrs.",
+        "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Thrissur: HIGH.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Palakkad transit corridors."
+      ],
+      "scenario_title": "Walayar Border \u00b7 Bulk Cannabis Inflow (Andhra Pipeline)"
+    },
+    {
+      "origin_node": "palakkad_rail",
+      "substance": "ganja",
+      "quantity_g": 30000.0,
+      "is_commercial": true,
+      "transport_mode": "train",
+      "predicted_destinations": [
+        {
+          "district": "Malappuram",
+          "probability": 65.4,
+          "rank": 1,
+          "waypoint_path": [
+            "palakkad_rail",
+            "Thrissur",
+            "Malappuram"
+          ],
+          "distance_km": 150.0,
+          "estimated_transit_hours": 3.0,
+          "arrival_window": "2.4 \u2013 4.0 hrs"
+        },
+        {
+          "district": "Palakkad",
+          "probability": 15.8,
+          "rank": 2,
+          "waypoint_path": [
+            "palakkad_rail",
+            "Palakkad"
+          ],
+          "distance_km": 5.0,
+          "estimated_transit_hours": 0.2,
+          "arrival_window": "0.5 \u2013 0.2 hrs"
+        },
+        {
+          "district": "Ernakulam",
+          "probability": 8.1,
+          "rank": 3,
+          "waypoint_path": [
+            "palakkad_rail",
+            "Ernakulam"
+          ],
+          "distance_km": 135.0,
+          "estimated_transit_hours": 1.9,
+          "arrival_window": "1.5 \u2013 2.5 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "palakkad_rail",
+        "Thrissur",
+        "Malappuram"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along palakkad_rail -> Thrissur -> Malappuram.",
+        "Alert Excise & Police highway patrol units at Malappuram bypass junctions within arrival window 2.4 \u2013 4.0 hrs.",
+        "Deploy RPF and anti-narcotics squad with sniffer canines at major railway stations in Malappuram."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Malappuram: HIGH.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Thrissur transit corridors."
+      ],
+      "scenario_title": "Palakkad Junction \u00b7 Express Train Luggage Courier"
+    },
+    {
+      "origin_node": "muthanga",
+      "substance": "methamphetamine",
+      "quantity_g": 45.0,
+      "is_commercial": false,
+      "transport_mode": "bus",
+      "predicted_destinations": [
+        {
+          "district": "Kannur",
+          "probability": 50.8,
+          "rank": 1,
+          "waypoint_path": [
+            "muthanga",
+            "Wayanad",
+            "Kozhikode",
+            "Kannur"
+          ],
+          "distance_km": 195.0,
+          "estimated_transit_hours": 7.0,
+          "arrival_window": "5.6 \u2013 9.5 hrs"
+        },
+        {
+          "district": "Kozhikode",
+          "probability": 19.4,
+          "rank": 2,
+          "waypoint_path": [
+            "muthanga",
+            "Wayanad",
+            "Kozhikode"
+          ],
+          "distance_km": 105.0,
+          "estimated_transit_hours": 3.8,
+          "arrival_window": "3.0 \u2013 5.1 hrs"
+        },
+        {
+          "district": "Wayanad",
+          "probability": 19.3,
+          "rank": 3,
+          "waypoint_path": [
+            "muthanga",
+            "Wayanad"
+          ],
+          "distance_km": 20.0,
+          "estimated_transit_hours": 0.6,
+          "arrival_window": "0.5 \u2013 0.8 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "muthanga",
+        "Wayanad",
+        "Kozhikode",
+        "Kannur"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along muthanga -> Wayanad -> Kozhikode.",
+        "Alert Excise & Police highway patrol units at Kannur bypass junctions within arrival window 5.6 \u2013 9.5 hrs.",
+        "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Kannur: HIGH.",
+        "Advisory to college campuses, hostels, and youth centers in Kannur: elevated synthetic party drug transit alert.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Wayanad transit corridors."
+      ],
+      "scenario_title": "Muthanga Gateway \u00b7 Methamphetamine Interstate Bus"
+    },
+    {
+      "origin_node": "thalappady",
+      "substance": "mdma",
+      "quantity_g": 25.0,
+      "is_commercial": true,
+      "transport_mode": "road_private",
+      "predicted_destinations": [
+        {
+          "district": "Kasaragod",
+          "probability": 93.4,
+          "rank": 1,
+          "waypoint_path": [
+            "thalappady",
+            "Kasaragod"
+          ],
+          "distance_km": 20.0,
+          "estimated_transit_hours": 0.5,
+          "arrival_window": "0.5 \u2013 0.7 hrs"
+        },
+        {
+          "district": "Ernakulam",
+          "probability": 3.0,
+          "rank": 2,
+          "waypoint_path": [
+            "thalappady",
+            "Kasaragod",
+            "Kannur",
+            "Kozhikode",
+            "Malappuram",
+            "Thrissur",
+            "Ernakulam"
+          ],
+          "distance_km": 400.0,
+          "estimated_transit_hours": 11.0,
+          "arrival_window": "8.8 \u2013 14.9 hrs"
+        },
+        {
+          "district": "Kannur",
+          "probability": 1.6,
+          "rank": 3,
+          "waypoint_path": [
+            "thalappady",
+            "Kasaragod",
+            "Kannur"
+          ],
+          "distance_km": 110.0,
+          "estimated_transit_hours": 3.0,
+          "arrival_window": "2.4 \u2013 4.1 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "thalappady",
+        "Kasaragod"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along thalappady -> Kasaragod.",
+        "Alert Excise & Police highway patrol units at Kasaragod bypass junctions within arrival window 0.5 \u2013 0.7 hrs.",
+        "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Kasaragod: HIGH.",
+        "Advisory to college campuses, hostels, and youth centers in Kasaragod: elevated synthetic party drug transit alert.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Kasaragod transit corridors."
+      ],
+      "scenario_title": "Thalappady Border \u00b7 Coastal Synthetic Inflow (Mangalore Hub)"
+    },
+    {
+      "origin_node": "kumily",
+      "substance": "ganja",
+      "quantity_g": 15000.0,
+      "is_commercial": false,
+      "transport_mode": "road_private",
+      "predicted_destinations": [
+        {
+          "district": "Idukki",
+          "probability": 93.6,
+          "rank": 1,
+          "waypoint_path": [
+            "kumily",
+            "Idukki"
+          ],
+          "distance_km": 20.0,
+          "estimated_transit_hours": 0.6,
+          "arrival_window": "0.5 \u2013 0.8 hrs"
+        },
+        {
+          "district": "Kozhikode",
+          "probability": 2.2,
+          "rank": 2,
+          "waypoint_path": [
+            "kumily",
+            "Idukki",
+            "Ernakulam",
+            "Thrissur",
+            "Malappuram",
+            "Kozhikode"
+          ],
+          "distance_km": 355.0,
+          "estimated_transit_hours": 10.0,
+          "arrival_window": "8.0 \u2013 13.5 hrs"
+        },
+        {
+          "district": "Malappuram",
+          "probability": 2.1,
+          "rank": 3,
+          "waypoint_path": [
+            "kumily",
+            "Idukki",
+            "Ernakulam",
+            "Thrissur",
+            "Malappuram"
+          ],
+          "distance_km": 305.0,
+          "estimated_transit_hours": 8.4,
+          "arrival_window": "6.7 \u2013 11.3 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "kumily",
+        "Idukki"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along kumily -> Idukki.",
+        "Alert Excise & Police highway patrol units at Idukki bypass junctions within arrival window 0.5 \u2013 0.8 hrs.",
+        "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Idukki: MODERATE.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Idukki transit corridors."
+      ],
+      "scenario_title": "Kumily Checkpost \u00b7 High Range Mountain Transit"
+    },
+    {
+      "origin_node": "aryankavu",
+      "substance": "ganja",
+      "quantity_g": 20000.0,
+      "is_commercial": true,
+      "transport_mode": "road_private",
+      "predicted_destinations": [
+        {
+          "district": "Idukki",
+          "probability": 38.2,
+          "rank": 1,
+          "waypoint_path": [
+            "aryankavu",
+            "Pathanamthitta",
+            "Kottayam",
+            "Idukki"
+          ],
+          "distance_km": 205.0,
+          "estimated_transit_hours": 6.2,
+          "arrival_window": "5.0 \u2013 8.4 hrs"
+        },
+        {
+          "district": "Kollam",
+          "probability": 20.7,
+          "rank": 2,
+          "waypoint_path": [
+            "aryankavu",
+            "Kollam"
+          ],
+          "distance_km": 70.0,
+          "estimated_transit_hours": 2.0,
+          "arrival_window": "1.6 \u2013 2.7 hrs"
+        },
+        {
+          "district": "Thiruvananthapuram",
+          "probability": 16.1,
+          "rank": 3,
+          "waypoint_path": [
+            "aryankavu",
+            "Kollam",
+            "Thiruvananthapuram"
+          ],
+          "distance_km": 140.0,
+          "estimated_transit_hours": 3.8,
+          "arrival_window": "3.0 \u2013 5.1 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "aryankavu",
+        "Pathanamthitta",
+        "Kottayam",
+        "Idukki"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along aryankavu -> Pathanamthitta -> Kottayam.",
+        "Alert Excise & Police highway patrol units at Idukki bypass junctions within arrival window 5.0 \u2013 8.4 hrs.",
+        "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Idukki: HIGH.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Pathanamthitta transit corridors."
+      ],
+      "scenario_title": "Aryankavu Pass \u00b7 Southern Mountain Transit"
+    },
+    {
+      "origin_node": "nedumbassery",
+      "substance": "mdma",
+      "quantity_g": 400.0,
+      "is_commercial": true,
+      "transport_mode": "courier_postal",
+      "predicted_destinations": [
+        {
+          "district": "Malappuram",
+          "probability": 47.4,
+          "rank": 1,
+          "waypoint_path": [
+            "nedumbassery",
+            "Thrissur",
+            "Malappuram"
+          ],
+          "distance_km": 135.0,
+          "estimated_transit_hours": 18.0,
+          "arrival_window": "14.4 \u2013 24.3 hrs"
+        },
+        {
+          "district": "Ernakulam",
+          "probability": 37.5,
+          "rank": 2,
+          "waypoint_path": [
+            "nedumbassery",
+            "Ernakulam"
+          ],
+          "distance_km": 25.0,
+          "estimated_transit_hours": 18.0,
+          "arrival_window": "14.4 \u2013 24.3 hrs"
+        },
+        {
+          "district": "Thiruvananthapuram",
+          "probability": 8.5,
+          "rank": 3,
+          "waypoint_path": [
+            "nedumbassery",
+            "Ernakulam",
+            "Alappuzha",
+            "Kollam",
+            "Thiruvananthapuram"
+          ],
+          "distance_km": 240.0,
+          "estimated_transit_hours": 19.2,
+          "arrival_window": "15.4 \u2013 25.9 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "nedumbassery",
+        "Thrissur",
+        "Malappuram"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along nedumbassery -> Thrissur -> Malappuram.",
+        "Alert Excise & Police highway patrol units at Malappuram bypass junctions within arrival window 14.4 \u2013 24.3 hrs.",
+        "Screen inbound courier logistics sorting centers in Malappuram (focus: darknet/synthetic delivery manifests)."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Malappuram: HIGH.",
+        "Advisory to college campuses, hostels, and youth centers in Malappuram: elevated synthetic party drug transit alert.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Thrissur transit corridors."
+      ],
+      "scenario_title": "Nedumbassery CIAL \u00b7 International Air / Postal Mail"
+    },
+    {
+      "origin_node": "aluva_rail",
+      "substance": "hashish_oil",
+      "quantity_g": 2000.0,
+      "is_commercial": false,
+      "transport_mode": "train",
+      "predicted_destinations": [
+        {
+          "district": "Ernakulam",
+          "probability": 41.6,
+          "rank": 1,
+          "waypoint_path": [
+            "aluva_rail",
+            "Ernakulam"
+          ],
+          "distance_km": 15.0,
+          "estimated_transit_hours": 0.4,
+          "arrival_window": "0.5 \u2013 0.6 hrs"
+        },
+        {
+          "district": "Kozhikode",
+          "probability": 17.0,
+          "rank": 2,
+          "waypoint_path": [
+            "aluva_rail",
+            "Ernakulam",
+            "Thrissur",
+            "Malappuram",
+            "Kozhikode"
+          ],
+          "distance_km": 215.0,
+          "estimated_transit_hours": 5.3,
+          "arrival_window": "4.3 \u2013 7.2 hrs"
+        },
+        {
+          "district": "Alappuzha",
+          "probability": 10.7,
+          "rank": 3,
+          "waypoint_path": [
+            "aluva_rail",
+            "Alappuzha"
+          ],
+          "distance_km": 75.0,
+          "estimated_transit_hours": 1.5,
+          "arrival_window": "1.2 \u2013 2.1 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "aluva_rail",
+        "Ernakulam"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along aluva_rail -> Ernakulam.",
+        "Alert Excise & Police highway patrol units at Ernakulam bypass junctions within arrival window 0.5 \u2013 0.6 hrs.",
+        "Deploy RPF and anti-narcotics squad with sniffer canines at major railway stations in Ernakulam."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Ernakulam: MODERATE.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Ernakulam transit corridors."
+      ],
+      "scenario_title": "Aluva Railway Hub \u00b7 Hashish Oil Express Consignment"
+    }
+  ],
+  "displacement_simulations": [
+    {
+      "target_checkpost": "walayar",
+      "checkpost_name": "Walayar Checkpost",
+      "enforcement_boost_pct": 50.0,
+      "impact_summary": "A 50% enforcement surge at Walayar Checkpost (NH 544) suppresses direct highway transit into Palakkad/Ernakulam.Smuggling networks exhibit route displacement into the northern Wayanad corridor (36%) and modal substitution into railway parcel logistics (22%).",
+      "rerouting_distribution": [
+        {
+          "corridor": "c01 (Muthanga / Wayanad Ghat Pass)",
+          "share_pct": 36.0,
+          "risk_change": "+28% Inflow Pressure"
+        },
+        {
+          "corridor": "c06 (Kumily / Idukki Mountain Route)",
+          "share_pct": 24.0,
+          "risk_change": "+19% Inflow Pressure"
+        },
+        {
+          "corridor": "c10 / c04 (Interstate Express Rail Parcels)",
+          "share_pct": 22.0,
+          "risk_change": "+17% Modal Shift"
+        },
+        {
+          "corridor": "Deterred / Abandoned Transit Attempts",
+          "share_pct": 18.0,
+          "risk_change": "Direct Supply Interruption"
+        }
+      ]
+    },
+    {
+      "target_checkpost": "muthanga",
+      "checkpost_name": "Muthanga Checkpost",
+      "enforcement_boost_pct": 50.0,
+      "impact_summary": "A 50% enforcement surge at Muthanga Checkpost (NH 766) diverts Bengaluru synthetic flow southward into Walayar trunk and northward into Kasaragod coastal highways.",
+      "rerouting_distribution": [
+        {
+          "corridor": "c02 (Walayar / Palakkad NH 544)",
+          "share_pct": 42.0,
+          "risk_change": "+34% Inflow Pressure"
+        },
+        {
+          "corridor": "c03 (Thalappady / Kasaragod Coastal)",
+          "share_pct": 26.0,
+          "risk_change": "+20% Coastal Rerouting"
+        },
+        {
+          "corridor": "SH 28 (Nilambur / Vazhikkadavu Ghat Pass)",
+          "share_pct": 18.0,
+          "risk_change": "+14% Secondary Road Spillover"
+        },
+        {
+          "corridor": "Deterred / Abandoned Transit Attempts",
+          "share_pct": 14.0,
+          "risk_change": "Direct Supply Interruption"
+        }
+      ]
+    }
+  ],
+  "model_architecture": {
+    "type": "Hierarchical Hybrid: Dirichlet-Markov Routing + HistGradientBoosting + Graph Diffusion",
+    "compute_requirement": "Sub-minute CPU Training (Zero Cloud Training Required); Sub-millisecond Edge Inference",
+    "veracity_sources": "1,137 News Seizure Observations + 65 Kerala High Court NDPS Judicial Cases"
+  }
+}

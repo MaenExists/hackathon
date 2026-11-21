@@ -369,7 +369,13 @@ def main():
     ap.add_argument("--demo", action="store_true", help="Synthetic smoke test ONLY")
     ap.add_argument("--horizon", type=int, default=2, help="Forecast horizon H in weeks (default: 2)")
     ap.add_argument("--export-json", help="Export backtest replay to JSON for UI demo")
+    ap.add_argument("--transit", action="store_true", help="Run full multi-level transit movement & diffusion engine")
     a = ap.parse_args()
+
+    if a.transit:
+        from corridor_transit_model import main as transit_main
+        transit_main([])
+        return
 
     if a.demo:
         print("*** SYNTHETIC DATA: pipeline smoke test, NOT real findings ***")

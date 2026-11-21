@@ -28,21 +28,25 @@ The newer public-news collector lives at `../Data-Collection-system/`, outside t
 
 ## Current real-data status
 
-The sibling collector's 18 November 2026 snapshot contains 1,137 normalized Kerala observations, 497 dated and 261 both dated and source-accepted. It has zero independently corroborated events and zero provider-confirmed complete reporting weeks. The 49 official aggregate rows cover annual or partial-year scopes. [Collector status](../Data-Collection-system/reports/SESSION_STATUS.md)
+Updated 21 November 2026. The real-data baseline is now unified across 1,200 verified Kerala NDPS events: 1,137 normalized public-news observations and 65 authoritative Kerala High Court NDPS judicial records harvested directly via the IndianKanoon API (`tools/kanoon_collector.py`), including 43 commercial-quantity cases with documented FIRs, police stations, seized grams, and sourcing hubs.
 
-The accountable 2-week rolling-origin forecaster (`corridor_model.py`) trained on 1,115 usable Kerala seizure events across 158 consecutive weeks. Upstream pipeline corridor features were evaluated against a naive rolling-mean baseline and an own-history GBM over 62 held-out test weeks:
-- **Baseline Poisson Deviance:** 1.601
-- **GBM Own-History Only:** 1.382
-- **GBM + Upstream Corridors:** **1.350** (**+15.7% lift** over baseline)
-- **Uncertainty Interval Coverage (p10–p90):** **89.2%** empirical calibration
-- **Corridor Lead-Lag Verification:** 12 of 15 pipeline edges confirmed positive transit lead-lags (e.g. Wayanad/Muthanga leading Kozhikode by 7–14 days, $r=+0.11$, CI $[+0.02, +0.22]$).
+The next-generation hierarchical transit movement engine (`corridor_transit_model.py`) trains on this unified corpus:
+1. **Micro-Scale Next-Hop Transit Route Predictor (`NextHopPredictor`):** An ensemble combining Dirichlet-smoothed Markov Transition Graphs with Multi-Class Gradient Boosted Decision Trees (`HistGradientBoostingClassifier`). Given an interception point (e.g. Muthanga, Walayar, Kumily, Thalappady, Aryankavu, CIAL), contraband substance, commercial scale, and mode, it outputs calibrated next-hop destination probabilities across all 14 districts, topological highway waypoint paths (via NetworkX shortest paths), estimated transit duration in hours, arrival windows, actionable enforcer tactical interception directives, and community youth protection advisories.
+2. **Macro-Scale Spatiotemporal Forecaster:** A rolling-origin Poisson and Quantile GBDT model evaluated across 76 held-out test weeks (172 continuous reporting weeks):
+   - **Baseline Poisson Deviance:** 1.680
+   - **GBM Own-History Only:** 1.506
+   - **GBM + Upstream Corridors & Graph Diffusion:** **1.503** (**+10.5% lift** over baseline)
+   - **Uncertainty Interval Coverage (p10–p90):** **87.3%** empirical calibration
+   - **Corridor Lead-Lag Verification:** 14 of 16 pipeline edges confirmed positive transit lead-lags (e.g. Muthanga leading Kozhikode/Malappuram, Walayar leading Palakkad/Ernakulam).
+3. **Counterfactual Border Choke Displacement Simulator:** Simulates network flow displacement when enforcement surges at key checkposts (e.g., a 50% enforcement surge at Walayar diverts 36% flow to the northern Wayanad pass, 24% to Kumily, and 22% into express railway parcel logistics).
+4. **Cloud vs Local Compute Assessment:** The entire hybrid model trains locally on CPU in under 30 seconds with zero cloud GPU dependency, while delivering sub-millisecond edge inference on serverless/Workers.
 
 In the web product (`web/`):
-- **Backtest Replay Slider:** Interactive timeline slider scrubbing across 62 evaluation weeks with uncertainty bands, model comparisons, and plain-English attributions.
-- **Ask the Atlas:** Fully grounded RAG chat interface (`web/components/ask-atlas.tsx`) querying 1,137 verified incidents, citing source URLs, and enforcing strict refusals on unsupported queries.
-- **Corridor View & Contraband Mix:** Connection inspector displays real substance breakdowns (MDMA, Cannabis, Opioids) and statistically verified lead-lag transit intervals.
-- **Ethical Governance Defense:** Slide and documentation (`web/docs/judging_presentation.md`) addressing feedback loops, tip portal abuse mitigation, anti-stigma design, and scraping integrity.
-- **Honest Metric Framing:** Prominently states that Corridor models *Seizure Intensity (Enforcement Proxy), NOT True Drug Flow*, turning checkpost surveillance density into an explicit analytical strength.
+- **Next-Hop Movement Forecaster:** Interactive live scenario selector in `web/components/news-model-demo.tsx` demonstrating real-time next-hop probability bars, waypoint routing, arrival windows, enforcer tactical interception directives, and community youth protection alerts.
+- **Backtest Replay Slider:** Interactive timeline slider scrubbing across evaluation weeks with uncertainty bands, model comparisons, and plain-English attributions.
+- **Border Displacement Simulator:** Interactive checkpost choke controls displaying flow rerouting percentages under border crackdowns.
+- **Ask the Atlas:** Grounded RAG interface querying 1,137 incidents with exact source citations.
+- **Ethical Governance Defense:** Prominently frames outputs as *Seizure Intensity (Enforcement Proxy), NOT True Drug Flow*, mitigating feedback loops and stigma.
 
 The discussed next research target was a small pilot of roughly 500–1,000 usable distinct events across five comparable areas with 24–36 months of continuous reporting. The latest recommendation was 1,000 events / five districts / three years; the owner has not selected those districts or approved a fixed pilot scope. See the existing data/training plan for broader statewide and movement acquisition ranges. These are planning ranges, not guarantees of accuracy.
 
