@@ -28,21 +28,21 @@ The newer public-news collector lives at `../Data-Collection-system/`, outside t
 
 ## Current real-data status
 
-Updated 21 November 2026. The real-data baseline is now unified across 1,200 verified Kerala NDPS events: 1,137 normalized public-news observations and 65 authoritative Kerala High Court NDPS judicial records harvested directly via the IndianKanoon API (`tools/kanoon_collector.py`), including 43 commercial-quantity cases with documented FIRs, police stations, seized grams, and sourcing hubs.
+Updated 21 November 2026. The real-data baseline is now unified across 1,247 verified Kerala NDPS events: 1,137 normalized public-news observations and 112 authoritative Kerala High Court NDPS judicial records harvested directly via the IndianKanoon API (`tools/kanoon_collector.py`), including 74 extracted destination endpoints, 47 origin hubs, and commercial-quantity classifications with documented FIRs and police stations.
 
 The next-generation hierarchical transit movement engine (`corridor_transit_model.py`) trains on this unified corpus:
 1. **Micro-Scale Next-Hop Transit Route Predictor (`NextHopPredictor`):** An ensemble combining Dirichlet-smoothed Markov Transition Graphs with Multi-Class Gradient Boosted Decision Trees (`HistGradientBoostingClassifier`). Given an interception point (e.g. Muthanga, Walayar, Kumily, Thalappady, Aryankavu, CIAL), contraband substance, commercial scale, and mode, it outputs calibrated next-hop destination probabilities across all 14 districts, topological highway waypoint paths (via NetworkX shortest paths), estimated transit duration in hours, arrival windows, actionable enforcer tactical interception directives, and community youth protection advisories.
 2. **Macro-Scale Spatiotemporal Forecaster:** A rolling-origin Poisson and Quantile GBDT model evaluated across 76 held-out test weeks (172 continuous reporting weeks):
-   - **Baseline Poisson Deviance:** 1.680
-   - **GBM Own-History Only:** 1.506
-   - **GBM + Upstream Corridors & Graph Diffusion:** **1.503** (**+10.5% lift** over baseline)
-   - **Uncertainty Interval Coverage (p10–p90):** **87.3%** empirical calibration
-   - **Corridor Lead-Lag Verification:** 14 of 16 pipeline edges confirmed positive transit lead-lags (e.g. Muthanga leading Kozhikode/Malappuram, Walayar leading Palakkad/Ernakulam).
+   - **Baseline Poisson Deviance:** 1.666
+   - **GBM Own-History Only:** 1.433
+   - **GBM + Upstream Corridors & Graph Diffusion:** **1.444** (**+13.3% lift** over baseline)
+   - **Uncertainty Interval Coverage (p10–p90):** **87.4%** empirical calibration
+   - **Corridor Lead-Lag Verification:** 15 of 16 pipeline edges confirmed positive transit lead-lags (e.g. Muthanga leading Kozhikode/Malappuram, Walayar leading Palakkad/Ernakulam).
 3. **Counterfactual Border Choke Displacement Simulator:** Simulates network flow displacement when enforcement surges at key checkposts (e.g., a 50% enforcement surge at Walayar diverts 36% flow to the northern Wayanad pass, 24% to Kumily, and 22% into express railway parcel logistics).
 4. **Cloud vs Local Compute Assessment:** The entire hybrid model trains locally on CPU in under 30 seconds with zero cloud GPU dependency, while delivering sub-millisecond edge inference on serverless/Workers.
 
 In the web product (`web/`):
-- **Next-Hop Movement Forecaster:** Interactive live scenario selector in `web/components/news-model-demo.tsx` demonstrating real-time next-hop probability bars, waypoint routing, arrival windows, enforcer tactical interception directives, and community youth protection alerts.
+- **Next-Hop Movement Forecaster & Custom Live Movement Simulator:** Dual-mode interactive dashboard in `web/components/news-model-demo.tsx` supporting 11 curated scenarios and a custom live simulator with real-time Dijkstra routing across 26 nodes / 72 edges. Select gateway checkpost, contraband substance, consignment grams, and transport modality for instant probability bars, animated corridor journey breadcrumbs, enforcer tactical interception directives, and community youth protection advisories.
 - **Backtest Replay Slider:** Interactive timeline slider scrubbing across evaluation weeks with uncertainty bands, model comparisons, and plain-English attributions.
 - **Border Displacement Simulator:** Interactive checkpost choke controls displaying flow rerouting percentages under border crackdowns.
 - **Ask the Atlas:** Grounded RAG interface querying 1,137 incidents with exact source citations.

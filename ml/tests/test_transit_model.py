@@ -91,11 +91,50 @@ def test_macro_features_no_future_leakage():
 
 
 def test_counterfactual_displacement_conservation():
-    res = simulate_enforcement_displacement("walayar", 50.0)
-    assert res["target_checkpost"] == "walayar"
-    assert "rerouting_distribution" in res
-    total_share = sum(item["share_pct"] for item in res["rerouting_distribution"])
-    assert abs(total_share - 100.0) < 1e-4  # Flow conservation (100%)
+    checkposts_to_test = ["walayar", "muthanga", "thalappady", "kumily", "aryankavu", "unknown_border"]
+    for cp in checkposts_to_test:
+        res = simulate_enforcement_displacement(cp, 50.0)
+        assert "rerouting_distribution" in res
+        total_share = sum(item["share_pct"] for item in res["rerouting_distribution"])
+        assert abs(total_share - 100.0) < 1e-4, f"Flow not conserved for {cp}: sum={total_share}"
+
+
+def test_next_hop_predictor_edge_cases():
+    G = build_corridor_graph()
+    predictor = NextHopPredictor(G)
+
+    df = pd.DataFrame([
+        {"district": "Wayanad", "place": "muthanga", "substance": "mdma", "quantity_g": 50.0, "transport_mode": "road_private", "date": "2024-03-01", "origin_hub": "Bengaluru", "destination_district": "Kozhikode"},
+        {"district": "Palakkad", "place": "walayar", "substance": "ganja", "quantity_g": 50000.0, "transport_mode": "road_private", "date": "2024-03-02", "origin_hub": "Andhra Pradesh", "destination_district": "Ernakulam"},
+        {"district": "Ernakulam", "place": "edappally", "substance": "mdma", "quantity_g": 20.0, "transport_mode": "bus", "date": "2024-03-03", "origin_hub": "Mangalore", "destination_district": "Ernakulam"},
+        {"district": "Idukki", "place": "kumily", "substance": "ganja", "quantity_g": 10000.0, "transport_mode": "road_private", "date": "2024-03-04", "origin_hub": "Madurai", "destination_district": "Kottayam"},
+    ] * 20)
+
+    predictor.fit(df)
+
+    # 1. quantity_g=None should not crash with TypeError
+    pred_none = predictor.predict_next_hop("muthanga", "mdma", quantity_g=None)
+    assert len(pred_none["predicted_destinations"]) == 3
+
+    # 2. quantity_g=0.0
+    pred_zero = predictor.predict_next_hop("muthanga", "mdma", quantity_g=0.0)
+    assert pred_zero["is_commercial"] is False
+
+    # 3. District casing neutrality: query with "Ernakulam" or "ernakulam" must route from Ernakulam
+    pred_ekm = predictor.predict_next_hop("Ernakulam", "mdma", quantity_g=25.0)
+    # The primary path must start from Ernakulam, NOT Palakkad
+    assert pred_ekm["primary_corridor_path"][0] == "Ernakulam"
+
+    # 4. Unseen substance and mode should not crash
+    pred_unseen = predictor.predict_next_hop("walayar", substance="ketamine", transport_mode="drone")
+    assert len(pred_unseen["predicted_destinations"]) == 3
+
+    # 5. Check arrival windows are valid (lower <= upper, never inverted)
+    for d in pred_ekm["predicted_destinations"]:
+        arr = d["arrival_window"]
+        parts = arr.replace(" hrs", "").split(" – ")
+        low, high = float(parts[0]), float(parts[1])
+        assert low <= high, f"Inverted arrival window: {arr}"
 
 
 def test_kanoon_case_extraction():
@@ -112,4 +151,26 @@ def test_kanoon_case_extraction():
     assert case["quantity_g"] == 55.5
     assert case["origin_place"] == "Bengaluru"
     assert case["destination_place"] == "Kozhikode"
+    assert case["is_commercial"] is True
+
+
+def test_kanoon_accused_address_destination_extraction():
+    # Multi-comma accused address block test
+    judgment_text = """
+    IN THE HIGH COURT OF KERALA AT ERNAKULAM
+    BAIL APPL. NO. 9999 OF 2025
+    CRIME NO. 1181/2017 OF WALAYAR POLICE STATION, PALAKKAD
+    Charged under Section 20(b)(ii)(C) of the NDPS Act.
+    PETITIONER/ACCUSED:
+    MOHAMMED RAFI, AGED 28 YEARS, S/O USMAN, KALLACHI HOUSE, KAKKATTIL P.O., VADAKARA, KOZHIKODE DISTRICT, PIN - 673506
+    RESPONDENT:
+    STATE OF KERALA
+    The accused was apprehended carrying 25000 grams of Ganja in bags at Walayar checkpost with direction to transport it to Ernakulam.
+    """
+    case = extract_incident(888888, "Mohammed Rafi vs State on 15 May, 2025", judgment_text)
+    assert case is not None
+    assert case["district"] == "Palakkad"  # Seizure happened at Walayar
+    assert case["place"] == "Walayar Checkpost"
+    assert case["destination_place"] == "Ernakulam"
+    assert case["quantity_g"] == 25000.0
     assert case["is_commercial"] is True

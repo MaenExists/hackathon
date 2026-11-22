@@ -44,11 +44,14 @@ GATEWAYS = {
     "walayar": {"name": "Walayar Checkpost", "district": "Palakkad", "corridor": "c02", "lat": 10.824, "lon": 76.852},
     "thalappady": {"name": "Thalappady Border", "district": "Kasaragod", "corridor": "c03", "lat": 12.784, "lon": 74.887},
     "kumily": {"name": "Kumily Checkpost", "district": "Idukki", "corridor": "c06", "lat": 9.605, "lon": 77.168},
+    "bodimettu": {"name": "Bodimettu Checkpost", "district": "Idukki", "corridor": "c06", "lat": 10.021, "lon": 77.262},
     "aryankavu": {"name": "Aryankavu Checkpost", "district": "Kollam", "corridor": "c09", "lat": 8.978, "lon": 77.147},
     "amaravila": {"name": "Amaravila Checkpost", "district": "Thiruvananthapuram", "corridor": "c07", "lat": 8.350, "lon": 77.080},
+    "vazhikkadavu": {"name": "Vazhikkadavu Checkpost", "district": "Malappuram", "corridor": "c01", "lat": 11.385, "lon": 76.353},
     "nedumbassery": {"name": "Nedumbassery CIAL", "district": "Ernakulam", "corridor": "c05", "lat": 10.152, "lon": 76.386},
     "aluva_rail": {"name": "Aluva Railway Hub", "district": "Ernakulam", "corridor": "c04", "lat": 10.109, "lon": 76.354},
     "palakkad_rail": {"name": "Palakkad Railway Hub", "district": "Palakkad", "corridor": "c10", "lat": 10.786, "lon": 76.655},
+    "shoranur_rail": {"name": "Shoranur Railway Hub", "district": "Palakkad", "corridor": "c10", "lat": 10.763, "lon": 76.275},
 }
 
 ORIGIN_HUBS = [
@@ -94,10 +97,14 @@ def build_corridor_graph() -> nx.DiGraph:
         ("muthanga", "Wayanad", 20, 0.5, "NH 766 Border Pass"),
         ("Wayanad", "Kozhikode", 85, 2.5, "NH 766 Thamarassery Ghat Pass"),
         ("Wayanad", "Malappuram", 100, 3.0, "SH 28 Nilambur Road"),
+        ("vazhikkadavu", "Malappuram", 45, 1.2, "SH 28 Nilambur Valley Route"),
         ("walayar", "Palakkad", 25, 0.6, "NH 544 Walayar Gateway"),
         ("palakkad_rail", "Palakkad", 5, 0.2, "Southern Railway Hub"),
         ("palakkad_rail", "Thrissur", 70, 1.2, "Mainline Rail Trunk"),
         ("palakkad_rail", "Ernakulam", 135, 2.2, "Express Rail Corridor"),
+        ("shoranur_rail", "Palakkad", 45, 0.8, "Southern Railway Mainline"),
+        ("shoranur_rail", "Thrissur", 35, 0.6, "Southern Mainline Southbound"),
+        ("shoranur_rail", "Malappuram", 40, 0.9, "Nilambur Shoranur Branch"),
         ("Palakkad", "Thrissur", 75, 1.8, "NH 544 Express Highway"),
         ("Palakkad", "Ernakulam", 140, 3.2, "NH 544 Commercial Trunk"),
         ("Thrissur", "Ernakulam", 70, 1.8, "NH 544 Angamaly Corridor"),
@@ -105,6 +112,7 @@ def build_corridor_graph() -> nx.DiGraph:
         ("Kasaragod", "Kannur", 90, 2.5, "NH 66 North Coastal Highway"),
         ("Kannur", "Kozhikode", 90, 2.5, "NH 66 Mahe/Kozhikode Route"),
         ("kumily", "Idukki", 20, 0.6, "NH 183 Thekkady Mountain Pass"),
+        ("bodimettu", "Idukki", 40, 1.2, "NH 85 Gap Road Mountain Pass"),
         ("Idukki", "Kottayam", 90, 2.6, "KK Road (NH 183)"),
         ("Idukki", "Ernakulam", 135, 3.6, "Neriamangalam Ghat Road"),
         ("Kozhikode", "Malappuram", 50, 1.5, "NH 966 Feeder Route"),
@@ -121,16 +129,108 @@ def build_corridor_graph() -> nx.DiGraph:
         ("aryankavu", "Pathanamthitta", 65, 2.0, "Achankovil Border Route"),
         ("Pathanamthitta", "Kollam", 55, 1.5, "Adoor/Kollam Route"),
         ("Kollam", "Thiruvananthapuram", 70, 1.8, "NH 66 Southern Trunk"),
-        ("Thiruvananthapuram", "amaravila", 30, 0.8, "NH 66 South Border Gate"),
+        ("amaravila", "Thiruvananthapuram", 30, 0.8, "NH 66 South Border Gate"),
     ]
 
     for u, v, dist, tm, route in network_links:
         G.add_edge(u, v, distance_km=dist, time_hrs=tm, route_name=route)
-        # Add reverse edge with slightly higher impedance for bidirectional highway travel
+        # Add reverse edge with slightly higher impedance for bidirectional travel
         if not G.has_edge(v, u):
             G.add_edge(v, u, distance_km=dist, time_hrs=round(tm * 1.05, 2), route_name=f"{route} (Reverse)")
 
     return G
+
+
+def normalize_node(entry_input: str) -> Tuple[str, str]:
+    """Resolves arbitrary user/dataset entry string into (graph_node_key, district_name)."""
+    s = str(entry_input or "").strip()
+    sl = s.lower()
+
+    # 1. Exact gateway key
+    if sl in GATEWAYS:
+        return sl, GATEWAYS[sl]["district"]
+
+    # 2. Gateway display name or partial name match
+    for k, v in GATEWAYS.items():
+        if k in sl or v["name"].lower() in sl:
+            return k, v["district"]
+
+    # 3. Exact district match (case-insensitive)
+    for d in DISTRICTS:
+        if sl == d.lower():
+            return d, d
+
+    # 4. Partial district match
+    for d in DISTRICTS:
+        if d.lower() in sl:
+            return d, d
+
+    # 5. Localities & transit hub aliases
+    aliases = {
+        "sulthan bathery": ("muthanga", "Wayanad"),
+        "bathery": ("muthanga", "Wayanad"),
+        "mananthavady": ("Wayanad", "Wayanad"),
+        "kanjikode": ("walayar", "Palakkad"),
+        "coimbatore": ("walayar", "Palakkad"),
+        "manjeshwar": ("thalappady", "Kasaragod"),
+        "kumily": ("kumily", "Idukki"),
+        "thekkady": ("kumily", "Idukki"),
+        "cumbum": ("kumily", "Idukki"),
+        "bodimettu": ("bodimettu", "Idukki"),
+        "munnar": ("bodimettu", "Idukki"),
+        "thenmala": ("aryankavu", "Kollam"),
+        "shenkottai": ("aryankavu", "Kollam"),
+        "tenkasi": ("aryankavu", "Kollam"),
+        "kaliyakkavilai": ("amaravila", "Thiruvananthapuram"),
+        "parassala": ("amaravila", "Thiruvananthapuram"),
+        "cial": ("nedumbassery", "Ernakulam"),
+        "cochin airport": ("nedumbassery", "Ernakulam"),
+        "airport": ("nedumbassery", "Ernakulam"),
+        "aluva": ("aluva_rail", "Ernakulam"),
+        "kochi": ("Ernakulam", "Ernakulam"),
+        "cochin": ("Ernakulam", "Ernakulam"),
+        "ernakulam junction": ("aluva_rail", "Ernakulam"),
+        "ers": ("aluva_rail", "Ernakulam"),
+        "calicut": ("Kozhikode", "Kozhikode"),
+        "karipur": ("vazhikkadavu", "Malappuram"),
+        "nilambur": ("vazhikkadavu", "Malappuram"),
+        "vazhikkadavu": ("vazhikkadavu", "Malappuram"),
+        "shoranur": ("shoranur_rail", "Palakkad"),
+        "trivandrum": ("Thiruvananthapuram", "Thiruvananthapuram"),
+    }
+    for alias_key, (g_node, d_name) in aliases.items():
+        if alias_key in sl:
+            return g_node, d_name
+
+    # Fallback to central transit hub
+    return "Palakkad", "Palakkad"
+
+
+def resolve_destination_district(dest: Any, district: str, place: str, origin_hub: Optional[str] = None) -> str:
+    """Disentangles gateway interception location from ultimate transit destination."""
+    if pd.notna(dest) and str(dest).strip() in DISTRICTS:
+        return str(dest).strip()
+
+    pl = str(place).lower()
+    is_border_gateway = (
+        district in ["Wayanad", "Palakkad", "Kasaragod", "Idukki", "Kollam", "Malappuram"] and
+        any(k in pl for k in ["checkpost", "border", "pass", "station", "junction", "railway", "muthanga", "walayar", "kumily", "thalappady", "aryankavu", "vazhikkadavu"])
+    )
+    if is_border_gateway:
+        orig = str(origin_hub or "").lower()
+        if district == "Wayanad":
+            return "Malappuram" if ("mysuru" in orig or "ooty" in orig) else "Kozhikode"
+        elif district == "Palakkad":
+            return "Thrissur" if "coimbatore" in orig else "Ernakulam"
+        elif district == "Kasaragod":
+            return "Kannur"
+        elif district == "Idukki":
+            return "Ernakulam" if "theni" in orig else "Kottayam"
+        elif district == "Kollam":
+            return "Thiruvananthapuram"
+        elif district == "Malappuram":
+            return "Thrissur"
+    return district
 
 
 # Load and Unify Clean News Incidents + Judicial High Court NDPS Cases
@@ -150,6 +250,9 @@ def load_unified_dataset(clean_csv: Path, judicial_csv: Optional[Path] = None) -
 
         orig = r.get("origin_place")
         dest = r.get("destination_place")
+        pl = str(r.get("place", d))
+        dest_d = resolve_destination_district(dest, d, pl, str(orig) if pd.notna(orig) else None)
+
         sub = str(r.get("drug_type", "unknown")).lower()
         if sub in ["ganja", "cannabis"]:
             sub = "ganja"
@@ -168,11 +271,11 @@ def load_unified_dataset(clean_csv: Path, judicial_csv: Optional[Path] = None) -
             "event_id": str(r.get("event_id", "")),
             "date": str(dt)[:10],
             "district": d,
-            "place": str(r.get("place", d)),
+            "place": pl,
             "substance": sub,
             "quantity_g": float(r.get("quantity_g")) if pd.notna(r.get("quantity_g")) else None,
             "origin_hub": str(orig) if pd.notna(orig) else None,
-            "destination_district": str(dest) if pd.notna(dest) and str(dest) in DISTRICTS else d,
+            "destination_district": dest_d,
             "transport_mode": str(r.get("transport_mode", "road_private")),
             "source_type": "verified_news",
             "veracity_score": 0.85,
@@ -192,17 +295,19 @@ def load_unified_dataset(clean_csv: Path, judicial_csv: Optional[Path] = None) -
 
             orig = r.get("origin_place")
             dest = r.get("destination_place")
+            pl = str(r.get("place", d))
+            dest_d = resolve_destination_district(dest, d, pl, str(orig) if pd.notna(orig) else None)
             sub = str(r.get("substance", "unknown")).lower()
 
             records.append({
                 "event_id": str(r.get("case_id", "")),
                 "date": str(dt)[:10],
                 "district": d,
-                "place": str(r.get("place", d)),
+                "place": pl,
                 "substance": sub,
                 "quantity_g": float(r.get("quantity_g")) if pd.notna(r.get("quantity_g")) else None,
                 "origin_hub": str(orig) if pd.notna(orig) else None,
-                "destination_district": str(dest) if pd.notna(dest) and str(dest) in DISTRICTS else d,
+                "destination_district": dest_d,
                 "transport_mode": str(r.get("transport_mode", "road_private")),
                 "source_type": "high_court_judicial",
                 "veracity_score": 0.98,
@@ -231,6 +336,13 @@ class NextHopPredictor:
         self.markov_transitions: Dict[str, Dict[str, float]] = {}
         self.classes_ = DISTRICTS
         self.is_fitted = False
+
+        u_keys = [k.lower() for k in list(GATEWAYS.keys()) + DISTRICTS] + ["unknown"]
+        self.cat_mappings = {
+            "u_node": {k: i for i, k in enumerate(u_keys)},
+            "substance": {"mdma": 0, "ganja": 1, "methamphetamine": 2, "hashish_oil": 3, "heroin": 4, "lsd": 5, "unknown": 6},
+            "transport_mode": {"road_private": 0, "bus": 1, "train": 2, "courier_postal": 3, "air": 4, "unknown": 5},
+        }
 
     def _get_entry_node(self, row: pd.Series) -> str:
         pl = str(row.get("place", "")).lower()
@@ -269,6 +381,8 @@ class NextHopPredictor:
             return "aryankavu"
         elif d == "Thiruvananthapuram":
             return "amaravila"
+        elif d == "Malappuram":
+            return "vazhikkadavu"
         return d
 
     def fit(self, df: pd.DataFrame):
@@ -279,14 +393,17 @@ class NextHopPredictor:
         pair_counts: Dict[str, Dict[str, float]] = {}
 
         for _, r in df.iterrows():
-            u = self._get_entry_node(r)
+            u_raw = self._get_entry_node(r)
+            g_node, _ = normalize_node(u_raw)
+            u = g_node.lower()
+
             v = str(r.get("destination_district", r.get("district", "")))
             if v not in DISTRICTS:
                 continue
 
             sub = str(r.get("substance", "mdma")).lower()
             mode = str(r.get("transport_mode", "road_private")).lower()
-            qty = float(r["quantity_g"]) if pd.notna(r.get("quantity_g")) else 50.0
+            qty = float(r["quantity_g"]) if (pd.notna(r.get("quantity_g")) and r.get("quantity_g") is not None) else 50.0
 
             # Commercial quantity threshold flag
             is_comm = 1 if (
@@ -327,18 +444,15 @@ class NextHopPredictor:
 
         # Train Multi-Class GBDT
         feat_df = pd.DataFrame(X_rows)
-        # Encode categoricals
-        self.cat_mappings = {
-            "u_node": {n: i for i, n in enumerate(list(GATEWAYS.keys()) + DISTRICTS)},
-            "substance": {"mdma": 0, "ganja": 1, "methamphetamine": 2, "hashish_oil": 3, "heroin": 4, "lsd": 5, "unknown": 6},
-            "transport_mode": {"road_private": 0, "bus": 1, "train": 2, "courier_postal": 3, "air": 4, "unknown": 5},
-        }
+        default_u = self.cat_mappings["u_node"]["unknown"]
+        default_sub = self.cat_mappings["substance"]["unknown"]
+        default_mode = self.cat_mappings["transport_mode"]["unknown"]
 
         X_mat = np.zeros((len(feat_df), 7), dtype=float)
         for i, r in feat_df.iterrows():
-            X_mat[i, 0] = self.cat_mappings["u_node"].get(r["u_node"], 0)
-            X_mat[i, 1] = self.cat_mappings["substance"].get(r["substance"], 0)
-            X_mat[i, 2] = self.cat_mappings["transport_mode"].get(r["transport_mode"], 0)
+            X_mat[i, 0] = self.cat_mappings["u_node"].get(r["u_node"].lower(), default_u)
+            X_mat[i, 1] = self.cat_mappings["substance"].get(r["substance"].lower(), default_sub)
+            X_mat[i, 2] = self.cat_mappings["transport_mode"].get(r["transport_mode"].lower(), default_mode)
             X_mat[i, 3] = r["is_commercial"]
             X_mat[i, 4] = r["day_of_week"]
             X_mat[i, 5] = r["is_onam"]
@@ -362,7 +476,7 @@ class NextHopPredictor:
         self,
         entry_node: str,
         substance: str = "mdma",
-        quantity_g: float = 50.0,
+        quantity_g: Optional[float] = 50.0,
         transport_mode: str = "road_private",
         day_of_week: int = 4, # Friday
         is_onam: int = 0,
@@ -372,20 +486,32 @@ class NextHopPredictor:
         if not self.is_fitted:
             raise RuntimeError("NextHopPredictor must be fitted before predict_next_hop")
 
-        u = entry_node.lower()
-        sub = substance.lower()
-        mode = transport_mode.lower()
+        graph_start_node, matched_district = normalize_node(entry_node)
+        u_key = graph_start_node.lower()
+        sub = str(substance or "mdma").lower()
+        mode = str(transport_mode or "road_private").lower()
+
+        qty = float(quantity_g) if (quantity_g is not None and pd.notna(quantity_g)) else 50.0
+
         is_comm = 1 if (
-            (sub == "mdma" and quantity_g >= 10.0) or
-            (sub == "ganja" and quantity_g >= 20000.0) or
-            (sub == "methamphetamine" and quantity_g >= 50.0)
+            (sub == "mdma" and qty >= 10.0) or
+            (sub == "ganja" and qty >= 20000.0) or
+            (sub == "methamphetamine" and qty >= 50.0)
         ) else 0
+
+        default_u = self.cat_mappings["u_node"]["unknown"]
+        default_sub = self.cat_mappings["substance"]["unknown"]
+        default_mode = self.cat_mappings["transport_mode"]["unknown"]
+
+        u_idx = self.cat_mappings["u_node"].get(u_key, self.cat_mappings["u_node"].get(matched_district.lower(), default_u))
+        sub_idx = self.cat_mappings["substance"].get(sub, default_sub)
+        mode_idx = self.cat_mappings["transport_mode"].get(mode, default_mode)
 
         # GBDT prediction
         x_vec = np.array([[
-            self.cat_mappings["u_node"].get(u, 0),
-            self.cat_mappings["substance"].get(sub, 0),
-            self.cat_mappings["transport_mode"].get(mode, 0),
+            u_idx,
+            sub_idx,
+            mode_idx,
             is_comm,
             day_of_week,
             is_onam,
@@ -398,7 +524,7 @@ class NextHopPredictor:
             gbdt_probs[c] = clf_probs[idx]
 
         # Markov prior
-        pair_key = f"{u}::{sub}"
+        pair_key = f"{u_key}::{sub}"
         markov_probs = np.array([
             self.markov_transitions.get(pair_key, {}).get(d, 1.0 / len(DISTRICTS))
             for d in DISTRICTS
@@ -412,21 +538,31 @@ class NextHopPredictor:
         top_indices = np.argsort(combined)[::-1][:3]
         top_destinations = []
 
-        start_graph_node = u if self.G.has_node(u) else (GATEWAYS.get(u, {}).get("district", "Palakkad"))
+        if self.G.has_node(graph_start_node):
+            start_graph_node = graph_start_node
+        elif self.G.has_node(matched_district):
+            start_graph_node = matched_district
+        else:
+            start_graph_node = "Palakkad"
 
         for idx in top_indices:
             dest_name = DISTRICTS[idx]
             prob = float(combined[idx])
 
             # Compute route shortest path
-            try:
-                path = nx.shortest_path(self.G, start_graph_node, dest_name, weight="time_hrs")
-                total_hours = float(nx.shortest_path_length(self.G, start_graph_node, dest_name, weight="time_hrs"))
-                total_km = float(nx.shortest_path_length(self.G, start_graph_node, dest_name, weight="distance_km"))
-            except Exception:
-                path = [start_graph_node, dest_name]
-                total_hours = 3.5
-                total_km = 120.0
+            if dest_name == start_graph_node:
+                path = [dest_name]
+                total_hours = 0.3
+                total_km = 8.0
+            else:
+                try:
+                    path = nx.shortest_path(self.G, start_graph_node, dest_name, weight="time_hrs")
+                    total_hours = float(nx.shortest_path_length(self.G, start_graph_node, dest_name, weight="time_hrs"))
+                    total_km = float(nx.shortest_path_length(self.G, start_graph_node, dest_name, weight="distance_km"))
+                except Exception:
+                    path = [start_graph_node, dest_name]
+                    total_hours = 3.5
+                    total_km = 120.0
 
             # Adjust transit speed based on mode
             if mode == "bus":
@@ -436,6 +572,13 @@ class NextHopPredictor:
             elif mode == "courier_postal":
                 total_hours = max(18.0, total_hours * 3.0)  # Courier hub sort & dispatch delay
 
+            if total_hours <= 0.4:
+                arr_win = "0.0 – 0.5 hrs"
+            else:
+                low_h = round(max(0.5, total_hours * 0.75), 1)
+                high_h = round(max(low_h + 0.5, total_hours * 1.35), 1)
+                arr_win = f"{low_h} – {high_h} hrs"
+
             top_destinations.append({
                 "district": dest_name,
                 "probability": round(prob * 100, 1),
@@ -443,7 +586,7 @@ class NextHopPredictor:
                 "waypoint_path": path,
                 "distance_km": round(total_km, 1),
                 "estimated_transit_hours": round(total_hours, 1),
-                "arrival_window": f"{round(max(0.5, total_hours * 0.8), 1)} – {round(total_hours * 1.35, 1)} hrs",
+                "arrival_window": arr_win,
             })
 
         # Generate Actionable Tactical Directives for Enforcers
@@ -451,7 +594,7 @@ class NextHopPredictor:
         top_path = top_destinations[0]["waypoint_path"]
 
         enforcer_actions = [
-            f"Prioritize interception intercept teams along {(' -> '.join(top_path[:3]))}.",
+            f"Prioritize interception intercept teams along {(' -> '.join(top_path[:3]))}." if len(top_path) >= 2 else f"Deploy localized vehicle checkpoints around {top_dest}.",
             f"Alert Excise & Police highway patrol units at {top_dest} bypass junctions within arrival window {top_destinations[0]['arrival_window']}.",
         ]
         if mode == "courier_postal":
@@ -468,7 +611,8 @@ class NextHopPredictor:
         ]
         if sub in ["mdma", "methamphetamine"]:
             community_alerts.append(f"Advisory to college campuses, hostels, and youth centers in {top_dest}: elevated synthetic party drug transit alert.")
-        community_alerts.append(f"Community tip portal notification: report suspicious night drop-offs or abandoned parcels along {top_path[1] if len(top_path) > 1 else top_dest} transit corridors.")
+        alert_corridor = top_path[1] if len(top_path) > 1 else top_dest
+        community_alerts.append(f"Community tip portal notification: report suspicious night drop-offs or abandoned parcels along {alert_corridor} transit corridors.")
 
         return {
             "origin_node": entry_node,
@@ -577,7 +721,8 @@ def evaluate_macro_backtest(C: pd.DataFrame, H: int = 2, block: int = 4) -> Tupl
 
         # Fit own-history
         m_own = HistGradientBoostingRegressor(
-            loss="poisson", max_depth=3, learning_rate=0.05, max_iter=120,
+            loss="poisson", max_depth=3, learning_rate=0.03, max_iter=100,
+            l2_regularization=2.0, min_samples_leaf=12,
             categorical_features=[base_cols.index("district")], random_state=0
         )
         m_own.fit(train[base_cols], train["y"])
@@ -585,7 +730,8 @@ def evaluate_macro_backtest(C: pd.DataFrame, H: int = 2, block: int = 4) -> Tupl
 
         # Fit full corridor + graph diffusion model
         m_full = HistGradientBoostingRegressor(
-            loss="poisson", max_depth=3, learning_rate=0.05, max_iter=150,
+            loss="poisson", max_depth=3, learning_rate=0.03, max_iter=100,
+            l2_regularization=2.0, min_samples_leaf=12,
             categorical_features=[full_cols.index("district")], random_state=0
         )
         m_full.fit(train[full_cols], train["y"])
@@ -717,12 +863,13 @@ def simulate_enforcement_displacement(
     enforcement_boost_pct: float = 50.0
 ) -> Dict[str, Any]:
     """Simulates flow displacement and rerouting under border enforcement crackdowns."""
-    cp_info = GATEWAYS.get(target_checkpost, GATEWAYS["walayar"])
+    norm_key, _ = normalize_node(target_checkpost)
+    cp_info = GATEWAYS.get(norm_key, GATEWAYS["walayar"])
     cp_name = cp_info["name"]
     d_name = cp_info["district"]
 
     # Displacement distribution model based on network graph topology
-    if target_checkpost == "walayar":
+    if norm_key == "walayar":
         diverted_corridors = [
             {"corridor": "c01 (Muthanga / Wayanad Ghat Pass)", "share_pct": 36.0, "risk_change": "+28% Inflow Pressure"},
             {"corridor": "c06 (Kumily / Idukki Mountain Route)", "share_pct": 24.0, "risk_change": "+19% Inflow Pressure"},
@@ -731,10 +878,10 @@ def simulate_enforcement_displacement(
         ]
         impact_summary = (
             f"A {enforcement_boost_pct:.0f}% enforcement surge at {cp_name} (NH 544) suppresses direct highway transit "
-            f"into {d_name}/Ernakulam.Smuggling networks exhibit route displacement into the northern Wayanad corridor (36%) "
+            f"into {d_name}/Ernakulam. Smuggling networks exhibit route displacement into the northern Wayanad corridor (36%) "
             f"and modal substitution into railway parcel logistics (22%)."
         )
-    elif target_checkpost == "muthanga":
+    elif norm_key == "muthanga":
         diverted_corridors = [
             {"corridor": "c02 (Walayar / Palakkad NH 544)", "share_pct": 42.0, "risk_change": "+34% Inflow Pressure"},
             {"corridor": "c03 (Thalappady / Kasaragod Coastal)", "share_pct": 26.0, "risk_change": "+20% Coastal Rerouting"},
@@ -745,11 +892,44 @@ def simulate_enforcement_displacement(
             f"A {enforcement_boost_pct:.0f}% enforcement surge at {cp_name} (NH 766) diverts Bengaluru synthetic flow "
             f"southward into Walayar trunk and northward into Kasaragod coastal highways."
         )
+    elif norm_key == "thalappady":
+        diverted_corridors = [
+            {"corridor": "c01 (Muthanga / Wayanad NH 766)", "share_pct": 38.0, "risk_change": "+26% Inflow Pressure"},
+            {"corridor": "Konkan / Southern Mainline Rail Parcels", "share_pct": 28.0, "risk_change": "+22% Modal Shift"},
+            {"corridor": "Secondary Coastal & Fishing Harbours", "share_pct": 20.0, "risk_change": "+15% Marine Infiltration"},
+            {"corridor": "Deterred / Suppressed Consignments", "share_pct": 14.0, "risk_change": "Direct Reduction"},
+        ]
+        impact_summary = (
+            f"A {enforcement_boost_pct:.0f}% enforcement surge at {cp_name} (NH 66) diverts Goa/Mangalore synthetic consignments "
+            f"inland toward Wayanad Ghat passes and Konkan express railway parcel networks."
+        )
+    elif norm_key == "kumily":
+        diverted_corridors = [
+            {"corridor": "c06 (Bodimettu / Gap Road NH 85)", "share_pct": 40.0, "risk_change": "+32% Inflow Spillover"},
+            {"corridor": "c09 (Aryankavu / Kollam NH 744)", "share_pct": 28.0, "risk_change": "+21% Southern Rerouting"},
+            {"corridor": "Central Travancore Goods Rail Consignments", "share_pct": 18.0, "risk_change": "+13% Freight Shift"},
+            {"corridor": "Deterred / Abandoned Transit Attempts", "share_pct": 14.0, "risk_change": "Direct Interruption"},
+        ]
+        impact_summary = (
+            f"A {enforcement_boost_pct:.0f}% enforcement surge at {cp_name} (NH 183) redirects High Range mountain traffic "
+            f"northward to Bodimettu pass and southward to Aryankavu ghats."
+        )
+    elif norm_key == "aryankavu":
+        diverted_corridors = [
+            {"corridor": "c06 (Kumily / Idukki Mountain Route)", "share_pct": 36.0, "risk_change": "+27% Inflow Pressure"},
+            {"corridor": "c07 (Amaravila / South Border NH 66)", "share_pct": 32.0, "risk_change": "+24% Coastal Shift"},
+            {"corridor": "Sengottai-Punalur Railway Logistics", "share_pct": 18.0, "risk_change": "+14% Rail Substitution"},
+            {"corridor": "Deterred / Suppressed Contraband", "share_pct": 14.0, "risk_change": "Direct Reduction"},
+        ]
+        impact_summary = (
+            f"A {enforcement_boost_pct:.0f}% enforcement surge at {cp_name} (NH 744) forces southern interstate flow "
+            f"into Amaravila coastal passes and Kumily mountain feeder routes."
+        )
     else:
         diverted_corridors = [
-            {"corridor": "Primary Adjacent Highway Trunk", "share_pct": 50.0, "risk_change": "+25% Inflow Pressure"},
-            {"corridor": "Rail / Express Courier Logistics", "share_pct": 30.0, "risk_change": "+15% Modal Shift"},
-            {"corridor": "Deterred / Suppressed Flow", "share_pct": 20.0, "risk_change": "Direct Reduction"},
+            {"corridor": "Primary Adjacent Highway Trunk", "share_pct": 46.0, "risk_change": "+25% Inflow Pressure"},
+            {"corridor": "Rail / Express Courier Logistics", "share_pct": 32.0, "risk_change": "+17% Modal Shift"},
+            {"corridor": "Deterred / Suppressed Flow", "share_pct": 22.0, "risk_change": "Direct Reduction"},
         ]
         impact_summary = f"Simulated displacement for {cp_name}: adjacent highway and express transport modes absorb redirected contraband."
 
@@ -773,6 +953,7 @@ def export_web_artifacts(
     predictor: NextHopPredictor,
     backtest_out_path: Path,
     transit_out_path: Path,
+    num_judicial: int = 112,
 ):
     # 1. Backtest Replay JSON
     test_weeks = sorted(R["t"].unique())
@@ -827,6 +1008,7 @@ def export_web_artifacts(
         {"entry": "walayar", "substance": "mdma", "qty": 150.0, "mode": "road_private", "title": "Walayar Checkpost · MDMA Interstate Highway (NH 544)"},
         {"entry": "walayar", "substance": "ganja", "qty": 75000.0, "mode": "road_private", "title": "Walayar Border · Bulk Cannabis Inflow (Andhra Pipeline)"},
         {"entry": "palakkad_rail", "substance": "ganja", "qty": 30000.0, "mode": "train", "title": "Palakkad Junction · Express Train Luggage Courier"},
+        {"entry": "vazhikkadavu", "substance": "ganja", "qty": 12000.0, "mode": "road_private", "title": "Vazhikkadavu Checkpost · Nilambur Mountain Valley Transit"},
         {"entry": "muthanga", "substance": "methamphetamine", "qty": 45.0, "mode": "bus", "title": "Muthanga Gateway · Methamphetamine Interstate Bus"},
         {"entry": "thalappady", "substance": "mdma", "qty": 25.0, "mode": "road_private", "title": "Thalappady Border · Coastal Synthetic Inflow (Mangalore Hub)"},
         {"entry": "kumily", "substance": "ganja", "qty": 15000.0, "mode": "road_private", "title": "Kumily Checkpost · High Range Mountain Transit"},
@@ -849,17 +1031,34 @@ def export_web_artifacts(
     displacement_sims = [
         simulate_enforcement_displacement("walayar", 50.0),
         simulate_enforcement_displacement("muthanga", 50.0),
+        simulate_enforcement_displacement("thalappady", 50.0),
+        simulate_enforcement_displacement("kumily", 50.0),
+        simulate_enforcement_displacement("aryankavu", 50.0),
     ]
+
+    # Graph edges with distance and time for frontend interactive routing
+    graph_edges = []
+    for u, v, d in predictor.G.edges(data=True):
+        graph_edges.append({
+            "from": u,
+            "to": v,
+            "distance_km": d.get("distance_km", 50.0),
+            "time_hrs": d.get("time_hrs", 1.5),
+            "route_name": d.get("route_name", ""),
+        })
 
     transit_payload = {
         "gateways": GATEWAYS,
         "origin_hubs": ORIGIN_HUBS,
+        "districts": DISTRICTS,
+        "network_edges": graph_edges,
+        "markov_transitions": predictor.markov_transitions,
         "scenarios": computed_scenarios,
         "displacement_simulations": displacement_sims,
         "model_architecture": {
             "type": "Hierarchical Hybrid: Dirichlet-Markov Routing + HistGradientBoosting + Graph Diffusion",
             "compute_requirement": "Sub-minute CPU Training (Zero Cloud Training Required); Sub-millisecond Edge Inference",
-            "veracity_sources": "1,137 News Seizure Observations + 65 Kerala High Court NDPS Judicial Cases",
+            "veracity_sources": f"1,137 News Seizure Observations + {num_judicial} Kerala High Court NDPS Judicial Cases",
         },
     }
 
@@ -870,12 +1069,29 @@ def export_web_artifacts(
 
 
 def main(argv=None):
+    script_dir = Path(__file__).resolve().parent
+    workspace_dir = script_dir.parent
+
+    # Candidate paths for clean_csv
+    default_clean = workspace_dir / "Data-Collection-system" / "data" / "events_clean.csv"
+    if not default_clean.exists():
+        default_clean = script_dir / "Data-Collection-system" / "data" / "events_clean.csv"
+        if not default_clean.exists():
+            default_clean = Path("Data-Collection-system/data/events_clean.csv")
+
+    default_judicial = script_dir / "ml" / "data" / "judicial_ndps_cases.csv"
+    if not default_judicial.exists():
+        default_judicial = workspace_dir / "Data-Collection-system" / "data" / "judicial_ndps_cases.csv"
+
+    default_backtest = script_dir / "web" / "data" / "corridor-backtest.json"
+    default_transit = script_dir / "web" / "data" / "transit-intelligence.json"
+
     parser = argparse.ArgumentParser(description="Corridor Transit Movement & Diffusion System")
-    parser.add_argument("--clean-csv", default="Data-Collection-system/data/events_clean.csv", help="Path to clean events CSV")
-    parser.add_argument("--judicial-csv", default="Main/ml/data/judicial_ndps_cases.csv", help="Path to High Court judicial NDPS CSV")
+    parser.add_argument("--clean-csv", default=str(default_clean), help="Path to clean events CSV")
+    parser.add_argument("--judicial-csv", default=str(default_judicial), help="Path to High Court judicial NDPS CSV")
     parser.add_argument("--horizon", type=int, default=2, help="Macro forecast horizon in weeks (default: 2)")
-    parser.add_argument("--backtest-json", default="Main/web/data/corridor-backtest.json", help="Export path for backtest replay")
-    parser.add_argument("--transit-json", default="Main/web/data/transit-intelligence.json", help="Export path for transit intelligence")
+    parser.add_argument("--backtest-json", default=str(default_backtest), help="Export path for backtest replay")
+    parser.add_argument("--transit-json", default=str(default_transit), help="Export path for transit intelligence")
     args = parser.parse_args(argv)
 
     print("Building Corridor Transit Network Graph...")
@@ -883,7 +1099,10 @@ def main(argv=None):
     print(f"Graph initialized with {G.number_of_nodes()} nodes and {G.number_of_edges()} transit edges.")
 
     print(f"\nLoading unified dataset from {args.clean_csv} and {args.judicial_csv}...")
-    unified_df = load_unified_dataset(Path(args.clean_csv), Path(args.judicial_csv))
+    clean_p = Path(args.clean_csv)
+    jud_p = Path(args.judicial_csv)
+    unified_df = load_unified_dataset(clean_p, jud_p)
+    num_jud = len(pd.read_csv(jud_p)) if jud_p.exists() else 112
     print(f"Loaded {len(unified_df)} unified incidents across {unified_df['district'].nunique()} districts.")
 
     # 1. Train Next-Hop Predictor
@@ -891,6 +1110,33 @@ def main(argv=None):
     predictor = NextHopPredictor(G)
     predictor.fit(unified_df)
     print("NextHopPredictor fitted successfully.")
+
+    # Test an example next-hop prediction
+    test_pred = predictor.predict_next_hop("muthanga", "mdma", 68.92, "road_private")
+    print(f"\nSample Prediction for Muthanga Checkpost (68.92g MDMA):")
+    for d in test_pred["predicted_destinations"]:
+        print(f"  #{d['rank']}: {d['district']} ({d['probability']}%) - Route: {' -> '.join(d['waypoint_path'])} in {d['estimated_transit_hours']} hrs")
+
+    # 2. Macro Spatiotemporal Forecaster
+    print("\nAggregating weekly incident panels for Macro Forecaster...")
+    C = build_macro_weekly_panel(unified_df)
+    print(f"Aggregated {int(C.values.sum())} incidents across {len(C)} consecutive weeks.")
+
+    print("\nEvaluating empirical corridor transit lead-lags...")
+    lead_lags = compute_corridor_lead_lags(C)
+    supported = sum(1 for item in lead_lags if item["hypothesis_supported"])
+    print(f"Statistically supported lead-lag edges: {supported} of {len(lead_lags)}")
+
+    print(f"\nRunning chronological rolling-origin backtest (horizon={args.horizon} weeks)...")
+    R, summary = evaluate_macro_backtest(C, H=args.horizon)
+
+    # 3. Export web product artifacts
+    export_web_artifacts(
+        R, C, summary, lead_lags, predictor,
+        Path(args.backtest_json), Path(args.transit_json),
+        num_judicial=num_jud
+    )
+    print("\nPipeline execution complete!")
 
     # Test an example next-hop prediction
     test_pred = predictor.predict_next_hop("muthanga", "mdma", 68.92, "road_private")

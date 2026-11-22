@@ -28,6 +28,13 @@
       "lat": 9.605,
       "lon": 77.168
     },
+    "bodimettu": {
+      "name": "Bodimettu Checkpost",
+      "district": "Idukki",
+      "corridor": "c06",
+      "lat": 10.021,
+      "lon": 77.262
+    },
     "aryankavu": {
       "name": "Aryankavu Checkpost",
       "district": "Kollam",
@@ -41,6 +48,13 @@
       "corridor": "c07",
       "lat": 8.35,
       "lon": 77.08
+    },
+    "vazhikkadavu": {
+      "name": "Vazhikkadavu Checkpost",
+      "district": "Malappuram",
+      "corridor": "c01",
+      "lat": 11.385,
+      "lon": 76.353
     },
     "nedumbassery": {
       "name": "Nedumbassery CIAL",
@@ -62,6 +76,13 @@
       "corridor": "c10",
       "lat": 10.786,
       "lon": 76.655
+    },
+    "shoranur_rail": {
+      "name": "Shoranur Railway Hub",
+      "district": "Palakkad",
+      "corridor": "c10",
+      "lat": 10.763,
+      "lon": 76.275
     }
   },
   "origin_hubs": [
@@ -77,6 +98,1714 @@
     "Mumbai",
     "Overseas Air"
   ],
+  "districts": [
+    "Thiruvananthapuram",
+    "Kollam",
+    "Pathanamthitta",
+    "Alappuzha",
+    "Kottayam",
+    "Idukki",
+    "Ernakulam",
+    "Thrissur",
+    "Palakkad",
+    "Malappuram",
+    "Kozhikode",
+    "Wayanad",
+    "Kannur",
+    "Kasaragod"
+  ],
+  "network_edges": [
+    {
+      "from": "Thiruvananthapuram",
+      "to": "Kollam",
+      "distance_km": 70,
+      "time_hrs": 1.89,
+      "route_name": "NH 66 Southern Trunk (Reverse)"
+    },
+    {
+      "from": "Thiruvananthapuram",
+      "to": "amaravila",
+      "distance_km": 30,
+      "time_hrs": 0.84,
+      "route_name": "NH 66 South Border Gate (Reverse)"
+    },
+    {
+      "from": "Kollam",
+      "to": "Alappuzha",
+      "distance_km": 85,
+      "time_hrs": 2.31,
+      "route_name": "NH 66 Kayamkulam Route (Reverse)"
+    },
+    {
+      "from": "Kollam",
+      "to": "aryankavu",
+      "distance_km": 70,
+      "time_hrs": 2.1,
+      "route_name": "NH 744 Thenmala Ghat Pass (Reverse)"
+    },
+    {
+      "from": "Kollam",
+      "to": "Pathanamthitta",
+      "distance_km": 55,
+      "time_hrs": 1.58,
+      "route_name": "Adoor/Kollam Route (Reverse)"
+    },
+    {
+      "from": "Kollam",
+      "to": "Thiruvananthapuram",
+      "distance_km": 70,
+      "time_hrs": 1.8,
+      "route_name": "NH 66 Southern Trunk"
+    },
+    {
+      "from": "Pathanamthitta",
+      "to": "Kottayam",
+      "distance_km": 50,
+      "time_hrs": 1.47,
+      "route_name": "Central Travancore Road (Reverse)"
+    },
+    {
+      "from": "Pathanamthitta",
+      "to": "aryankavu",
+      "distance_km": 65,
+      "time_hrs": 2.1,
+      "route_name": "Achankovil Border Route (Reverse)"
+    },
+    {
+      "from": "Pathanamthitta",
+      "to": "Kollam",
+      "distance_km": 55,
+      "time_hrs": 1.5,
+      "route_name": "Adoor/Kollam Route"
+    },
+    {
+      "from": "Alappuzha",
+      "to": "aluva_rail",
+      "distance_km": 75,
+      "time_hrs": 1.89,
+      "route_name": "Coastal Express Rail (Reverse)"
+    },
+    {
+      "from": "Alappuzha",
+      "to": "Ernakulam",
+      "distance_km": 60,
+      "time_hrs": 1.68,
+      "route_name": "NH 66 Coastal Route (Reverse)"
+    },
+    {
+      "from": "Alappuzha",
+      "to": "Kollam",
+      "distance_km": 85,
+      "time_hrs": 2.2,
+      "route_name": "NH 66 Kayamkulam Route"
+    },
+    {
+      "from": "Kottayam",
+      "to": "Idukki",
+      "distance_km": 90,
+      "time_hrs": 2.73,
+      "route_name": "KK Road (NH 183) (Reverse)"
+    },
+    {
+      "from": "Kottayam",
+      "to": "Ernakulam",
+      "distance_km": 65,
+      "time_hrs": 1.89,
+      "route_name": "MC Road (SH 1) (Reverse)"
+    },
+    {
+      "from": "Kottayam",
+      "to": "Pathanamthitta",
+      "distance_km": 50,
+      "time_hrs": 1.4,
+      "route_name": "Central Travancore Road"
+    },
+    {
+      "from": "Idukki",
+      "to": "kumily",
+      "distance_km": 20,
+      "time_hrs": 0.63,
+      "route_name": "NH 183 Thekkady Mountain Pass (Reverse)"
+    },
+    {
+      "from": "Idukki",
+      "to": "bodimettu",
+      "distance_km": 40,
+      "time_hrs": 1.26,
+      "route_name": "NH 85 Gap Road Mountain Pass (Reverse)"
+    },
+    {
+      "from": "Idukki",
+      "to": "Kottayam",
+      "distance_km": 90,
+      "time_hrs": 2.6,
+      "route_name": "KK Road (NH 183)"
+    },
+    {
+      "from": "Idukki",
+      "to": "Ernakulam",
+      "distance_km": 135,
+      "time_hrs": 3.6,
+      "route_name": "Neriamangalam Ghat Road"
+    },
+    {
+      "from": "Ernakulam",
+      "to": "palakkad_rail",
+      "distance_km": 135,
+      "time_hrs": 2.31,
+      "route_name": "Express Rail Corridor (Reverse)"
+    },
+    {
+      "from": "Ernakulam",
+      "to": "Palakkad",
+      "distance_km": 140,
+      "time_hrs": 3.36,
+      "route_name": "NH 544 Commercial Trunk (Reverse)"
+    },
+    {
+      "from": "Ernakulam",
+      "to": "Thrissur",
+      "distance_km": 70,
+      "time_hrs": 1.89,
+      "route_name": "NH 544 Angamaly Corridor (Reverse)"
+    },
+    {
+      "from": "Ernakulam",
+      "to": "Idukki",
+      "distance_km": 135,
+      "time_hrs": 3.78,
+      "route_name": "Neriamangalam Ghat Road (Reverse)"
+    },
+    {
+      "from": "Ernakulam",
+      "to": "nedumbassery",
+      "distance_km": 25,
+      "time_hrs": 0.84,
+      "route_name": "CIAL Airport Highway (Reverse)"
+    },
+    {
+      "from": "Ernakulam",
+      "to": "aluva_rail",
+      "distance_km": 15,
+      "time_hrs": 0.53,
+      "route_name": "Kochi Urban Rail Link (Reverse)"
+    },
+    {
+      "from": "Ernakulam",
+      "to": "Alappuzha",
+      "distance_km": 60,
+      "time_hrs": 1.6,
+      "route_name": "NH 66 Coastal Route"
+    },
+    {
+      "from": "Ernakulam",
+      "to": "Kottayam",
+      "distance_km": 65,
+      "time_hrs": 1.8,
+      "route_name": "MC Road (SH 1)"
+    },
+    {
+      "from": "Thrissur",
+      "to": "palakkad_rail",
+      "distance_km": 70,
+      "time_hrs": 1.26,
+      "route_name": "Mainline Rail Trunk (Reverse)"
+    },
+    {
+      "from": "Thrissur",
+      "to": "shoranur_rail",
+      "distance_km": 35,
+      "time_hrs": 0.63,
+      "route_name": "Southern Mainline Southbound (Reverse)"
+    },
+    {
+      "from": "Thrissur",
+      "to": "Palakkad",
+      "distance_km": 75,
+      "time_hrs": 1.89,
+      "route_name": "NH 544 Express Highway (Reverse)"
+    },
+    {
+      "from": "Thrissur",
+      "to": "Ernakulam",
+      "distance_km": 70,
+      "time_hrs": 1.8,
+      "route_name": "NH 544 Angamaly Corridor"
+    },
+    {
+      "from": "Thrissur",
+      "to": "Malappuram",
+      "distance_km": 80,
+      "time_hrs": 2.31,
+      "route_name": "SH 69 Guruvayur/Thrissur (Reverse)"
+    },
+    {
+      "from": "Thrissur",
+      "to": "nedumbassery",
+      "distance_km": 55,
+      "time_hrs": 1.47,
+      "route_name": "NH 544 Northbound (Reverse)"
+    },
+    {
+      "from": "Palakkad",
+      "to": "walayar",
+      "distance_km": 25,
+      "time_hrs": 0.63,
+      "route_name": "NH 544 Walayar Gateway (Reverse)"
+    },
+    {
+      "from": "Palakkad",
+      "to": "palakkad_rail",
+      "distance_km": 5,
+      "time_hrs": 0.21,
+      "route_name": "Southern Railway Hub (Reverse)"
+    },
+    {
+      "from": "Palakkad",
+      "to": "shoranur_rail",
+      "distance_km": 45,
+      "time_hrs": 0.84,
+      "route_name": "Southern Railway Mainline (Reverse)"
+    },
+    {
+      "from": "Palakkad",
+      "to": "Thrissur",
+      "distance_km": 75,
+      "time_hrs": 1.8,
+      "route_name": "NH 544 Express Highway"
+    },
+    {
+      "from": "Palakkad",
+      "to": "Ernakulam",
+      "distance_km": 140,
+      "time_hrs": 3.2,
+      "route_name": "NH 544 Commercial Trunk"
+    },
+    {
+      "from": "Malappuram",
+      "to": "Wayanad",
+      "distance_km": 100,
+      "time_hrs": 3.15,
+      "route_name": "SH 28 Nilambur Road (Reverse)"
+    },
+    {
+      "from": "Malappuram",
+      "to": "vazhikkadavu",
+      "distance_km": 45,
+      "time_hrs": 1.26,
+      "route_name": "SH 28 Nilambur Valley Route (Reverse)"
+    },
+    {
+      "from": "Malappuram",
+      "to": "shoranur_rail",
+      "distance_km": 40,
+      "time_hrs": 0.95,
+      "route_name": "Nilambur Shoranur Branch (Reverse)"
+    },
+    {
+      "from": "Malappuram",
+      "to": "Kozhikode",
+      "distance_km": 50,
+      "time_hrs": 1.58,
+      "route_name": "NH 966 Feeder Route (Reverse)"
+    },
+    {
+      "from": "Malappuram",
+      "to": "Thrissur",
+      "distance_km": 80,
+      "time_hrs": 2.2,
+      "route_name": "SH 69 Guruvayur/Thrissur"
+    },
+    {
+      "from": "Kozhikode",
+      "to": "Wayanad",
+      "distance_km": 85,
+      "time_hrs": 2.62,
+      "route_name": "NH 766 Thamarassery Ghat Pass (Reverse)"
+    },
+    {
+      "from": "Kozhikode",
+      "to": "Kannur",
+      "distance_km": 90,
+      "time_hrs": 2.62,
+      "route_name": "NH 66 Mahe/Kozhikode Route (Reverse)"
+    },
+    {
+      "from": "Kozhikode",
+      "to": "Malappuram",
+      "distance_km": 50,
+      "time_hrs": 1.5,
+      "route_name": "NH 966 Feeder Route"
+    },
+    {
+      "from": "Wayanad",
+      "to": "muthanga",
+      "distance_km": 20,
+      "time_hrs": 0.53,
+      "route_name": "NH 766 Border Pass (Reverse)"
+    },
+    {
+      "from": "Wayanad",
+      "to": "Kozhikode",
+      "distance_km": 85,
+      "time_hrs": 2.5,
+      "route_name": "NH 766 Thamarassery Ghat Pass"
+    },
+    {
+      "from": "Wayanad",
+      "to": "Malappuram",
+      "distance_km": 100,
+      "time_hrs": 3.0,
+      "route_name": "SH 28 Nilambur Road"
+    },
+    {
+      "from": "Kannur",
+      "to": "Kasaragod",
+      "distance_km": 90,
+      "time_hrs": 2.62,
+      "route_name": "NH 66 North Coastal Highway (Reverse)"
+    },
+    {
+      "from": "Kannur",
+      "to": "Kozhikode",
+      "distance_km": 90,
+      "time_hrs": 2.5,
+      "route_name": "NH 66 Mahe/Kozhikode Route"
+    },
+    {
+      "from": "Kasaragod",
+      "to": "thalappady",
+      "distance_km": 20,
+      "time_hrs": 0.53,
+      "route_name": "NH 66 Coastal Border (Reverse)"
+    },
+    {
+      "from": "Kasaragod",
+      "to": "Kannur",
+      "distance_km": 90,
+      "time_hrs": 2.5,
+      "route_name": "NH 66 North Coastal Highway"
+    },
+    {
+      "from": "muthanga",
+      "to": "Wayanad",
+      "distance_km": 20,
+      "time_hrs": 0.5,
+      "route_name": "NH 766 Border Pass"
+    },
+    {
+      "from": "walayar",
+      "to": "Palakkad",
+      "distance_km": 25,
+      "time_hrs": 0.6,
+      "route_name": "NH 544 Walayar Gateway"
+    },
+    {
+      "from": "thalappady",
+      "to": "Kasaragod",
+      "distance_km": 20,
+      "time_hrs": 0.5,
+      "route_name": "NH 66 Coastal Border"
+    },
+    {
+      "from": "kumily",
+      "to": "Idukki",
+      "distance_km": 20,
+      "time_hrs": 0.6,
+      "route_name": "NH 183 Thekkady Mountain Pass"
+    },
+    {
+      "from": "bodimettu",
+      "to": "Idukki",
+      "distance_km": 40,
+      "time_hrs": 1.2,
+      "route_name": "NH 85 Gap Road Mountain Pass"
+    },
+    {
+      "from": "aryankavu",
+      "to": "Kollam",
+      "distance_km": 70,
+      "time_hrs": 2.0,
+      "route_name": "NH 744 Thenmala Ghat Pass"
+    },
+    {
+      "from": "aryankavu",
+      "to": "Pathanamthitta",
+      "distance_km": 65,
+      "time_hrs": 2.0,
+      "route_name": "Achankovil Border Route"
+    },
+    {
+      "from": "amaravila",
+      "to": "Thiruvananthapuram",
+      "distance_km": 30,
+      "time_hrs": 0.8,
+      "route_name": "NH 66 South Border Gate"
+    },
+    {
+      "from": "vazhikkadavu",
+      "to": "Malappuram",
+      "distance_km": 45,
+      "time_hrs": 1.2,
+      "route_name": "SH 28 Nilambur Valley Route"
+    },
+    {
+      "from": "nedumbassery",
+      "to": "Ernakulam",
+      "distance_km": 25,
+      "time_hrs": 0.8,
+      "route_name": "CIAL Airport Highway"
+    },
+    {
+      "from": "nedumbassery",
+      "to": "Thrissur",
+      "distance_km": 55,
+      "time_hrs": 1.4,
+      "route_name": "NH 544 Northbound"
+    },
+    {
+      "from": "aluva_rail",
+      "to": "Ernakulam",
+      "distance_km": 15,
+      "time_hrs": 0.5,
+      "route_name": "Kochi Urban Rail Link"
+    },
+    {
+      "from": "aluva_rail",
+      "to": "Alappuzha",
+      "distance_km": 75,
+      "time_hrs": 1.8,
+      "route_name": "Coastal Express Rail"
+    },
+    {
+      "from": "palakkad_rail",
+      "to": "Palakkad",
+      "distance_km": 5,
+      "time_hrs": 0.2,
+      "route_name": "Southern Railway Hub"
+    },
+    {
+      "from": "palakkad_rail",
+      "to": "Thrissur",
+      "distance_km": 70,
+      "time_hrs": 1.2,
+      "route_name": "Mainline Rail Trunk"
+    },
+    {
+      "from": "palakkad_rail",
+      "to": "Ernakulam",
+      "distance_km": 135,
+      "time_hrs": 2.2,
+      "route_name": "Express Rail Corridor"
+    },
+    {
+      "from": "shoranur_rail",
+      "to": "Palakkad",
+      "distance_km": 45,
+      "time_hrs": 0.8,
+      "route_name": "Southern Railway Mainline"
+    },
+    {
+      "from": "shoranur_rail",
+      "to": "Thrissur",
+      "distance_km": 35,
+      "time_hrs": 0.6,
+      "route_name": "Southern Mainline Southbound"
+    },
+    {
+      "from": "shoranur_rail",
+      "to": "Malappuram",
+      "distance_km": 40,
+      "time_hrs": 0.9,
+      "route_name": "Nilambur Shoranur Branch"
+    }
+  ],
+  "markov_transitions": {
+    "aluva_rail::ganja": {
+      "Thiruvananthapuram": 0.04508196721311476,
+      "Kollam": 0.004098360655737705,
+      "Pathanamthitta": 0.004098360655737705,
+      "Alappuzha": 0.3319672131147541,
+      "Kottayam": 0.08606557377049182,
+      "Idukki": 0.004098360655737705,
+      "Ernakulam": 0.3319672131147541,
+      "Thrissur": 0.004098360655737705,
+      "Palakkad": 0.004098360655737705,
+      "Malappuram": 0.004098360655737705,
+      "Kozhikode": 0.1680327868852459,
+      "Wayanad": 0.004098360655737705,
+      "Kannur": 0.004098360655737705,
+      "Kasaragod": 0.004098360655737705
+    },
+    "aryankavu::ganja": {
+      "Thiruvananthapuram": 0.24531835205992508,
+      "Kollam": 0.3951310861423221,
+      "Pathanamthitta": 0.0018726591760299628,
+      "Alappuzha": 0.05805243445692884,
+      "Kottayam": 0.09550561797752809,
+      "Idukki": 0.02059925093632959,
+      "Ernakulam": 0.0018726591760299628,
+      "Thrissur": 0.0018726591760299628,
+      "Palakkad": 0.0018726591760299628,
+      "Malappuram": 0.0018726591760299628,
+      "Kozhikode": 0.11423220973782772,
+      "Wayanad": 0.03932584269662922,
+      "Kannur": 0.0018726591760299628,
+      "Kasaragod": 0.02059925093632959
+    },
+    "walayar::ganja": {
+      "Thiruvananthapuram": 0.0012919896640826874,
+      "Kollam": 0.0012919896640826874,
+      "Pathanamthitta": 0.0012919896640826874,
+      "Alappuzha": 0.027131782945736434,
+      "Kottayam": 0.014211886304909561,
+      "Idukki": 0.0012919896640826874,
+      "Ernakulam": 0.5439276485788114,
+      "Thrissur": 0.11757105943152453,
+      "Palakkad": 0.2596899224806202,
+      "Malappuram": 0.014211886304909561,
+      "Kozhikode": 0.014211886304909561,
+      "Wayanad": 0.0012919896640826874,
+      "Kannur": 0.0012919896640826874,
+      "Kasaragod": 0.0012919896640826874
+    },
+    "kumily::unknown": {
+      "Thiruvananthapuram": 0.007462686567164181,
+      "Kollam": 0.007462686567164181,
+      "Pathanamthitta": 0.007462686567164181,
+      "Alappuzha": 0.007462686567164181,
+      "Kottayam": 0.3805970149253731,
+      "Idukki": 0.5298507462686567,
+      "Ernakulam": 0.007462686567164181,
+      "Thrissur": 0.007462686567164181,
+      "Palakkad": 0.007462686567164181,
+      "Malappuram": 0.007462686567164181,
+      "Kozhikode": 0.007462686567164181,
+      "Wayanad": 0.007462686567164181,
+      "Kannur": 0.007462686567164181,
+      "Kasaragod": 0.007462686567164181
+    },
+    "kumily::ganja": {
+      "Thiruvananthapuram": 0.0036496350364963502,
+      "Kollam": 0.040145985401459854,
+      "Pathanamthitta": 0.0036496350364963502,
+      "Alappuzha": 0.040145985401459854,
+      "Kottayam": 0.22262773722627735,
+      "Idukki": 0.5875912408759124,
+      "Ernakulam": 0.0036496350364963502,
+      "Thrissur": 0.0036496350364963502,
+      "Palakkad": 0.0036496350364963502,
+      "Malappuram": 0.040145985401459854,
+      "Kozhikode": 0.040145985401459854,
+      "Wayanad": 0.0036496350364963502,
+      "Kannur": 0.0036496350364963502,
+      "Kasaragod": 0.0036496350364963502
+    },
+    "nedumbassery::hashish_oil": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.4583333333333333,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "nedumbassery::ganja": {
+      "Thiruvananthapuram": 0.049107142857142856,
+      "Kollam": 0.004464285714285714,
+      "Pathanamthitta": 0.004464285714285714,
+      "Alappuzha": 0.004464285714285714,
+      "Kottayam": 0.004464285714285714,
+      "Idukki": 0.049107142857142856,
+      "Ernakulam": 0.71875,
+      "Thrissur": 0.004464285714285714,
+      "Palakkad": 0.004464285714285714,
+      "Malappuram": 0.13839285714285712,
+      "Kozhikode": 0.004464285714285714,
+      "Wayanad": 0.004464285714285714,
+      "Kannur": 0.004464285714285714,
+      "Kasaragod": 0.004464285714285714
+    },
+    "vazhikkadavu::ganja": {
+      "Thiruvananthapuram": 0.004098360655737705,
+      "Kollam": 0.004098360655737705,
+      "Pathanamthitta": 0.004098360655737705,
+      "Alappuzha": 0.004098360655737705,
+      "Kottayam": 0.004098360655737705,
+      "Idukki": 0.004098360655737705,
+      "Ernakulam": 0.004098360655737705,
+      "Thrissur": 0.0860655737704918,
+      "Palakkad": 0.045081967213114756,
+      "Malappuram": 0.8237704918032787,
+      "Kozhikode": 0.004098360655737705,
+      "Wayanad": 0.004098360655737705,
+      "Kannur": 0.004098360655737705,
+      "Kasaragod": 0.004098360655737705
+    },
+    "vazhikkadavu::mdma": {
+      "Thiruvananthapuram": 0.0022522522522522522,
+      "Kollam": 0.0022522522522522522,
+      "Pathanamthitta": 0.0022522522522522522,
+      "Alappuzha": 0.0022522522522522522,
+      "Kottayam": 0.0022522522522522522,
+      "Idukki": 0.0022522522522522522,
+      "Ernakulam": 0.0022522522522522522,
+      "Thrissur": 0.0022522522522522522,
+      "Palakkad": 0.02477477477477478,
+      "Malappuram": 0.9481981981981983,
+      "Kozhikode": 0.0022522522522522522,
+      "Wayanad": 0.0022522522522522522,
+      "Kannur": 0.0022522522522522522,
+      "Kasaragod": 0.0022522522522522522
+    },
+    "aryankavu::unknown": {
+      "Thiruvananthapuram": 0.488095238095238,
+      "Kollam": 0.13095238095238096,
+      "Pathanamthitta": 0.011904761904761904,
+      "Alappuzha": 0.25,
+      "Kottayam": 0.011904761904761904,
+      "Idukki": 0.011904761904761904,
+      "Ernakulam": 0.011904761904761904,
+      "Thrissur": 0.011904761904761904,
+      "Palakkad": 0.011904761904761904,
+      "Malappuram": 0.011904761904761904,
+      "Kozhikode": 0.011904761904761904,
+      "Wayanad": 0.011904761904761904,
+      "Kannur": 0.011904761904761904,
+      "Kasaragod": 0.011904761904761904
+    },
+    "kumily::mdma": {
+      "Thiruvananthapuram": 0.008771929824561403,
+      "Kollam": 0.008771929824561403,
+      "Pathanamthitta": 0.008771929824561403,
+      "Alappuzha": 0.008771929824561403,
+      "Kottayam": 0.18421052631578946,
+      "Idukki": 0.7105263157894737,
+      "Ernakulam": 0.008771929824561403,
+      "Thrissur": 0.008771929824561403,
+      "Palakkad": 0.008771929824561403,
+      "Malappuram": 0.008771929824561403,
+      "Kozhikode": 0.008771929824561403,
+      "Wayanad": 0.008771929824561403,
+      "Kannur": 0.008771929824561403,
+      "Kasaragod": 0.008771929824561403
+    },
+    "muthanga::mdma": {
+      "Thiruvananthapuram": 0.0009487666034155598,
+      "Kollam": 0.0009487666034155598,
+      "Pathanamthitta": 0.0009487666034155598,
+      "Alappuzha": 0.010436432637571158,
+      "Kottayam": 0.0009487666034155598,
+      "Idukki": 0.0009487666034155598,
+      "Ernakulam": 0.0009487666034155598,
+      "Thrissur": 0.010436432637571158,
+      "Palakkad": 0.0009487666034155598,
+      "Malappuram": 0.10531309297912712,
+      "Kozhikode": 0.5037950664136622,
+      "Wayanad": 0.29506641366223907,
+      "Kannur": 0.06736242884250473,
+      "Kasaragod": 0.0009487666034155598
+    },
+    "walayar::mdma": {
+      "Thiruvananthapuram": 0.11167002012072434,
+      "Kollam": 0.07142857142857142,
+      "Pathanamthitta": 0.03118712273641851,
+      "Alappuzha": 0.06136820925553319,
+      "Kottayam": 0.07142857142857142,
+      "Idukki": 0.011066398390342052,
+      "Ernakulam": 0.22233400402414488,
+      "Thrissur": 0.11167002012072434,
+      "Palakkad": 0.24245472837022133,
+      "Malappuram": 0.001006036217303823,
+      "Kozhikode": 0.011066398390342052,
+      "Wayanad": 0.001006036217303823,
+      "Kannur": 0.011066398390342052,
+      "Kasaragod": 0.04124748490945673
+    },
+    "kozhikode::mdma": {
+      "Thiruvananthapuram": 0.0015527950310559005,
+      "Kollam": 0.0015527950310559005,
+      "Pathanamthitta": 0.0015527950310559005,
+      "Alappuzha": 0.0015527950310559005,
+      "Kottayam": 0.0015527950310559005,
+      "Idukki": 0.0015527950310559005,
+      "Ernakulam": 0.0015527950310559005,
+      "Thrissur": 0.0015527950310559005,
+      "Palakkad": 0.0015527950310559005,
+      "Malappuram": 0.0015527950310559005,
+      "Kozhikode": 0.9798136645962733,
+      "Wayanad": 0.0015527950310559005,
+      "Kannur": 0.0015527950310559005,
+      "Kasaragod": 0.0015527950310559005
+    },
+    "thrissur::ganja": {
+      "Thiruvananthapuram": 0.0036496350364963502,
+      "Kollam": 0.0036496350364963502,
+      "Pathanamthitta": 0.0036496350364963502,
+      "Alappuzha": 0.0036496350364963502,
+      "Kottayam": 0.0036496350364963502,
+      "Idukki": 0.0036496350364963502,
+      "Ernakulam": 0.040145985401459854,
+      "Thrissur": 0.9160583941605839,
+      "Palakkad": 0.0036496350364963502,
+      "Malappuram": 0.0036496350364963502,
+      "Kozhikode": 0.0036496350364963502,
+      "Wayanad": 0.0036496350364963502,
+      "Kannur": 0.0036496350364963502,
+      "Kasaragod": 0.0036496350364963502
+    },
+    "ernakulam::ganja": {
+      "Thiruvananthapuram": 0.0014204545454545457,
+      "Kollam": 0.0014204545454545457,
+      "Pathanamthitta": 0.0014204545454545457,
+      "Alappuzha": 0.015625000000000003,
+      "Kottayam": 0.0014204545454545457,
+      "Idukki": 0.0014204545454545457,
+      "Ernakulam": 0.9673295454545455,
+      "Thrissur": 0.0014204545454545457,
+      "Palakkad": 0.0014204545454545457,
+      "Malappuram": 0.0014204545454545457,
+      "Kozhikode": 0.0014204545454545457,
+      "Wayanad": 0.0014204545454545457,
+      "Kannur": 0.0014204545454545457,
+      "Kasaragod": 0.0014204545454545457
+    },
+    "pathanamthitta::ganja": {
+      "Thiruvananthapuram": 0.003787878787878788,
+      "Kollam": 0.003787878787878788,
+      "Pathanamthitta": 0.9507575757575757,
+      "Alappuzha": 0.003787878787878788,
+      "Kottayam": 0.003787878787878788,
+      "Idukki": 0.003787878787878788,
+      "Ernakulam": 0.003787878787878788,
+      "Thrissur": 0.003787878787878788,
+      "Palakkad": 0.003787878787878788,
+      "Malappuram": 0.003787878787878788,
+      "Kozhikode": 0.003787878787878788,
+      "Wayanad": 0.003787878787878788,
+      "Kannur": 0.003787878787878788,
+      "Kasaragod": 0.003787878787878788
+    },
+    "alappuzha::ganja": {
+      "Thiruvananthapuram": 0.0028248587570621473,
+      "Kollam": 0.0028248587570621473,
+      "Pathanamthitta": 0.0028248587570621473,
+      "Alappuzha": 0.9632768361581922,
+      "Kottayam": 0.0028248587570621473,
+      "Idukki": 0.0028248587570621473,
+      "Ernakulam": 0.0028248587570621473,
+      "Thrissur": 0.0028248587570621473,
+      "Palakkad": 0.0028248587570621473,
+      "Malappuram": 0.0028248587570621473,
+      "Kozhikode": 0.0028248587570621473,
+      "Wayanad": 0.0028248587570621473,
+      "Kannur": 0.0028248587570621473,
+      "Kasaragod": 0.0028248587570621473
+    },
+    "ernakulam::mdma": {
+      "Thiruvananthapuram": 0.0013812154696132598,
+      "Kollam": 0.0013812154696132598,
+      "Pathanamthitta": 0.0013812154696132598,
+      "Alappuzha": 0.0013812154696132598,
+      "Kottayam": 0.0013812154696132598,
+      "Idukki": 0.0013812154696132598,
+      "Ernakulam": 0.9820441988950277,
+      "Thrissur": 0.0013812154696132598,
+      "Palakkad": 0.0013812154696132598,
+      "Malappuram": 0.0013812154696132598,
+      "Kozhikode": 0.0013812154696132598,
+      "Wayanad": 0.0013812154696132598,
+      "Kannur": 0.0013812154696132598,
+      "Kasaragod": 0.0013812154696132598
+    },
+    "muthanga::methamphetamine": {
+      "Thiruvananthapuram": 0.00574712643678161,
+      "Kollam": 0.00574712643678161,
+      "Pathanamthitta": 0.00574712643678161,
+      "Alappuzha": 0.00574712643678161,
+      "Kottayam": 0.00574712643678161,
+      "Idukki": 0.00574712643678161,
+      "Ernakulam": 0.00574712643678161,
+      "Thrissur": 0.00574712643678161,
+      "Palakkad": 0.00574712643678161,
+      "Malappuram": 0.23563218390804597,
+      "Kozhikode": 0.23563218390804597,
+      "Wayanad": 0.2931034482758621,
+      "Kannur": 0.17816091954022992,
+      "Kasaragod": 0.00574712643678161
+    },
+    "thrissur::lsd": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.4583333333333333,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "amaravila::ganja": {
+      "Thiruvananthapuram": 0.9507575757575757,
+      "Kollam": 0.003787878787878788,
+      "Pathanamthitta": 0.003787878787878788,
+      "Alappuzha": 0.003787878787878788,
+      "Kottayam": 0.003787878787878788,
+      "Idukki": 0.003787878787878788,
+      "Ernakulam": 0.003787878787878788,
+      "Thrissur": 0.003787878787878788,
+      "Palakkad": 0.003787878787878788,
+      "Malappuram": 0.003787878787878788,
+      "Kozhikode": 0.003787878787878788,
+      "Wayanad": 0.003787878787878788,
+      "Kannur": 0.003787878787878788,
+      "Kasaragod": 0.003787878787878788
+    },
+    "thalappady::ganja": {
+      "Thiruvananthapuram": 0.010638297872340425,
+      "Kollam": 0.010638297872340425,
+      "Pathanamthitta": 0.010638297872340425,
+      "Alappuzha": 0.010638297872340425,
+      "Kottayam": 0.010638297872340425,
+      "Idukki": 0.010638297872340425,
+      "Ernakulam": 0.010638297872340425,
+      "Thrissur": 0.010638297872340425,
+      "Palakkad": 0.010638297872340425,
+      "Malappuram": 0.010638297872340425,
+      "Kozhikode": 0.010638297872340425,
+      "Wayanad": 0.010638297872340425,
+      "Kannur": 0.11702127659574468,
+      "Kasaragod": 0.7553191489361701
+    },
+    "thalappady::other": {
+      "Thiruvananthapuram": 0.029411764705882353,
+      "Kollam": 0.029411764705882353,
+      "Pathanamthitta": 0.029411764705882353,
+      "Alappuzha": 0.029411764705882353,
+      "Kottayam": 0.029411764705882353,
+      "Idukki": 0.029411764705882353,
+      "Ernakulam": 0.029411764705882353,
+      "Thrissur": 0.029411764705882353,
+      "Palakkad": 0.029411764705882353,
+      "Malappuram": 0.029411764705882353,
+      "Kozhikode": 0.029411764705882353,
+      "Wayanad": 0.029411764705882353,
+      "Kannur": 0.3235294117647059,
+      "Kasaragod": 0.3235294117647059
+    },
+    "muthanga::ganja": {
+      "Thiruvananthapuram": 0.0029940119760479044,
+      "Kollam": 0.0029940119760479044,
+      "Pathanamthitta": 0.0029940119760479044,
+      "Alappuzha": 0.0029940119760479044,
+      "Kottayam": 0.0029940119760479044,
+      "Idukki": 0.03293413173652695,
+      "Ernakulam": 0.0029940119760479044,
+      "Thrissur": 0.0029940119760479044,
+      "Palakkad": 0.0029940119760479044,
+      "Malappuram": 0.0029940119760479044,
+      "Kozhikode": 0.3323353293413174,
+      "Wayanad": 0.6017964071856288,
+      "Kannur": 0.0029940119760479044,
+      "Kasaragod": 0.0029940119760479044
+    },
+    "kannur::hashish_oil": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.4583333333333333,
+      "Kasaragod": 0.041666666666666664
+    },
+    "thrissur::mdma": {
+      "Thiruvananthapuram": 0.004098360655737705,
+      "Kollam": 0.045081967213114756,
+      "Pathanamthitta": 0.004098360655737705,
+      "Alappuzha": 0.004098360655737705,
+      "Kottayam": 0.004098360655737705,
+      "Idukki": 0.004098360655737705,
+      "Ernakulam": 0.004098360655737705,
+      "Thrissur": 0.9057377049180327,
+      "Palakkad": 0.004098360655737705,
+      "Malappuram": 0.004098360655737705,
+      "Kozhikode": 0.004098360655737705,
+      "Wayanad": 0.004098360655737705,
+      "Kannur": 0.004098360655737705,
+      "Kasaragod": 0.004098360655737705
+    },
+    "thalappady::mdma": {
+      "Thiruvananthapuram": 0.003401360544217687,
+      "Kollam": 0.003401360544217687,
+      "Pathanamthitta": 0.003401360544217687,
+      "Alappuzha": 0.003401360544217687,
+      "Kottayam": 0.003401360544217687,
+      "Idukki": 0.003401360544217687,
+      "Ernakulam": 0.03741496598639456,
+      "Thrissur": 0.003401360544217687,
+      "Palakkad": 0.003401360544217687,
+      "Malappuram": 0.003401360544217687,
+      "Kozhikode": 0.003401360544217687,
+      "Wayanad": 0.003401360544217687,
+      "Kannur": 0.03741496598639456,
+      "Kasaragod": 0.8877551020408163
+    },
+    "kozhikode::ganja": {
+      "Thiruvananthapuram": 0.002415458937198068,
+      "Kollam": 0.002415458937198068,
+      "Pathanamthitta": 0.002415458937198068,
+      "Alappuzha": 0.002415458937198068,
+      "Kottayam": 0.002415458937198068,
+      "Idukki": 0.002415458937198068,
+      "Ernakulam": 0.002415458937198068,
+      "Thrissur": 0.002415458937198068,
+      "Palakkad": 0.002415458937198068,
+      "Malappuram": 0.002415458937198068,
+      "Kozhikode": 0.9685990338164252,
+      "Wayanad": 0.002415458937198068,
+      "Kannur": 0.002415458937198068,
+      "Kasaragod": 0.002415458937198068
+    },
+    "ernakulam::lsd": {
+      "Thiruvananthapuram": 0.011904761904761904,
+      "Kollam": 0.011904761904761904,
+      "Pathanamthitta": 0.011904761904761904,
+      "Alappuzha": 0.011904761904761904,
+      "Kottayam": 0.011904761904761904,
+      "Idukki": 0.011904761904761904,
+      "Ernakulam": 0.8452380952380951,
+      "Thrissur": 0.011904761904761904,
+      "Palakkad": 0.011904761904761904,
+      "Malappuram": 0.011904761904761904,
+      "Kozhikode": 0.011904761904761904,
+      "Wayanad": 0.011904761904761904,
+      "Kannur": 0.011904761904761904,
+      "Kasaragod": 0.011904761904761904
+    },
+    "palakkad_rail::ganja": {
+      "Thiruvananthapuram": 0.008771929824561405,
+      "Kollam": 0.008771929824561405,
+      "Pathanamthitta": 0.008771929824561405,
+      "Alappuzha": 0.008771929824561405,
+      "Kottayam": 0.008771929824561405,
+      "Idukki": 0.008771929824561405,
+      "Ernakulam": 0.4473684210526316,
+      "Thrissur": 0.35964912280701755,
+      "Palakkad": 0.09649122807017546,
+      "Malappuram": 0.008771929824561405,
+      "Kozhikode": 0.008771929824561405,
+      "Wayanad": 0.008771929824561405,
+      "Kannur": 0.008771929824561405,
+      "Kasaragod": 0.008771929824561405
+    },
+    "walayar::unknown": {
+      "Thiruvananthapuram": 0.013513513513513516,
+      "Kollam": 0.013513513513513516,
+      "Pathanamthitta": 0.013513513513513516,
+      "Alappuzha": 0.013513513513513516,
+      "Kottayam": 0.013513513513513516,
+      "Idukki": 0.14864864864864868,
+      "Ernakulam": 0.5540540540540541,
+      "Thrissur": 0.013513513513513516,
+      "Palakkad": 0.14864864864864868,
+      "Malappuram": 0.013513513513513516,
+      "Kozhikode": 0.013513513513513516,
+      "Wayanad": 0.013513513513513516,
+      "Kannur": 0.013513513513513516,
+      "Kasaragod": 0.013513513513513516
+    },
+    "kannur::ganja": {
+      "Thiruvananthapuram": 0.007462686567164179,
+      "Kollam": 0.007462686567164179,
+      "Pathanamthitta": 0.007462686567164179,
+      "Alappuzha": 0.007462686567164179,
+      "Kottayam": 0.007462686567164179,
+      "Idukki": 0.007462686567164179,
+      "Ernakulam": 0.007462686567164179,
+      "Thrissur": 0.007462686567164179,
+      "Palakkad": 0.007462686567164179,
+      "Malappuram": 0.007462686567164179,
+      "Kozhikode": 0.007462686567164179,
+      "Wayanad": 0.007462686567164179,
+      "Kannur": 0.9029850746268656,
+      "Kasaragod": 0.007462686567164179
+    },
+    "kozhikode::hashish_oil": {
+      "Thiruvananthapuram": 0.029411764705882353,
+      "Kollam": 0.029411764705882353,
+      "Pathanamthitta": 0.029411764705882353,
+      "Alappuzha": 0.029411764705882353,
+      "Kottayam": 0.029411764705882353,
+      "Idukki": 0.029411764705882353,
+      "Ernakulam": 0.029411764705882353,
+      "Thrissur": 0.029411764705882353,
+      "Palakkad": 0.029411764705882353,
+      "Malappuram": 0.029411764705882353,
+      "Kozhikode": 0.6176470588235293,
+      "Wayanad": 0.029411764705882353,
+      "Kannur": 0.029411764705882353,
+      "Kasaragod": 0.029411764705882353
+    },
+    "ernakulam::unknown": {
+      "Thiruvananthapuram": 0.010638297872340425,
+      "Kollam": 0.010638297872340425,
+      "Pathanamthitta": 0.010638297872340425,
+      "Alappuzha": 0.010638297872340425,
+      "Kottayam": 0.010638297872340425,
+      "Idukki": 0.010638297872340425,
+      "Ernakulam": 0.8617021276595744,
+      "Thrissur": 0.010638297872340425,
+      "Palakkad": 0.010638297872340425,
+      "Malappuram": 0.010638297872340425,
+      "Kozhikode": 0.010638297872340425,
+      "Wayanad": 0.010638297872340425,
+      "Kannur": 0.010638297872340425,
+      "Kasaragod": 0.010638297872340425
+    },
+    "thrissur::methamphetamine": {
+      "Thiruvananthapuram": 0.01851851851851852,
+      "Kollam": 0.01851851851851852,
+      "Pathanamthitta": 0.01851851851851852,
+      "Alappuzha": 0.01851851851851852,
+      "Kottayam": 0.01851851851851852,
+      "Idukki": 0.01851851851851852,
+      "Ernakulam": 0.01851851851851852,
+      "Thrissur": 0.7592592592592593,
+      "Palakkad": 0.01851851851851852,
+      "Malappuram": 0.01851851851851852,
+      "Kozhikode": 0.01851851851851852,
+      "Wayanad": 0.01851851851851852,
+      "Kannur": 0.01851851851851852,
+      "Kasaragod": 0.01851851851851852
+    },
+    "walayar::methamphetamine": {
+      "Thiruvananthapuram": 0.004672897196261683,
+      "Kollam": 0.004672897196261683,
+      "Pathanamthitta": 0.004672897196261683,
+      "Alappuzha": 0.05140186915887851,
+      "Kottayam": 0.004672897196261683,
+      "Idukki": 0.004672897196261683,
+      "Ernakulam": 0.4252336448598131,
+      "Thrissur": 0.05140186915887851,
+      "Palakkad": 0.4252336448598131,
+      "Malappuram": 0.004672897196261683,
+      "Kozhikode": 0.004672897196261683,
+      "Wayanad": 0.004672897196261683,
+      "Kannur": 0.004672897196261683,
+      "Kasaragod": 0.004672897196261683
+    },
+    "kottayam::ganja": {
+      "Thiruvananthapuram": 0.004098360655737705,
+      "Kollam": 0.004098360655737705,
+      "Pathanamthitta": 0.004098360655737705,
+      "Alappuzha": 0.004098360655737705,
+      "Kottayam": 0.9467213114754098,
+      "Idukki": 0.004098360655737705,
+      "Ernakulam": 0.004098360655737705,
+      "Thrissur": 0.004098360655737705,
+      "Palakkad": 0.004098360655737705,
+      "Malappuram": 0.004098360655737705,
+      "Kozhikode": 0.004098360655737705,
+      "Wayanad": 0.004098360655737705,
+      "Kannur": 0.004098360655737705,
+      "Kasaragod": 0.004098360655737705
+    },
+    "walayar::hashish_oil": {
+      "Thiruvananthapuram": 0.011904761904761904,
+      "Kollam": 0.011904761904761904,
+      "Pathanamthitta": 0.011904761904761904,
+      "Alappuzha": 0.011904761904761904,
+      "Kottayam": 0.011904761904761904,
+      "Idukki": 0.011904761904761904,
+      "Ernakulam": 0.36904761904761907,
+      "Thrissur": 0.25,
+      "Palakkad": 0.13095238095238096,
+      "Malappuram": 0.011904761904761904,
+      "Kozhikode": 0.011904761904761904,
+      "Wayanad": 0.13095238095238096,
+      "Kannur": 0.011904761904761904,
+      "Kasaragod": 0.011904761904761904
+    },
+    "amaravila::mdma": {
+      "Thiruvananthapuram": 0.9243421052631579,
+      "Kollam": 0.03618421052631579,
+      "Pathanamthitta": 0.003289473684210526,
+      "Alappuzha": 0.003289473684210526,
+      "Kottayam": 0.003289473684210526,
+      "Idukki": 0.003289473684210526,
+      "Ernakulam": 0.003289473684210526,
+      "Thrissur": 0.003289473684210526,
+      "Palakkad": 0.003289473684210526,
+      "Malappuram": 0.003289473684210526,
+      "Kozhikode": 0.003289473684210526,
+      "Wayanad": 0.003289473684210526,
+      "Kannur": 0.003289473684210526,
+      "Kasaragod": 0.003289473684210526
+    },
+    "kannur::mdma": {
+      "Thiruvananthapuram": 0.0035211267605633804,
+      "Kollam": 0.0035211267605633804,
+      "Pathanamthitta": 0.0035211267605633804,
+      "Alappuzha": 0.0035211267605633804,
+      "Kottayam": 0.0035211267605633804,
+      "Idukki": 0.0035211267605633804,
+      "Ernakulam": 0.0035211267605633804,
+      "Thrissur": 0.0035211267605633804,
+      "Palakkad": 0.0035211267605633804,
+      "Malappuram": 0.0035211267605633804,
+      "Kozhikode": 0.0035211267605633804,
+      "Wayanad": 0.0035211267605633804,
+      "Kannur": 0.954225352112676,
+      "Kasaragod": 0.0035211267605633804
+    },
+    "nedumbassery::cocaine": {
+      "Thiruvananthapuram": 0.17187500000000003,
+      "Kollam": 0.015625000000000003,
+      "Pathanamthitta": 0.015625000000000003,
+      "Alappuzha": 0.015625000000000003,
+      "Kottayam": 0.015625000000000003,
+      "Idukki": 0.015625000000000003,
+      "Ernakulam": 0.640625,
+      "Thrissur": 0.015625000000000003,
+      "Palakkad": 0.015625000000000003,
+      "Malappuram": 0.015625000000000003,
+      "Kozhikode": 0.015625000000000003,
+      "Wayanad": 0.015625000000000003,
+      "Kannur": 0.015625000000000003,
+      "Kasaragod": 0.015625000000000003
+    },
+    "thrissur::heroin": {
+      "Thiruvananthapuram": 0.029411764705882353,
+      "Kollam": 0.029411764705882353,
+      "Pathanamthitta": 0.029411764705882353,
+      "Alappuzha": 0.029411764705882353,
+      "Kottayam": 0.029411764705882353,
+      "Idukki": 0.029411764705882353,
+      "Ernakulam": 0.029411764705882353,
+      "Thrissur": 0.6176470588235293,
+      "Palakkad": 0.029411764705882353,
+      "Malappuram": 0.029411764705882353,
+      "Kozhikode": 0.029411764705882353,
+      "Wayanad": 0.029411764705882353,
+      "Kannur": 0.029411764705882353,
+      "Kasaragod": 0.029411764705882353
+    },
+    "ernakulam::heroin": {
+      "Thiruvananthapuram": 0.006944444444444445,
+      "Kollam": 0.006944444444444445,
+      "Pathanamthitta": 0.006944444444444445,
+      "Alappuzha": 0.006944444444444445,
+      "Kottayam": 0.006944444444444445,
+      "Idukki": 0.006944444444444445,
+      "Ernakulam": 0.9097222222222222,
+      "Thrissur": 0.006944444444444445,
+      "Palakkad": 0.006944444444444445,
+      "Malappuram": 0.006944444444444445,
+      "Kozhikode": 0.006944444444444445,
+      "Wayanad": 0.006944444444444445,
+      "Kannur": 0.006944444444444445,
+      "Kasaragod": 0.006944444444444445
+    },
+    "aryankavu::mdma": {
+      "Thiruvananthapuram": 0.045081967213114756,
+      "Kollam": 0.9057377049180327,
+      "Pathanamthitta": 0.004098360655737705,
+      "Alappuzha": 0.004098360655737705,
+      "Kottayam": 0.004098360655737705,
+      "Idukki": 0.004098360655737705,
+      "Ernakulam": 0.004098360655737705,
+      "Thrissur": 0.004098360655737705,
+      "Palakkad": 0.004098360655737705,
+      "Malappuram": 0.004098360655737705,
+      "Kozhikode": 0.004098360655737705,
+      "Wayanad": 0.004098360655737705,
+      "Kannur": 0.004098360655737705,
+      "Kasaragod": 0.004098360655737705
+    },
+    "aluva_rail::mdma": {
+      "Thiruvananthapuram": 0.22340425531914893,
+      "Kollam": 0.11702127659574468,
+      "Pathanamthitta": 0.010638297872340425,
+      "Alappuzha": 0.010638297872340425,
+      "Kottayam": 0.010638297872340425,
+      "Idukki": 0.010638297872340425,
+      "Ernakulam": 0.11702127659574468,
+      "Thrissur": 0.010638297872340425,
+      "Palakkad": 0.010638297872340425,
+      "Malappuram": 0.010638297872340425,
+      "Kozhikode": 0.32978723404255317,
+      "Wayanad": 0.010638297872340425,
+      "Kannur": 0.010638297872340425,
+      "Kasaragod": 0.11702127659574468
+    },
+    "vazhikkadavu::other": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.4583333333333333,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "kozhikode::lsd": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.4583333333333333,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "kumily::hashish_oil": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.4583333333333333,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "ernakulam::cocaine": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.4583333333333333,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "nedumbassery::mdma": {
+      "Thiruvananthapuram": 0.015625,
+      "Kollam": 0.015625,
+      "Pathanamthitta": 0.015625,
+      "Alappuzha": 0.015625,
+      "Kottayam": 0.015625,
+      "Idukki": 0.015625,
+      "Ernakulam": 0.328125,
+      "Thrissur": 0.015625,
+      "Palakkad": 0.015625,
+      "Malappuram": 0.484375,
+      "Kozhikode": 0.015625,
+      "Wayanad": 0.015625,
+      "Kannur": 0.015625,
+      "Kasaragod": 0.015625
+    },
+    "kottayam::mdma": {
+      "Thiruvananthapuram": 0.009615384615384616,
+      "Kollam": 0.009615384615384616,
+      "Pathanamthitta": 0.009615384615384616,
+      "Alappuzha": 0.009615384615384616,
+      "Kottayam": 0.8749999999999999,
+      "Idukki": 0.009615384615384616,
+      "Ernakulam": 0.009615384615384616,
+      "Thrissur": 0.009615384615384616,
+      "Palakkad": 0.009615384615384616,
+      "Malappuram": 0.009615384615384616,
+      "Kozhikode": 0.009615384615384616,
+      "Wayanad": 0.009615384615384616,
+      "Kannur": 0.009615384615384616,
+      "Kasaragod": 0.009615384615384616
+    },
+    "alappuzha::mdma": {
+      "Thiruvananthapuram": 0.006097560975609757,
+      "Kollam": 0.006097560975609757,
+      "Pathanamthitta": 0.06707317073170734,
+      "Alappuzha": 0.8597560975609757,
+      "Kottayam": 0.006097560975609757,
+      "Idukki": 0.006097560975609757,
+      "Ernakulam": 0.006097560975609757,
+      "Thrissur": 0.006097560975609757,
+      "Palakkad": 0.006097560975609757,
+      "Malappuram": 0.006097560975609757,
+      "Kozhikode": 0.006097560975609757,
+      "Wayanad": 0.006097560975609757,
+      "Kannur": 0.006097560975609757,
+      "Kasaragod": 0.006097560975609757
+    },
+    "kozhikode::unknown": {
+      "Thiruvananthapuram": 0.029411764705882353,
+      "Kollam": 0.029411764705882353,
+      "Pathanamthitta": 0.029411764705882353,
+      "Alappuzha": 0.029411764705882353,
+      "Kottayam": 0.029411764705882353,
+      "Idukki": 0.029411764705882353,
+      "Ernakulam": 0.029411764705882353,
+      "Thrissur": 0.029411764705882353,
+      "Palakkad": 0.029411764705882353,
+      "Malappuram": 0.029411764705882353,
+      "Kozhikode": 0.6176470588235293,
+      "Wayanad": 0.029411764705882353,
+      "Kannur": 0.029411764705882353,
+      "Kasaragod": 0.029411764705882353
+    },
+    "kozhikode::heroin": {
+      "Thiruvananthapuram": 0.029411764705882353,
+      "Kollam": 0.029411764705882353,
+      "Pathanamthitta": 0.029411764705882353,
+      "Alappuzha": 0.029411764705882353,
+      "Kottayam": 0.029411764705882353,
+      "Idukki": 0.029411764705882353,
+      "Ernakulam": 0.029411764705882353,
+      "Thrissur": 0.029411764705882353,
+      "Palakkad": 0.029411764705882353,
+      "Malappuram": 0.029411764705882353,
+      "Kozhikode": 0.6176470588235293,
+      "Wayanad": 0.029411764705882353,
+      "Kannur": 0.029411764705882353,
+      "Kasaragod": 0.029411764705882353
+    },
+    "kottayam::methamphetamine": {
+      "Thiruvananthapuram": 0.022727272727272728,
+      "Kollam": 0.022727272727272728,
+      "Pathanamthitta": 0.022727272727272728,
+      "Alappuzha": 0.022727272727272728,
+      "Kottayam": 0.7045454545454545,
+      "Idukki": 0.022727272727272728,
+      "Ernakulam": 0.022727272727272728,
+      "Thrissur": 0.022727272727272728,
+      "Palakkad": 0.022727272727272728,
+      "Malappuram": 0.022727272727272728,
+      "Kozhikode": 0.022727272727272728,
+      "Wayanad": 0.022727272727272728,
+      "Kannur": 0.022727272727272728,
+      "Kasaragod": 0.022727272727272728
+    },
+    "thrissur::unknown": {
+      "Thiruvananthapuram": 0.022727272727272728,
+      "Kollam": 0.022727272727272728,
+      "Pathanamthitta": 0.022727272727272728,
+      "Alappuzha": 0.022727272727272728,
+      "Kottayam": 0.022727272727272728,
+      "Idukki": 0.022727272727272728,
+      "Ernakulam": 0.022727272727272728,
+      "Thrissur": 0.7045454545454545,
+      "Palakkad": 0.022727272727272728,
+      "Malappuram": 0.022727272727272728,
+      "Kozhikode": 0.022727272727272728,
+      "Wayanad": 0.022727272727272728,
+      "Kannur": 0.022727272727272728,
+      "Kasaragod": 0.022727272727272728
+    },
+    "pathanamthitta::mdma": {
+      "Thiruvananthapuram": 0.010638297872340425,
+      "Kollam": 0.010638297872340425,
+      "Pathanamthitta": 0.8617021276595744,
+      "Alappuzha": 0.010638297872340425,
+      "Kottayam": 0.010638297872340425,
+      "Idukki": 0.010638297872340425,
+      "Ernakulam": 0.010638297872340425,
+      "Thrissur": 0.010638297872340425,
+      "Palakkad": 0.010638297872340425,
+      "Malappuram": 0.010638297872340425,
+      "Kozhikode": 0.010638297872340425,
+      "Wayanad": 0.010638297872340425,
+      "Kannur": 0.010638297872340425,
+      "Kasaragod": 0.010638297872340425
+    },
+    "vazhikkadavu::methamphetamine": {
+      "Thiruvananthapuram": 0.022727272727272728,
+      "Kollam": 0.022727272727272728,
+      "Pathanamthitta": 0.022727272727272728,
+      "Alappuzha": 0.022727272727272728,
+      "Kottayam": 0.022727272727272728,
+      "Idukki": 0.022727272727272728,
+      "Ernakulam": 0.022727272727272728,
+      "Thrissur": 0.022727272727272728,
+      "Palakkad": 0.022727272727272728,
+      "Malappuram": 0.7045454545454545,
+      "Kozhikode": 0.022727272727272728,
+      "Wayanad": 0.022727272727272728,
+      "Kannur": 0.022727272727272728,
+      "Kasaragod": 0.022727272727272728
+    },
+    "kozhikode::methamphetamine": {
+      "Thiruvananthapuram": 0.022727272727272728,
+      "Kollam": 0.022727272727272728,
+      "Pathanamthitta": 0.022727272727272728,
+      "Alappuzha": 0.022727272727272728,
+      "Kottayam": 0.022727272727272728,
+      "Idukki": 0.022727272727272728,
+      "Ernakulam": 0.022727272727272728,
+      "Thrissur": 0.022727272727272728,
+      "Palakkad": 0.022727272727272728,
+      "Malappuram": 0.022727272727272728,
+      "Kozhikode": 0.7045454545454545,
+      "Wayanad": 0.022727272727272728,
+      "Kannur": 0.022727272727272728,
+      "Kasaragod": 0.022727272727272728
+    },
+    "palakkad_rail::mdma": {
+      "Thiruvananthapuram": 0.029411764705882353,
+      "Kollam": 0.029411764705882353,
+      "Pathanamthitta": 0.029411764705882353,
+      "Alappuzha": 0.029411764705882353,
+      "Kottayam": 0.029411764705882353,
+      "Idukki": 0.029411764705882353,
+      "Ernakulam": 0.029411764705882353,
+      "Thrissur": 0.3235294117647059,
+      "Palakkad": 0.029411764705882353,
+      "Malappuram": 0.3235294117647059,
+      "Kozhikode": 0.029411764705882353,
+      "Wayanad": 0.029411764705882353,
+      "Kannur": 0.029411764705882353,
+      "Kasaragod": 0.029411764705882353
+    },
+    "alappuzha::heroin": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.4583333333333333,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "kannur::methamphetamine": {
+      "Thiruvananthapuram": 0.013513513513513516,
+      "Kollam": 0.013513513513513516,
+      "Pathanamthitta": 0.013513513513513516,
+      "Alappuzha": 0.013513513513513516,
+      "Kottayam": 0.013513513513513516,
+      "Idukki": 0.013513513513513516,
+      "Ernakulam": 0.013513513513513516,
+      "Thrissur": 0.013513513513513516,
+      "Palakkad": 0.013513513513513516,
+      "Malappuram": 0.013513513513513516,
+      "Kozhikode": 0.013513513513513516,
+      "Wayanad": 0.013513513513513516,
+      "Kannur": 0.8243243243243243,
+      "Kasaragod": 0.013513513513513516
+    },
+    "aryankavu::methamphetamine": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.4583333333333333,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "alappuzha::hashish_oil": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.4583333333333333,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "walayar::pharma_tablets": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.4583333333333333,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "ernakulam::methamphetamine": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.4583333333333333,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "kannur::heroin": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.4583333333333333,
+      "Kasaragod": 0.041666666666666664
+    },
+    "nedumbassery::other": {
+      "Thiruvananthapuram": 0.029411764705882353,
+      "Kollam": 0.029411764705882353,
+      "Pathanamthitta": 0.029411764705882353,
+      "Alappuzha": 0.029411764705882353,
+      "Kottayam": 0.029411764705882353,
+      "Idukki": 0.029411764705882353,
+      "Ernakulam": 0.6176470588235293,
+      "Thrissur": 0.029411764705882353,
+      "Palakkad": 0.029411764705882353,
+      "Malappuram": 0.029411764705882353,
+      "Kozhikode": 0.029411764705882353,
+      "Wayanad": 0.029411764705882353,
+      "Kannur": 0.029411764705882353,
+      "Kasaragod": 0.029411764705882353
+    },
+    "ernakulam::hashish_oil": {
+      "Thiruvananthapuram": 0.022727272727272728,
+      "Kollam": 0.022727272727272728,
+      "Pathanamthitta": 0.022727272727272728,
+      "Alappuzha": 0.022727272727272728,
+      "Kottayam": 0.022727272727272728,
+      "Idukki": 0.022727272727272728,
+      "Ernakulam": 0.7045454545454545,
+      "Thrissur": 0.022727272727272728,
+      "Palakkad": 0.022727272727272728,
+      "Malappuram": 0.022727272727272728,
+      "Kozhikode": 0.022727272727272728,
+      "Wayanad": 0.022727272727272728,
+      "Kannur": 0.022727272727272728,
+      "Kasaragod": 0.022727272727272728
+    },
+    "kottayam::other": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.4583333333333333,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "ernakulam::other": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.041666666666666664,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.4583333333333333,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    },
+    "muthanga::hashish_oil": {
+      "Thiruvananthapuram": 0.029411764705882353,
+      "Kollam": 0.029411764705882353,
+      "Pathanamthitta": 0.029411764705882353,
+      "Alappuzha": 0.029411764705882353,
+      "Kottayam": 0.029411764705882353,
+      "Idukki": 0.029411764705882353,
+      "Ernakulam": 0.029411764705882353,
+      "Thrissur": 0.029411764705882353,
+      "Palakkad": 0.029411764705882353,
+      "Malappuram": 0.029411764705882353,
+      "Kozhikode": 0.029411764705882353,
+      "Wayanad": 0.6176470588235293,
+      "Kannur": 0.029411764705882353,
+      "Kasaragod": 0.029411764705882353
+    },
+    "aryankavu::heroin": {
+      "Thiruvananthapuram": 0.041666666666666664,
+      "Kollam": 0.4583333333333333,
+      "Pathanamthitta": 0.041666666666666664,
+      "Alappuzha": 0.041666666666666664,
+      "Kottayam": 0.041666666666666664,
+      "Idukki": 0.041666666666666664,
+      "Ernakulam": 0.041666666666666664,
+      "Thrissur": 0.041666666666666664,
+      "Palakkad": 0.041666666666666664,
+      "Malappuram": 0.041666666666666664,
+      "Kozhikode": 0.041666666666666664,
+      "Wayanad": 0.041666666666666664,
+      "Kannur": 0.041666666666666664,
+      "Kasaragod": 0.041666666666666664
+    }
+  },
   "scenarios": [
     {
       "origin_node": "muthanga",
@@ -87,7 +1816,7 @@
       "predicted_destinations": [
         {
           "district": "Wayanad",
-          "probability": 65.6,
+          "probability": 49.1,
           "rank": 1,
           "waypoint_path": [
             "muthanga",
@@ -95,11 +1824,11 @@
           ],
           "distance_km": 20.0,
           "estimated_transit_hours": 0.5,
-          "arrival_window": "0.5 \u2013 0.7 hrs"
+          "arrival_window": "0.5 \u2013 1.0 hrs"
         },
         {
           "district": "Kozhikode",
-          "probability": 22.0,
+          "probability": 40.8,
           "rank": 2,
           "waypoint_path": [
             "muthanga",
@@ -108,11 +1837,11 @@
           ],
           "distance_km": 105.0,
           "estimated_transit_hours": 3.0,
-          "arrival_window": "2.4 \u2013 4.1 hrs"
+          "arrival_window": "2.2 \u2013 4.1 hrs"
         },
         {
           "district": "Malappuram",
-          "probability": 6.0,
+          "probability": 4.9,
           "rank": 3,
           "waypoint_path": [
             "muthanga",
@@ -121,7 +1850,7 @@
           ],
           "distance_km": 120.0,
           "estimated_transit_hours": 3.5,
-          "arrival_window": "2.8 \u2013 4.7 hrs"
+          "arrival_window": "2.6 \u2013 4.7 hrs"
         }
       ],
       "primary_corridor_path": [
@@ -130,7 +1859,7 @@
       ],
       "enforcer_tactical_directive": [
         "Prioritize interception intercept teams along muthanga -> Wayanad.",
-        "Alert Excise & Police highway patrol units at Wayanad bypass junctions within arrival window 0.5 \u2013 0.7 hrs.",
+        "Alert Excise & Police highway patrol units at Wayanad bypass junctions within arrival window 0.5 \u2013 1.0 hrs.",
         "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
       ],
       "community_early_warning": [
@@ -149,7 +1878,7 @@
       "predicted_destinations": [
         {
           "district": "Palakkad",
-          "probability": 29.3,
+          "probability": 33.4,
           "rank": 1,
           "waypoint_path": [
             "walayar",
@@ -157,11 +1886,11 @@
           ],
           "distance_km": 25.0,
           "estimated_transit_hours": 0.6,
-          "arrival_window": "0.5 \u2013 0.8 hrs"
+          "arrival_window": "0.5 \u2013 1.0 hrs"
         },
         {
           "district": "Thiruvananthapuram",
-          "probability": 20.1,
+          "probability": 20.7,
           "rank": 2,
           "waypoint_path": [
             "walayar",
@@ -174,11 +1903,11 @@
           ],
           "distance_km": 380.0,
           "estimated_transit_hours": 8.6,
-          "arrival_window": "6.9 \u2013 11.6 hrs"
+          "arrival_window": "6.5 \u2013 11.6 hrs"
         },
         {
           "district": "Kottayam",
-          "probability": 15.3,
+          "probability": 12.2,
           "rank": 3,
           "waypoint_path": [
             "walayar",
@@ -189,7 +1918,7 @@
           ],
           "distance_km": 230.0,
           "estimated_transit_hours": 4.8,
-          "arrival_window": "3.8 \u2013 6.5 hrs"
+          "arrival_window": "3.6 \u2013 6.5 hrs"
         }
       ],
       "primary_corridor_path": [
@@ -198,7 +1927,7 @@
       ],
       "enforcer_tactical_directive": [
         "Prioritize interception intercept teams along walayar -> Palakkad.",
-        "Alert Excise & Police highway patrol units at Palakkad bypass junctions within arrival window 0.5 \u2013 0.8 hrs.",
+        "Alert Excise & Police highway patrol units at Palakkad bypass junctions within arrival window 0.5 \u2013 1.0 hrs.",
         "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
       ],
       "community_early_warning": [
@@ -217,7 +1946,7 @@
       "predicted_destinations": [
         {
           "district": "Thrissur",
-          "probability": 40.8,
+          "probability": 40.5,
           "rank": 1,
           "waypoint_path": [
             "walayar",
@@ -227,24 +1956,12 @@
           ],
           "distance_km": 100.0,
           "estimated_transit_hours": 2.0,
-          "arrival_window": "1.6 \u2013 2.7 hrs"
-        },
-        {
-          "district": "Palakkad",
-          "probability": 29.0,
-          "rank": 2,
-          "waypoint_path": [
-            "walayar",
-            "Palakkad"
-          ],
-          "distance_km": 25.0,
-          "estimated_transit_hours": 0.6,
-          "arrival_window": "0.5 \u2013 0.8 hrs"
+          "arrival_window": "1.5 \u2013 2.7 hrs"
         },
         {
           "district": "Ernakulam",
-          "probability": 23.0,
-          "rank": 3,
+          "probability": 32.8,
+          "rank": 2,
           "waypoint_path": [
             "walayar",
             "Palakkad",
@@ -253,7 +1970,19 @@
           ],
           "distance_km": 165.0,
           "estimated_transit_hours": 3.0,
-          "arrival_window": "2.4 \u2013 4.1 hrs"
+          "arrival_window": "2.3 \u2013 4.1 hrs"
+        },
+        {
+          "district": "Palakkad",
+          "probability": 17.5,
+          "rank": 3,
+          "waypoint_path": [
+            "walayar",
+            "Palakkad"
+          ],
+          "distance_km": 25.0,
+          "estimated_transit_hours": 0.6,
+          "arrival_window": "0.5 \u2013 1.0 hrs"
         }
       ],
       "primary_corridor_path": [
@@ -264,7 +1993,7 @@
       ],
       "enforcer_tactical_directive": [
         "Prioritize interception intercept teams along walayar -> Palakkad -> palakkad_rail.",
-        "Alert Excise & Police highway patrol units at Thrissur bypass junctions within arrival window 1.6 \u2013 2.7 hrs.",
+        "Alert Excise & Police highway patrol units at Thrissur bypass junctions within arrival window 1.5 \u2013 2.7 hrs.",
         "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
       ],
       "community_early_warning": [
@@ -281,58 +2010,119 @@
       "transport_mode": "train",
       "predicted_destinations": [
         {
-          "district": "Malappuram",
-          "probability": 65.4,
+          "district": "Thrissur",
+          "probability": 53.8,
           "rank": 1,
           "waypoint_path": [
             "palakkad_rail",
-            "Thrissur",
-            "Malappuram"
+            "Thrissur"
           ],
-          "distance_km": 150.0,
-          "estimated_transit_hours": 3.0,
-          "arrival_window": "2.4 \u2013 4.0 hrs"
-        },
-        {
-          "district": "Palakkad",
-          "probability": 15.8,
-          "rank": 2,
-          "waypoint_path": [
-            "palakkad_rail",
-            "Palakkad"
-          ],
-          "distance_km": 5.0,
-          "estimated_transit_hours": 0.2,
-          "arrival_window": "0.5 \u2013 0.2 hrs"
+          "distance_km": 70.0,
+          "estimated_transit_hours": 1.0,
+          "arrival_window": "0.8 \u2013 1.4 hrs"
         },
         {
           "district": "Ernakulam",
-          "probability": 8.1,
-          "rank": 3,
+          "probability": 37.9,
+          "rank": 2,
           "waypoint_path": [
             "palakkad_rail",
             "Ernakulam"
           ],
           "distance_km": 135.0,
           "estimated_transit_hours": 1.9,
-          "arrival_window": "1.5 \u2013 2.5 hrs"
+          "arrival_window": "1.4 \u2013 2.5 hrs"
+        },
+        {
+          "district": "Palakkad",
+          "probability": 3.5,
+          "rank": 3,
+          "waypoint_path": [
+            "palakkad_rail",
+            "Palakkad"
+          ],
+          "distance_km": 5.0,
+          "estimated_transit_hours": 0.2,
+          "arrival_window": "0.0 \u2013 0.5 hrs"
         }
       ],
       "primary_corridor_path": [
         "palakkad_rail",
-        "Thrissur",
-        "Malappuram"
+        "Thrissur"
       ],
       "enforcer_tactical_directive": [
-        "Prioritize interception intercept teams along palakkad_rail -> Thrissur -> Malappuram.",
-        "Alert Excise & Police highway patrol units at Malappuram bypass junctions within arrival window 2.4 \u2013 4.0 hrs.",
-        "Deploy RPF and anti-narcotics squad with sniffer canines at major railway stations in Malappuram."
+        "Prioritize interception intercept teams along palakkad_rail -> Thrissur.",
+        "Alert Excise & Police highway patrol units at Thrissur bypass junctions within arrival window 0.8 \u2013 1.4 hrs.",
+        "Deploy RPF and anti-narcotics squad with sniffer canines at major railway stations in Thrissur."
       ],
       "community_early_warning": [
-        "District Vulnerability Rating for Malappuram: HIGH.",
+        "District Vulnerability Rating for Thrissur: HIGH.",
         "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Thrissur transit corridors."
       ],
       "scenario_title": "Palakkad Junction \u00b7 Express Train Luggage Courier"
+    },
+    {
+      "origin_node": "vazhikkadavu",
+      "substance": "ganja",
+      "quantity_g": 12000.0,
+      "is_commercial": false,
+      "transport_mode": "road_private",
+      "predicted_destinations": [
+        {
+          "district": "Malappuram",
+          "probability": 88.0,
+          "rank": 1,
+          "waypoint_path": [
+            "vazhikkadavu",
+            "Malappuram"
+          ],
+          "distance_km": 45.0,
+          "estimated_transit_hours": 1.2,
+          "arrival_window": "0.9 \u2013 1.6 hrs"
+        },
+        {
+          "district": "Thrissur",
+          "probability": 7.5,
+          "rank": 2,
+          "waypoint_path": [
+            "vazhikkadavu",
+            "Malappuram",
+            "shoranur_rail",
+            "Thrissur"
+          ],
+          "distance_km": 120.0,
+          "estimated_transit_hours": 2.8,
+          "arrival_window": "2.1 \u2013 3.7 hrs"
+        },
+        {
+          "district": "Palakkad",
+          "probability": 2.0,
+          "rank": 3,
+          "waypoint_path": [
+            "vazhikkadavu",
+            "Malappuram",
+            "shoranur_rail",
+            "Palakkad"
+          ],
+          "distance_km": 130.0,
+          "estimated_transit_hours": 3.0,
+          "arrival_window": "2.2 \u2013 4.0 hrs"
+        }
+      ],
+      "primary_corridor_path": [
+        "vazhikkadavu",
+        "Malappuram"
+      ],
+      "enforcer_tactical_directive": [
+        "Prioritize interception intercept teams along vazhikkadavu -> Malappuram.",
+        "Alert Excise & Police highway patrol units at Malappuram bypass junctions within arrival window 0.9 \u2013 1.6 hrs.",
+        "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
+      ],
+      "community_early_warning": [
+        "District Vulnerability Rating for Malappuram: MODERATE.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Malappuram transit corridors."
+      ],
+      "scenario_title": "Vazhikkadavu Checkpost \u00b7 Nilambur Mountain Valley Transit"
     },
     {
       "origin_node": "muthanga",
@@ -342,23 +2132,9 @@
       "transport_mode": "bus",
       "predicted_destinations": [
         {
-          "district": "Kannur",
-          "probability": 50.8,
-          "rank": 1,
-          "waypoint_path": [
-            "muthanga",
-            "Wayanad",
-            "Kozhikode",
-            "Kannur"
-          ],
-          "distance_km": 195.0,
-          "estimated_transit_hours": 7.0,
-          "arrival_window": "5.6 \u2013 9.5 hrs"
-        },
-        {
           "district": "Kozhikode",
-          "probability": 19.4,
-          "rank": 2,
+          "probability": 39.4,
+          "rank": 1,
           "waypoint_path": [
             "muthanga",
             "Wayanad",
@@ -366,11 +2142,24 @@
           ],
           "distance_km": 105.0,
           "estimated_transit_hours": 3.8,
-          "arrival_window": "3.0 \u2013 5.1 hrs"
+          "arrival_window": "2.8 \u2013 5.1 hrs"
+        },
+        {
+          "district": "Malappuram",
+          "probability": 34.4,
+          "rank": 2,
+          "waypoint_path": [
+            "muthanga",
+            "Wayanad",
+            "Malappuram"
+          ],
+          "distance_km": 120.0,
+          "estimated_transit_hours": 4.4,
+          "arrival_window": "3.3 \u2013 5.9 hrs"
         },
         {
           "district": "Wayanad",
-          "probability": 19.3,
+          "probability": 16.5,
           "rank": 3,
           "waypoint_path": [
             "muthanga",
@@ -378,23 +2167,22 @@
           ],
           "distance_km": 20.0,
           "estimated_transit_hours": 0.6,
-          "arrival_window": "0.5 \u2013 0.8 hrs"
+          "arrival_window": "0.5 \u2013 1.0 hrs"
         }
       ],
       "primary_corridor_path": [
         "muthanga",
         "Wayanad",
-        "Kozhikode",
-        "Kannur"
+        "Kozhikode"
       ],
       "enforcer_tactical_directive": [
         "Prioritize interception intercept teams along muthanga -> Wayanad -> Kozhikode.",
-        "Alert Excise & Police highway patrol units at Kannur bypass junctions within arrival window 5.6 \u2013 9.5 hrs.",
+        "Alert Excise & Police highway patrol units at Kozhikode bypass junctions within arrival window 2.8 \u2013 5.1 hrs.",
         "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
       ],
       "community_early_warning": [
-        "District Vulnerability Rating for Kannur: HIGH.",
-        "Advisory to college campuses, hostels, and youth centers in Kannur: elevated synthetic party drug transit alert.",
+        "District Vulnerability Rating for Kozhikode: HIGH.",
+        "Advisory to college campuses, hostels, and youth centers in Kozhikode: elevated synthetic party drug transit alert.",
         "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Wayanad transit corridors."
       ],
       "scenario_title": "Muthanga Gateway \u00b7 Methamphetamine Interstate Bus"
@@ -408,7 +2196,7 @@
       "predicted_destinations": [
         {
           "district": "Kasaragod",
-          "probability": 93.4,
+          "probability": 90.5,
           "rank": 1,
           "waypoint_path": [
             "thalappady",
@@ -416,11 +2204,11 @@
           ],
           "distance_km": 20.0,
           "estimated_transit_hours": 0.5,
-          "arrival_window": "0.5 \u2013 0.7 hrs"
+          "arrival_window": "0.5 \u2013 1.0 hrs"
         },
         {
           "district": "Ernakulam",
-          "probability": 3.0,
+          "probability": 4.3,
           "rank": 2,
           "waypoint_path": [
             "thalappady",
@@ -428,16 +2216,17 @@
             "Kannur",
             "Kozhikode",
             "Malappuram",
+            "shoranur_rail",
             "Thrissur",
             "Ernakulam"
           ],
-          "distance_km": 400.0,
-          "estimated_transit_hours": 11.0,
-          "arrival_window": "8.8 \u2013 14.9 hrs"
+          "distance_km": 395.0,
+          "estimated_transit_hours": 10.4,
+          "arrival_window": "7.8 \u2013 14.0 hrs"
         },
         {
           "district": "Kannur",
-          "probability": 1.6,
+          "probability": 2.5,
           "rank": 3,
           "waypoint_path": [
             "thalappady",
@@ -446,7 +2235,7 @@
           ],
           "distance_km": 110.0,
           "estimated_transit_hours": 3.0,
-          "arrival_window": "2.4 \u2013 4.1 hrs"
+          "arrival_window": "2.2 \u2013 4.1 hrs"
         }
       ],
       "primary_corridor_path": [
@@ -455,7 +2244,7 @@
       ],
       "enforcer_tactical_directive": [
         "Prioritize interception intercept teams along thalappady -> Kasaragod.",
-        "Alert Excise & Police highway patrol units at Kasaragod bypass junctions within arrival window 0.5 \u2013 0.7 hrs.",
+        "Alert Excise & Police highway patrol units at Kasaragod bypass junctions within arrival window 0.5 \u2013 1.0 hrs.",
         "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
       ],
       "community_early_warning": [
@@ -473,60 +2262,57 @@
       "transport_mode": "road_private",
       "predicted_destinations": [
         {
-          "district": "Idukki",
-          "probability": 93.6,
+          "district": "Kottayam",
+          "probability": 48.0,
           "rank": 1,
+          "waypoint_path": [
+            "kumily",
+            "Idukki",
+            "Kottayam"
+          ],
+          "distance_km": 110.0,
+          "estimated_transit_hours": 3.2,
+          "arrival_window": "2.4 \u2013 4.3 hrs"
+        },
+        {
+          "district": "Idukki",
+          "probability": 43.3,
+          "rank": 2,
           "waypoint_path": [
             "kumily",
             "Idukki"
           ],
           "distance_km": 20.0,
           "estimated_transit_hours": 0.6,
-          "arrival_window": "0.5 \u2013 0.8 hrs"
+          "arrival_window": "0.5 \u2013 1.0 hrs"
         },
         {
-          "district": "Kozhikode",
-          "probability": 2.2,
-          "rank": 2,
-          "waypoint_path": [
-            "kumily",
-            "Idukki",
-            "Ernakulam",
-            "Thrissur",
-            "Malappuram",
-            "Kozhikode"
-          ],
-          "distance_km": 355.0,
-          "estimated_transit_hours": 10.0,
-          "arrival_window": "8.0 \u2013 13.5 hrs"
-        },
-        {
-          "district": "Malappuram",
-          "probability": 2.1,
+          "district": "Alappuzha",
+          "probability": 2.8,
           "rank": 3,
           "waypoint_path": [
             "kumily",
             "Idukki",
             "Ernakulam",
-            "Thrissur",
-            "Malappuram"
+            "Alappuzha"
           ],
-          "distance_km": 305.0,
-          "estimated_transit_hours": 8.4,
-          "arrival_window": "6.7 \u2013 11.3 hrs"
+          "distance_km": 215.0,
+          "estimated_transit_hours": 5.8,
+          "arrival_window": "4.4 \u2013 7.8 hrs"
         }
       ],
       "primary_corridor_path": [
         "kumily",
-        "Idukki"
+        "Idukki",
+        "Kottayam"
       ],
       "enforcer_tactical_directive": [
-        "Prioritize interception intercept teams along kumily -> Idukki.",
-        "Alert Excise & Police highway patrol units at Idukki bypass junctions within arrival window 0.5 \u2013 0.8 hrs.",
+        "Prioritize interception intercept teams along kumily -> Idukki -> Kottayam.",
+        "Alert Excise & Police highway patrol units at Kottayam bypass junctions within arrival window 2.4 \u2013 4.3 hrs.",
         "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
       ],
       "community_early_warning": [
-        "District Vulnerability Rating for Idukki: MODERATE.",
+        "District Vulnerability Rating for Kottayam: MODERATE.",
         "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Idukki transit corridors."
       ],
       "scenario_title": "Kumily Checkpost \u00b7 High Range Mountain Transit"
@@ -539,18 +2325,17 @@
       "transport_mode": "road_private",
       "predicted_destinations": [
         {
-          "district": "Idukki",
-          "probability": 38.2,
+          "district": "Thiruvananthapuram",
+          "probability": 37.2,
           "rank": 1,
           "waypoint_path": [
             "aryankavu",
-            "Pathanamthitta",
-            "Kottayam",
-            "Idukki"
+            "Kollam",
+            "Thiruvananthapuram"
           ],
-          "distance_km": 205.0,
-          "estimated_transit_hours": 6.2,
-          "arrival_window": "5.0 \u2013 8.4 hrs"
+          "distance_km": 140.0,
+          "estimated_transit_hours": 3.8,
+          "arrival_window": "2.8 \u2013 5.1 hrs"
         },
         {
           "district": "Kollam",
@@ -562,36 +2347,40 @@
           ],
           "distance_km": 70.0,
           "estimated_transit_hours": 2.0,
-          "arrival_window": "1.6 \u2013 2.7 hrs"
+          "arrival_window": "1.5 \u2013 2.7 hrs"
         },
         {
-          "district": "Thiruvananthapuram",
-          "probability": 16.1,
+          "district": "Kozhikode",
+          "probability": 15.2,
           "rank": 3,
           "waypoint_path": [
             "aryankavu",
-            "Kollam",
-            "Thiruvananthapuram"
+            "Pathanamthitta",
+            "Kottayam",
+            "Ernakulam",
+            "Thrissur",
+            "shoranur_rail",
+            "Malappuram",
+            "Kozhikode"
           ],
-          "distance_km": 140.0,
-          "estimated_transit_hours": 3.8,
-          "arrival_window": "3.0 \u2013 5.1 hrs"
+          "distance_km": 375.0,
+          "estimated_transit_hours": 10.4,
+          "arrival_window": "7.8 \u2013 14.0 hrs"
         }
       ],
       "primary_corridor_path": [
         "aryankavu",
-        "Pathanamthitta",
-        "Kottayam",
-        "Idukki"
+        "Kollam",
+        "Thiruvananthapuram"
       ],
       "enforcer_tactical_directive": [
-        "Prioritize interception intercept teams along aryankavu -> Pathanamthitta -> Kottayam.",
-        "Alert Excise & Police highway patrol units at Idukki bypass junctions within arrival window 5.0 \u2013 8.4 hrs.",
+        "Prioritize interception intercept teams along aryankavu -> Kollam -> Thiruvananthapuram.",
+        "Alert Excise & Police highway patrol units at Thiruvananthapuram bypass junctions within arrival window 2.8 \u2013 5.1 hrs.",
         "Deploy vehicle automated number-plate recognition (ANPR) sweep on incoming private vehicles."
       ],
       "community_early_warning": [
-        "District Vulnerability Rating for Idukki: HIGH.",
-        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Pathanamthitta transit corridors."
+        "District Vulnerability Rating for Thiruvananthapuram: HIGH.",
+        "Community tip portal notification: report suspicious night drop-offs or abandoned parcels along Kollam transit corridors."
       ],
       "scenario_title": "Aryankavu Pass \u00b7 Southern Mountain Transit"
     },
@@ -604,20 +2393,21 @@
       "predicted_destinations": [
         {
           "district": "Malappuram",
-          "probability": 47.4,
+          "probability": 46.6,
           "rank": 1,
           "waypoint_path": [
             "nedumbassery",
             "Thrissur",
+            "shoranur_rail",
             "Malappuram"
           ],
-          "distance_km": 135.0,
+          "distance_km": 130.0,
           "estimated_transit_hours": 18.0,
-          "arrival_window": "14.4 \u2013 24.3 hrs"
+          "arrival_window": "13.5 \u2013 24.3 hrs"
         },
         {
           "district": "Ernakulam",
-          "probability": 37.5,
+          "probability": 33.4,
           "rank": 2,
           "waypoint_path": [
             "nedumbassery",
@@ -625,11 +2415,11 @@
           ],
           "distance_km": 25.0,
           "estimated_transit_hours": 18.0,
-          "arrival_window": "14.4 \u2013 24.3 hrs"
+          "arrival_window": "13.5 \u2013 24.3 hrs"
         },
         {
           "district": "Thiruvananthapuram",
-          "probability": 8.5,
+          "probability": 11.8,
           "rank": 3,
           "waypoint_path": [
             "nedumbassery",
@@ -640,17 +2430,18 @@
           ],
           "distance_km": 240.0,
           "estimated_transit_hours": 19.2,
-          "arrival_window": "15.4 \u2013 25.9 hrs"
+          "arrival_window": "14.4 \u2013 25.9 hrs"
         }
       ],
       "primary_corridor_path": [
         "nedumbassery",
         "Thrissur",
+        "shoranur_rail",
         "Malappuram"
       ],
       "enforcer_tactical_directive": [
-        "Prioritize interception intercept teams along nedumbassery -> Thrissur -> Malappuram.",
-        "Alert Excise & Police highway patrol units at Malappuram bypass junctions within arrival window 14.4 \u2013 24.3 hrs.",
+        "Prioritize interception intercept teams along nedumbassery -> Thrissur -> shoranur_rail.",
+        "Alert Excise & Police highway patrol units at Malappuram bypass junctions within arrival window 13.5 \u2013 24.3 hrs.",
         "Screen inbound courier logistics sorting centers in Malappuram (focus: darknet/synthetic delivery manifests)."
       ],
       "community_early_warning": [
@@ -669,7 +2460,7 @@
       "predicted_destinations": [
         {
           "district": "Ernakulam",
-          "probability": 41.6,
+          "probability": 20.9,
           "rank": 1,
           "waypoint_path": [
             "aluva_rail",
@@ -677,26 +2468,24 @@
           ],
           "distance_km": 15.0,
           "estimated_transit_hours": 0.4,
-          "arrival_window": "0.5 \u2013 0.6 hrs"
+          "arrival_window": "0.5 \u2013 1.0 hrs"
         },
         {
-          "district": "Kozhikode",
-          "probability": 17.0,
+          "district": "Kottayam",
+          "probability": 18.8,
           "rank": 2,
           "waypoint_path": [
             "aluva_rail",
             "Ernakulam",
-            "Thrissur",
-            "Malappuram",
-            "Kozhikode"
+            "Kottayam"
           ],
-          "distance_km": 215.0,
-          "estimated_transit_hours": 5.3,
-          "arrival_window": "4.3 \u2013 7.2 hrs"
+          "distance_km": 80.0,
+          "estimated_transit_hours": 2.0,
+          "arrival_window": "1.5 \u2013 2.6 hrs"
         },
         {
           "district": "Alappuzha",
-          "probability": 10.7,
+          "probability": 16.5,
           "rank": 3,
           "waypoint_path": [
             "aluva_rail",
@@ -704,7 +2493,7 @@
           ],
           "distance_km": 75.0,
           "estimated_transit_hours": 1.5,
-          "arrival_window": "1.2 \u2013 2.1 hrs"
+          "arrival_window": "1.1 \u2013 2.1 hrs"
         }
       ],
       "primary_corridor_path": [
@@ -713,7 +2502,7 @@
       ],
       "enforcer_tactical_directive": [
         "Prioritize interception intercept teams along aluva_rail -> Ernakulam.",
-        "Alert Excise & Police highway patrol units at Ernakulam bypass junctions within arrival window 0.5 \u2013 0.6 hrs.",
+        "Alert Excise & Police highway patrol units at Ernakulam bypass junctions within arrival window 0.5 \u2013 1.0 hrs.",
         "Deploy RPF and anti-narcotics squad with sniffer canines at major railway stations in Ernakulam."
       ],
       "community_early_warning": [
@@ -728,7 +2517,7 @@
       "target_checkpost": "walayar",
       "checkpost_name": "Walayar Checkpost",
       "enforcement_boost_pct": 50.0,
-      "impact_summary": "A 50% enforcement surge at Walayar Checkpost (NH 544) suppresses direct highway transit into Palakkad/Ernakulam.Smuggling networks exhibit route displacement into the northern Wayanad corridor (36%) and modal substitution into railway parcel logistics (22%).",
+      "impact_summary": "A 50% enforcement surge at Walayar Checkpost (NH 544) suppresses direct highway transit into Palakkad/Ernakulam. Smuggling networks exhibit route displacement into the northern Wayanad corridor (36%) and modal substitution into railway parcel logistics (22%).",
       "rerouting_distribution": [
         {
           "corridor": "c01 (Muthanga / Wayanad Ghat Pass)",
@@ -779,11 +2568,95 @@
           "risk_change": "Direct Supply Interruption"
         }
       ]
+    },
+    {
+      "target_checkpost": "thalappady",
+      "checkpost_name": "Thalappady Border",
+      "enforcement_boost_pct": 50.0,
+      "impact_summary": "A 50% enforcement surge at Thalappady Border (NH 66) diverts Goa/Mangalore synthetic consignments inland toward Wayanad Ghat passes and Konkan express railway parcel networks.",
+      "rerouting_distribution": [
+        {
+          "corridor": "c01 (Muthanga / Wayanad NH 766)",
+          "share_pct": 38.0,
+          "risk_change": "+26% Inflow Pressure"
+        },
+        {
+          "corridor": "Konkan / Southern Mainline Rail Parcels",
+          "share_pct": 28.0,
+          "risk_change": "+22% Modal Shift"
+        },
+        {
+          "corridor": "Secondary Coastal & Fishing Harbours",
+          "share_pct": 20.0,
+          "risk_change": "+15% Marine Infiltration"
+        },
+        {
+          "corridor": "Deterred / Suppressed Consignments",
+          "share_pct": 14.0,
+          "risk_change": "Direct Reduction"
+        }
+      ]
+    },
+    {
+      "target_checkpost": "kumily",
+      "checkpost_name": "Kumily Checkpost",
+      "enforcement_boost_pct": 50.0,
+      "impact_summary": "A 50% enforcement surge at Kumily Checkpost (NH 183) redirects High Range mountain traffic northward to Bodimettu pass and southward to Aryankavu ghats.",
+      "rerouting_distribution": [
+        {
+          "corridor": "c06 (Bodimettu / Gap Road NH 85)",
+          "share_pct": 40.0,
+          "risk_change": "+32% Inflow Spillover"
+        },
+        {
+          "corridor": "c09 (Aryankavu / Kollam NH 744)",
+          "share_pct": 28.0,
+          "risk_change": "+21% Southern Rerouting"
+        },
+        {
+          "corridor": "Central Travancore Goods Rail Consignments",
+          "share_pct": 18.0,
+          "risk_change": "+13% Freight Shift"
+        },
+        {
+          "corridor": "Deterred / Abandoned Transit Attempts",
+          "share_pct": 14.0,
+          "risk_change": "Direct Interruption"
+        }
+      ]
+    },
+    {
+      "target_checkpost": "aryankavu",
+      "checkpost_name": "Aryankavu Checkpost",
+      "enforcement_boost_pct": 50.0,
+      "impact_summary": "A 50% enforcement surge at Aryankavu Checkpost (NH 744) forces southern interstate flow into Amaravila coastal passes and Kumily mountain feeder routes.",
+      "rerouting_distribution": [
+        {
+          "corridor": "c06 (Kumily / Idukki Mountain Route)",
+          "share_pct": 36.0,
+          "risk_change": "+27% Inflow Pressure"
+        },
+        {
+          "corridor": "c07 (Amaravila / South Border NH 66)",
+          "share_pct": 32.0,
+          "risk_change": "+24% Coastal Shift"
+        },
+        {
+          "corridor": "Sengottai-Punalur Railway Logistics",
+          "share_pct": 18.0,
+          "risk_change": "+14% Rail Substitution"
+        },
+        {
+          "corridor": "Deterred / Suppressed Contraband",
+          "share_pct": 14.0,
+          "risk_change": "Direct Reduction"
+        }
+      ]
     }
   ],
   "model_architecture": {
     "type": "Hierarchical Hybrid: Dirichlet-Markov Routing + HistGradientBoosting + Graph Diffusion",
     "compute_requirement": "Sub-minute CPU Training (Zero Cloud Training Required); Sub-millisecond Edge Inference",
-    "veracity_sources": "1,137 News Seizure Observations + 65 Kerala High Court NDPS Judicial Cases"
+    "veracity_sources": "1,137 News Seizure Observations + 112 Kerala High Court NDPS Judicial Cases"
   }
 }

@@ -15,6 +15,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 import urllib.request
+import urllib.parse
 import urllib.error
 
 API_TOKEN = "b342770bcc88a69de58557d54f5a40eb2d452856"
@@ -38,9 +39,16 @@ CHECKPOSTS = {
     "thalappady": ("Kasaragod", "Thalappady Border"),
     "manjeshwar": ("Kasaragod", "Manjeshwar"),
     "amaravila": ("Thiruvananthapuram", "Amaravila Checkpost"),
+    "kaliyakkavilai": ("Thiruvananthapuram", "Amaravila Checkpost"),
     "nedumbassery": ("Ernakulam", "Nedumbassery CIAL"),
+    "cial": ("Ernakulam", "Nedumbassery CIAL"),
+    "cochin airport": ("Ernakulam", "Nedumbassery CIAL"),
     "aluva railway": ("Ernakulam", "Aluva Railway Station"),
     "palakkad railway": ("Palakkad", "Palakkad Railway Station"),
+    "vazhikkadavu": ("Malappuram", "Vazhikkadavu Checkpost"),
+    "nadukani": ("Malappuram", "Nadukani Pass"),
+    "shoranur": ("Palakkad", "Shoranur Railway Junction"),
+    "karipur": ("Malappuram", "Calicut Airport (Karipur)"),
 }
 
 SUBSTANCES = {
@@ -125,32 +133,38 @@ def extract_incident(tid: int, title: str, html: str) -> Optional[Dict[str, Any]
     if not text:
         return None
 
-    # Filter out non-NDPS civil matters if NDPS not in text
-    if not re.search(r"\bNDPS\b|Narcotic\s+Drugs", text, re.I):
+    # Filter out non-NDPS civil matters if NDPS/narcotics not in text
+    if not re.search(r"\bNDPS\b|Narcotic\s+Drugs|Psychotropic|Section\s+2[0-3]|Contraband", text, re.I):
         return None
 
     j_date = parse_judgment_date(title, text)
 
-    # Crime No and Police Station / Excise Range
+    # Crime No, Police Station / Excise Range, and authoritative station District
     crime_no = None
     station = None
+    district = None
+    place = None
+
     m_crime = re.search(
-        r"CRIME\s+NO\.?\s*(\d+\s*/\s*\d{4})\s+OF\s+([A-Za-z\s]+?(?:POLICE\s+STATION|EXCISE\s+RANGE|EXCISE\s+CIRCLE|EXCISE\s+SPECIAL\s+SQUAD))",
+        r"CRIME\s+NO\.?\s*(\d+\s*/\s*\d{4})\s+OF\s+([A-Za-z\s]+?(?:POLICE\s+STATION|EXCISE\s+RANGE|EXCISE\s+CIRCLE|EXCISE\s+SPECIAL\s+SQUAD))(?:\s*,\s*([A-Za-z]+))?",
         text,
         re.I,
     )
     if m_crime:
         crime_no = re.sub(r"\s+", "", m_crime.group(1))
         station = re.sub(r"\s+", " ", m_crime.group(2)).strip().title()
+        if m_crime.group(3):
+            cand_dist = m_crime.group(3).strip().title()
+            for d in DISTRICTS:
+                if d.lower() == cand_dist.lower():
+                    district = d
+                    break
 
-    # District resolution
-    district = None
-    place = None
     # 1. Check checkposts / key transit places first for high-precision locality
     for cp_key, (cp_dist, cp_name) in CHECKPOSTS.items():
         if re.search(rf"\b{cp_key}\b", text, re.I):
             place = cp_name
-            district = cp_dist
+            district = cp_dist  # Checkpost location is authoritative for entry interceptions
             break
 
     # 2. Check station name against districts
@@ -160,11 +174,12 @@ def extract_incident(tid: int, title: str, html: str) -> Optional[Dict[str, Any]
                 district = d
                 break
 
-    # 3. Check explicit '<Name> District' pattern
+    # 3. Body text search (strip High Court header so 'High Court of Kerala at Ernakulam' never poisons district)
+    body_text = re.sub(r"^[\s\S]*?HIGH\s+COURT\s+OF\s+KERALA\s+AT\s+ERNAKULAM", "", text, flags=re.I)
     if not district:
         m_dist = re.search(
             r"([A-Za-z]+)\s+DISTRICT\b",
-            text,
+            body_text,
             re.I,
         )
         if m_dist:
@@ -174,10 +189,10 @@ def extract_incident(tid: int, title: str, html: str) -> Optional[Dict[str, Any]
                     district = d
                     break
 
-    # 4. Fallback search across districts
+    # 4. Fallback search across districts in body text
     if not district:
         for d in DISTRICTS:
-            if re.search(rf"\b{d}\b", text):
+            if re.search(rf"\b{d}\b", body_text):
                 district = d
                 break
 
@@ -206,7 +221,7 @@ def extract_incident(tid: int, title: str, html: str) -> Optional[Dict[str, Any]
             u = unit_str.lower()
             if u.startswith("k"):
                 g_val = val * 1000.0
-            elif u.startswith("m") and "g" in u and "gm" not in u:
+            elif (u.startswith("m") and "g" in u and "gm" not in u) or u == "mg":
                 g_val = val / 1000.0
             else:
                 g_val = val
@@ -226,14 +241,14 @@ def extract_incident(tid: int, title: str, html: str) -> Optional[Dict[str, Any]
     destination = None
     # Check known sourcing hubs
     hubs = [
-        ("Bengaluru", r"\b(?:Bengaluru|Bangalore)\b"),
-        ("Mangalore", r"\b(?:Mangalore|Mangaluru)\b"),
+        ("Bengaluru", r"\b(?:Bengaluru|Bangalore|Gundlupet|Mysuru|Mysore)\b"),
+        ("Mangalore", r"\b(?:Mangalore|Mangaluru|Sullia)\b"),
         ("Goa", r"\b(?:Goa)\b"),
         ("Andhra Pradesh", r"\b(?:Andhra\s+Pradesh|Araku|Visakhapatnam|Vizag)\b"),
         ("Odisha", r"\b(?:Odisha|Orissa)\b"),
-        ("Coimbatore", r"\b(?:Coimbatore)\b"),
+        ("Coimbatore", r"\b(?:Coimbatore|Tiruppur|Salem)\b"),
         ("Chennai", r"\b(?:Chennai)\b"),
-        ("Madurai", r"\b(?:Madurai|Theni)\b"),
+        ("Madurai", r"\b(?:Madurai|Theni|Cumbum|Shenkottai|Tenkasi)\b"),
         ("Delhi", r"\b(?:Delhi|New\s+Delhi)\b"),
         ("Mumbai", r"\b(?:Mumbai|Bombay)\b"),
     ]
@@ -242,9 +257,9 @@ def extract_incident(tid: int, title: str, html: str) -> Optional[Dict[str, Any]
             origin = hub_name
             break
 
-    # Check transit phrase: travelling from X to Y
+    # Check transit phrase: travelling from X to Y, transport to X, etc.
     m_route = re.search(
-        r"travell?ing\s+from\s+([A-Za-z\s]+?)\s+to\s+([A-Za-z\s]+?)(?:\s+in|\s+by|\.|\,)",
+        r"(?:travell?ing|transport(?:ing)?(?:\s+it)?|proceeding|carr(?:y|ying))\s+from\s+([A-Za-z\s]+?)\s+to\s+([A-Za-z\s]+?)(?:\s+in|\s+by|\.|\,)",
         text,
         re.I,
     )
@@ -254,21 +269,53 @@ def extract_incident(tid: int, title: str, html: str) -> Optional[Dict[str, Any]
         if len(c_orig) < 30:
             origin = c_orig
         if len(c_dest) < 30:
-            destination = c_dest
+            for d in DISTRICTS:
+                if d.lower() in c_dest.lower():
+                    destination = d
+                    break
+            if not destination and len(c_dest) < 25:
+                destination = c_dest
 
-    # If destination not resolved, check accused native place vs seizure place
+    # Check explicit destination delivery / sale intention
     if not destination:
-        m_native = re.search(
-            r"PETITIONER/ACCUSED[^:]*:[^,]+,[^,]+,\s*([A-Za-z\s]+?)(?:DISTRICT|PIN|\n)",
+        m_dest = re.search(
+            r"(?:transport(?:ing)?(?:\s+it)?|deliver(?:y|ing)?|head(?:ing)?|proceeding|supplying|sell(?:ing)?|sale\s+in|transit(?:\s+to)?|brought\s+to|en\s*route\s+to|direction\s+to\s+transport(?:\s+it)?\s+to)\s+(?:to\s+|at\s+|in\s+)?([A-Za-z]+)",
             text,
             re.I,
         )
-        if m_native:
-            cand = m_native.group(1).strip().title()
+        if m_dest:
+            w = m_dest.group(1).title()
+            if w in DISTRICTS:
+                destination = w
+            elif w.lower() in ["kochi", "cochin"]:
+                destination = "Ernakulam"
+            elif w.lower() in ["calicut"]:
+                destination = "Kozhikode"
+            elif w.lower() in ["trivandrum"]:
+                destination = "Thiruvananthapuram"
+
+    # If destination not resolved, check accused native place vs seizure place
+    if not destination:
+        m_acc = re.search(
+            r"(?:PETITIONER|ACCUSED|APPELLANT)[\s\S]{1,600}?(?:RESPONDENT|STATE|ADVS)",
+            text,
+            re.I,
+        )
+        if m_acc:
+            acc_txt = m_acc.group(0)
             for d in DISTRICTS:
-                if d.lower() in cand.lower():
+                if re.search(rf"\b{d}\b", acc_txt, re.I):
                     destination = d
                     break
+            if not destination:
+                if re.search(r"\b(?:kochi|cochin|muvattupuzha|aluva|edappally|kakkanad)\b", acc_txt, re.I):
+                    destination = "Ernakulam"
+                elif re.search(r"\b(?:manjeri|tirur|perinthalmanna|nilambur|kottakkal)\b", acc_txt, re.I):
+                    destination = "Malappuram"
+                elif re.search(r"\b(?:vadakara|koyilandy)\b", acc_txt, re.I):
+                    destination = "Kozhikode"
+                elif re.search(r"\b(?:thalassery|payyannur)\b", acc_txt, re.I):
+                    destination = "Kannur"
 
     # Transport mode
     transport_mode = "road_private"
@@ -328,25 +375,49 @@ def extract_incident(tid: int, title: str, html: str) -> Optional[Dict[str, Any]
 
 def harvest_all(output_csv: Path, cache_dir: Path, target_count: int = 150):
     cache_dir.mkdir(parents=True, exist_ok=True)
+
     queries = [
         "ndps muthanga",
         "ndps walayar",
         "ndps aryankavu",
         "ndps kumily",
         "ndps thalappady",
+        "ndps vazhikkadavu",
+        "ndps amaravila",
+        "ndps bodimettu",
         "ndps bangalore",
         "ndps train",
         "ndps courier",
         "ndps commercial mdma",
         "ndps ganja commercial",
         "ndps hashish oil",
+        "ndps methamphetamine",
         "ndps sulthan bathery",
         "ndps ernakulam mdma",
         "ndps aluva railway",
+        "ndps palakkad junction",
+        "ndps shoranur",
         "ndps kozhikode mdma",
+        "ndps cial airport",
     ]
 
     all_cases: Dict[int, Dict[str, Any]] = {}
+
+    # First load and re-extract from all existing cached documents
+    cached_htmls = sorted(cache_dir.glob("*.html"))
+    if cached_htmls:
+        print(f"Loading {len(cached_htmls)} existing cached judicial orders...")
+        for cf in cached_htmls:
+            try:
+                tid = int(cf.stem)
+                html = cf.read_text(encoding="utf-8", errors="ignore")
+                case = extract_incident(tid, f"Case {tid}", html)
+                if case and case.get("district"):
+                    all_cases[tid] = case
+            except Exception:
+                continue
+        print(f"Extracted {len(all_cases)} valid structured NDPS cases from existing cache.")
+
     print(f"Beginning IndianKanoon NDPS judicial harvest (target: ~{target_count} structured cases)...")
 
     for q in queries:
@@ -354,6 +425,8 @@ def harvest_all(output_csv: Path, cache_dir: Path, target_count: int = 150):
             break
         print(f"Searching: '{q}' ...")
         for page in range(3):
+            if len(all_cases) >= target_count:
+                break
             try:
                 docs = search_kanoon(q, pagenum=page)
                 if not docs:
@@ -373,20 +446,32 @@ def harvest_all(output_csv: Path, cache_dir: Path, target_count: int = 150):
                 break
 
     records = list(all_cases.values())
-    print(f"Successfully harvested {len(records)} authoritative judicial NDPS cases!")
+    print(f"Successfully harvested and verified {len(records)} authoritative judicial NDPS cases!")
 
     import pandas as pd
     df = pd.DataFrame(records)
     output_csv.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(output_csv, index=False)
     print(f"Wrote structured judicial cases to {output_csv}")
+
+    # Also mirror to Data-Collection-system if present
+    repo_root = Path(__file__).resolve().parent.parent.parent
+    mirror_path = repo_root / "Data-Collection-system" / "data" / "judicial_ndps_cases.csv"
+    if mirror_path.parent.exists():
+        df.to_csv(mirror_path, index=False)
+        print(f"Mirrored structured cases to {mirror_path}")
+
     return df
 
 
 if __name__ == "__main__":
+    script_dir = Path(__file__).resolve().parent
+    default_out = script_dir.parent / "ml" / "data" / "judicial_ndps_cases.csv"
+    default_cache = script_dir.parent / "ml" / "data" / "kanoon_cache"
+
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out", default="Main/ml/data/judicial_ndps_cases.csv", help="Output CSV path")
-    parser.add_argument("--cache", default="Main/ml/data/kanoon_cache", help="Cache directory")
+    parser.add_argument("--out", default=str(default_out), help="Output CSV path")
+    parser.add_argument("--cache", default=str(default_cache), help="Cache directory")
     parser.add_argument("--limit", type=int, default=120, help="Target case count")
     args = parser.parse_args()
     harvest_all(Path(args.out), Path(args.cache), target_count=args.limit)

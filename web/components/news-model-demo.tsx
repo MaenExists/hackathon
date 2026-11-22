@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Play,
   Pause,
@@ -23,6 +23,9 @@ import {
   Cpu,
   RefreshCw,
   BarChart3,
+  SlidersHorizontal,
+  Sparkles,
+  Zap,
 } from "lucide-react";
 import demoMonthly from "../data/news-demo.json";
 import backtestData from "../data/corridor-backtest.json";
@@ -37,10 +40,55 @@ const monthlyMethodNames: Record<string, string> = {
   hist_gradient_boosting: "HistGradientBoosting (Poisson)",
 };
 
+const gatewayOptions = [
+  { id: "walayar", label: "Walayar Checkpost (Palakkad / Tamil Nadu)" },
+  { id: "muthanga", label: "Muthanga Checkpost (Wayanad / Karnataka)" },
+  { id: "thalappady", label: "Thalappady Border (Kasaragod / Karnataka)" },
+  { id: "kumily", label: "Kumily Checkpost (Idukki / Tamil Nadu)" },
+  { id: "bodimettu", label: "Bodimettu Checkpost (Idukki / Theni)" },
+  { id: "aryankavu", label: "Aryankavu Checkpost (Kollam / Tenkasi)" },
+  { id: "amaravila", label: "Amaravila Checkpost (Thiruvananthapuram / TN)" },
+  { id: "vazhikkadavu", label: "Vazhikkadavu Checkpost (Malappuram / Nilambur)" },
+  { id: "nedumbassery", label: "Nedumbassery CIAL Airport (Ernakulam)" },
+  { id: "aluva_rail", label: "Aluva Railway Hub (Ernakulam)" },
+  { id: "palakkad_rail", label: "Palakkad Railway Hub (Palakkad)" },
+  { id: "shoranur_rail", label: "Shoranur Railway Hub (Palakkad)" },
+];
+
+const substanceOptions = [
+  { id: "mdma", label: "MDMA / Ecstasy", threshold: 10, unit: "10g" },
+  { id: "ganja", label: "Ganja / Cannabis", threshold: 20000, unit: "20kg (20,000g)" },
+  { id: "methamphetamine", label: "Methamphetamine / ICE", threshold: 50, unit: "50g" },
+  { id: "hashish_oil", label: "Hashish Oil / Charas", threshold: 1000, unit: "1kg (1,000g)" },
+  { id: "heroin", label: "Heroin / Brown Sugar", threshold: 250, unit: "250g" },
+  { id: "lsd", label: "LSD Blots / Acid", threshold: 0.1, unit: "0.1g (100mg)" },
+  { id: "cocaine", label: "Cocaine / Crack", threshold: 100, unit: "100g" },
+];
+
+const modalityOptions = [
+  { id: "private_car", label: "Private Car / SUV (Interstate Highway)" },
+  { id: "interstate_bus", label: "Interstate Bus (KSRTC / Sleeper)" },
+  { id: "train_express", label: "Express Train (Platform / Parcel)" },
+  { id: "courier_parcel", label: "Courier / Express Logistics Service" },
+  { id: "heavy_truck", label: "Heavy Goods Truck / Container" },
+  { id: "motorcycle", label: "Motorcycle / Bypass Ridge Route" },
+  { id: "air_passenger", label: "Air Passenger / Cargo (Airport Hub)" },
+];
+
+const formatNodeName = (node: string) => {
+  const gw = (transitData.gateways as Record<string, { name: string }>)[node.toLowerCase()];
+  return gw ? gw.name : node;
+};
+
 export default function NewsModelDemo() {
   const [viewMode, setViewMode] = useState<"next_hop_transit" | "weekly_corridor" | "monthly_block">("next_hop_transit");
   const [activeScenarioIdx, setActiveScenarioIdx] = useState(0);
   const [activeDisplacementIdx, setActiveDisplacementIdx] = useState(0);
+  const [transitScenarioType, setTransitScenarioType] = useState<"curated" | "custom">("curated");
+  const [customGateway, setCustomGateway] = useState<string>("walayar");
+  const [customSubstance, setCustomSubstance] = useState<string>("mdma");
+  const [customQuantity, setCustomQuantity] = useState<number>(50);
+  const [customMode, setCustomMode] = useState<string>("private_car");
 
   // State for weekly corridor backtest
   const timeline = backtestData.timeline;
@@ -48,6 +96,178 @@ export default function NewsModelDemo() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedWeeklyModel, setSelectedWeeklyModel] = useState<"corridors" | "own_history" | "baseline">("corridors");
   const [showHypotheses, setShowHypotheses] = useState(false);
+
+  // Build adjacency list for Dijkstra route solver
+  const corridorGraph = useMemo(() => {
+    const adj: Record<string, Array<{ node: string; dist: number; time: number }>> = {};
+    for (const edge of transitData.network_edges) {
+      if (!adj[edge.from]) adj[edge.from] = [];
+      if (!adj[edge.to]) adj[edge.to] = [];
+      adj[edge.from].push({ node: edge.to, dist: edge.distance_km, time: edge.time_hrs });
+      adj[edge.to].push({ node: edge.from, dist: edge.distance_km, time: edge.time_hrs });
+    }
+    return adj;
+  }, []);
+
+  const solveShortestPath = useMemo(() => {
+    return (startNode: string, targetNode: string) => {
+      const dist: Record<string, number> = { [startNode]: 0 };
+      const prev: Record<string, string | null> = { [startNode]: null };
+      const visited = new Set<string>();
+      const pq: Array<{ node: string; cost: number }> = [{ node: startNode, cost: 0 }];
+
+      while (pq.length > 0) {
+        pq.sort((a, b) => a.cost - b.cost);
+        const curr = pq.shift()!;
+        if (curr.node === targetNode) break;
+        if (visited.has(curr.node)) continue;
+        visited.add(curr.node);
+
+        for (const neighbor of corridorGraph[curr.node] || []) {
+          const alt = curr.cost + neighbor.time;
+          if (dist[neighbor.node] === undefined || alt < dist[neighbor.node]) {
+            dist[neighbor.node] = alt;
+            prev[neighbor.node] = curr.node;
+            pq.push({ node: neighbor.node, cost: alt });
+          }
+        }
+      }
+
+      const path: string[] = [];
+      let curr: string | null = targetNode;
+      while (curr) {
+        path.unshift(curr);
+        curr = prev[curr] ?? null;
+      }
+      let totalKm = 0;
+      let totalHours = 0;
+      for (let i = 0; i < path.length - 1; i++) {
+        const e = corridorGraph[path[i]]?.find((n) => n.node === path[i + 1]);
+        if (e) {
+          totalKm += e.dist;
+          totalHours += e.time;
+        }
+      }
+      return { path, totalKm, totalHours: Math.round(totalHours * 10) / 10 };
+    };
+  }, [corridorGraph]);
+
+  const customPrediction = useMemo(() => {
+    const gatewayKey = customGateway.toLowerCase();
+    const substanceKey = customSubstance.toLowerCase();
+    const markovKey = `${gatewayKey}::${substanceKey}`;
+
+    let commercialThreshold = 50;
+    if (substanceKey.includes("mdma") || substanceKey.includes("ecstasy")) commercialThreshold = 10;
+    else if (substanceKey.includes("ganja") || substanceKey.includes("cannabis")) commercialThreshold = 20000;
+    else if (substanceKey.includes("meth")) commercialThreshold = 50;
+    else if (substanceKey.includes("hash") || substanceKey.includes("charas")) commercialThreshold = 1000;
+    else if (substanceKey.includes("heroin") || substanceKey.includes("brown sugar")) commercialThreshold = 250;
+    else if (substanceKey.includes("lsd")) commercialThreshold = 0.1;
+    else if (substanceKey.includes("cocaine")) commercialThreshold = 100;
+    const isCommercial = customQuantity >= commercialThreshold;
+
+    const transitions = transitData.markov_transitions as Record<string, Record<string, number>>;
+    let distProbs: Record<string, number> = {};
+
+    if (transitions && transitions[markovKey]) {
+      distProbs = { ...transitions[markovKey] };
+    } else {
+      const matchingKeys = Object.keys(transitions || {}).filter((k) => k.startsWith(`${gatewayKey}::`));
+      if (matchingKeys.length > 0) {
+        for (const k of matchingKeys) {
+          const trans = transitions[k];
+          for (const [d, p] of Object.entries(trans)) {
+            distProbs[d] = (distProbs[d] || 0) + p / matchingKeys.length;
+          }
+        }
+      } else {
+        for (const d of transitData.districts) {
+          const route = solveShortestPath(gatewayKey, d);
+          distProbs[d] = 1 / (route.totalKm + 25);
+        }
+      }
+    }
+
+    const scores: Record<string, number> = {};
+    for (const d of transitData.districts) {
+      let p = distProbs[d] || 0.01;
+      if (isCommercial) {
+        if (d === "Ernakulam") p *= 1.45;
+        if (d === "Kozhikode") p *= 1.35;
+        if (d === "Thiruvananthapuram") p *= 1.25;
+      }
+      if (customMode === "train_express") {
+        if (["Ernakulam", "Thrissur", "Palakkad", "Kozhikode", "Thiruvananthapuram"].includes(d)) p *= 1.3;
+      } else if (customMode === "courier_parcel") {
+        if (["Ernakulam", "Kozhikode", "Kottayam"].includes(d)) p *= 1.35;
+      }
+      scores[d] = p;
+    }
+
+    const sumScores = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+    const sortedDistricts = Object.entries(scores)
+      .map(([d, score]) => ({ district: d, rawProb: (score / sumScores) * 100 }))
+      .sort((a, b) => b.rawProb - a.rawProb);
+
+    const top3 = sortedDistricts.slice(0, 3);
+    const topSum = top3.reduce((a, b) => a + b.rawProb, 0) || 1;
+
+    const predictedDestinations = top3.map((item, idx) => {
+      const normProb = Math.round((item.rawProb / topSum) * 100);
+      const route = solveShortestPath(gatewayKey, item.district);
+      const lowH = Math.max(0.5, Math.round(route.totalHours * 0.8 * 10) / 10);
+      const highH = Math.max(lowH + 0.5, Math.round(route.totalHours * 1.3 * 10) / 10);
+      return {
+        rank: idx + 1,
+        district: item.district,
+        probability: normProb,
+        distance_km: route.totalKm,
+        estimated_transit_hours: route.totalHours,
+        arrival_window: `${lowH} – ${highH} hrs`,
+        waypoint_path: route.path,
+      };
+    });
+
+    const currentSum = predictedDestinations.reduce((a, b) => a + b.probability, 0);
+    if (currentSum !== 100 && predictedDestinations.length > 0) {
+      predictedDestinations[0].probability += 100 - currentSum;
+    }
+
+    const gwName =
+      (transitData.gateways as Record<string, { name: string }>)[gatewayKey]?.name || customGateway;
+    const primaryDest = predictedDestinations[0]?.district || "Ernakulam";
+
+    return {
+      scenario_title: `Custom Live Intercept: ${gwName} (${customSubstance.toUpperCase()}, ${customQuantity}g)`,
+      is_commercial: isCommercial,
+      substance: customSubstance,
+      quantity_g: customQuantity,
+      transport_mode: customMode,
+      commercial_threshold: commercialThreshold,
+      predicted_destinations: predictedDestinations,
+      enforcer_tactical_directive: [
+        `Primary Interception Corridor: Deploy mobile flying squads along ${predictedDestinations[0]?.waypoint_path.join(
+          " ➔ "
+        )}. Coordinate with highway police.`,
+        `Estimated Arrival Window: Contraband entering via ${gwName} reaches ${primaryDest} within ${predictedDestinations[0]?.arrival_window} (${predictedDestinations[0]?.distance_km} km). Intensify vehicle checks during this temporal window.`,
+        isCommercial
+          ? `Legal Severity: Consignment of ${customQuantity}g ${customSubstance.toUpperCase()} qualifies as COMMERCIAL QUANTITY under NDPS Act (threshold: ${commercialThreshold}g). Deploy Special Enforcement Squad (SES) / Anti-Narcotics Special Action Force (DANSAF) for immediate arrest under Sec 21(c)/20(b)(ii)(C) (Strict non-bailable, 10–20 years rigorous imprisonment).`
+          : `Legal Severity: Consignment of ${customQuantity}g ${customSubstance.toUpperCase()} is below commercial threshold (${commercialThreshold}g). Alert local police station beat officers for interdiction under intermediate NDPS provisions.`,
+        customMode === "train_express"
+          ? `Rail Logistics Directive: Coordinate with Railway Protection Force (RPF) and GRP at arrival platforms and parcel offices in ${primaryDest}.`
+          : customMode === "courier_parcel"
+          ? `Parcel Logistics Directive: Issue inspection order for express logistics hubs, sorting centres, and dark stores in ${primaryDest}.`
+          : `Highway Transit Directive: Implement staggered checkpoint barricades and ANPR vehicle scanning at entry toll plazas along the transit corridor.`,
+      ],
+      community_early_warning: [
+        `High Vigilance Notice: Elevated probability (${predictedDestinations[0]?.probability}%) of illicit contraband entering ${primaryDest} from border corridor.`,
+        `Youth & Campus Protection: Ward council members, parent-teacher associations, and college anti-drug clubs (Vimukthi) should heighten vigilance around hostels, coaching centres, and night cafes.`,
+        `Safe Anonymous Reporting: Citizens can report suspicious courier deliveries or vehicle drop-offs anonymously to Kerala Anti-Narcotics Toll-Free Helpline: 14405 or WhatsApp to 9447170145.`,
+        `Community Action: Monitor for sudden behavioral changes, unexplained electronic payments, or unknown package drop-offs in residential neighborhoods.`,
+      ],
+    };
+  }, [customGateway, customSubstance, customQuantity, customMode, corridorGraph, solveShortestPath]);
 
   // State for monthly block demo
   const [month, setMonth] = useState(demoMonthly.months[0]);
@@ -233,41 +453,246 @@ export default function NewsModelDemo() {
               </span>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "0.5rem" }}>
-              {transitData.scenarios.map((sc, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveScenarioIdx(idx)}
-                  style={{
-                    textAlign: "left",
-                    padding: "0.6rem 0.8rem",
-                    borderRadius: "6px",
-                    border: activeScenarioIdx === idx ? "1px solid #38bdf8" : "1px solid var(--border)",
-                    background: activeScenarioIdx === idx ? "rgba(56, 189, 248, 0.12)" : "rgba(0,0,0,0.2)",
-                    color: activeScenarioIdx === idx ? "#ffffff" : "var(--muted)",
-                    cursor: "pointer",
-                    transition: "all 0.15s ease",
-                  }}
-                >
-                  <div style={{ fontWeight: 600, fontSize: "0.85rem", color: activeScenarioIdx === idx ? "#38bdf8" : "var(--foreground)", marginBottom: "0.2rem" }}>
-                    {sc.scenario_title}
-                  </div>
-                  <div style={{ display: "flex", gap: "0.4rem", fontSize: "0.7rem" }}>
-                    <span style={{ textTransform: "uppercase", background: "rgba(255,255,255,0.08)", padding: "0.1rem 0.3rem", borderRadius: "3px" }}>
-                      {sc.substance} ({sc.quantity_g}g)
-                    </span>
-                    <span style={{ textTransform: "capitalize", color: "#a855f7" }}>
-                      {sc.transport_mode.replace("_", " ")}
-                    </span>
-                  </div>
-                </button>
-              ))}
+            {/* Mode Switcher: Curated Cases vs Custom Simulator */}
+            <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem", flexWrap: "wrap" }}>
+              <button
+                onClick={() => setTransitScenarioType("curated")}
+                className={`button ${transitScenarioType === "curated" ? "primary" : ""}`}
+                style={{ fontSize: "0.8rem", padding: "0.35rem 0.8rem", display: "inline-flex", alignItems: "center", gap: "0.35rem" }}
+              >
+                <Sparkles size={14} /> Curated Scenarios ({transitData.scenarios.length})
+              </button>
+              <button
+                onClick={() => setTransitScenarioType("custom")}
+                className={`button ${transitScenarioType === "custom" ? "primary" : ""}`}
+                style={{ fontSize: "0.8rem", padding: "0.35rem 0.8rem", display: "inline-flex", alignItems: "center", gap: "0.35rem" }}
+              >
+                <SlidersHorizontal size={14} /> Custom Live Movement Simulator
+              </button>
             </div>
+
+            {transitScenarioType === "curated" ? (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "0.5rem" }}>
+                {transitData.scenarios.map((sc, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveScenarioIdx(idx)}
+                    style={{
+                      textAlign: "left",
+                      padding: "0.6rem 0.8rem",
+                      borderRadius: "6px",
+                      border: activeScenarioIdx === idx ? "1px solid #38bdf8" : "1px solid var(--border)",
+                      background: activeScenarioIdx === idx ? "rgba(56, 189, 248, 0.12)" : "rgba(0,0,0,0.2)",
+                      color: activeScenarioIdx === idx ? "#ffffff" : "var(--muted)",
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    <div style={{ fontWeight: 600, fontSize: "0.85rem", color: activeScenarioIdx === idx ? "#38bdf8" : "var(--foreground)", marginBottom: "0.2rem" }}>
+                      {sc.scenario_title}
+                    </div>
+                    <div style={{ display: "flex", gap: "0.4rem", fontSize: "0.7rem" }}>
+                      <span style={{ textTransform: "uppercase", background: "rgba(255,255,255,0.08)", padding: "0.1rem 0.3rem", borderRadius: "3px" }}>
+                        {sc.substance} ({sc.quantity_g}g)
+                      </span>
+                      <span style={{ textTransform: "capitalize", color: "#a855f7" }}>
+                        {sc.transport_mode.replace("_", " ")}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div style={{ background: "rgba(0,0,0,0.25)", borderRadius: "6px", padding: "1rem", border: "1px solid var(--border)" }}>
+                {/* Custom Simulator Form Grid */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem", marginBottom: "1rem" }}>
+                  {/* Gateway Select */}
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.75rem", color: "var(--muted)", marginBottom: "0.3rem", fontWeight: 600 }}>
+                      ENTRY GATEWAY / INTERCEPTION POINT
+                    </label>
+                    <select
+                      value={customGateway}
+                      onChange={(e) => setCustomGateway(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "0.45rem 0.6rem",
+                        borderRadius: "4px",
+                        background: "var(--surface)",
+                        border: "1px solid var(--border)",
+                        color: "var(--foreground)",
+                        fontSize: "0.82rem",
+                      }}
+                    >
+                      {gatewayOptions.map((gw) => (
+                        <option key={gw.id} value={gw.id}>
+                          {gw.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Substance Select */}
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.75rem", color: "var(--muted)", marginBottom: "0.3rem", fontWeight: 600 }}>
+                      CONTRABAND SUBSTANCE
+                    </label>
+                    <select
+                      value={customSubstance}
+                      onChange={(e) => setCustomSubstance(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "0.45rem 0.6rem",
+                        borderRadius: "4px",
+                        background: "var(--surface)",
+                        border: "1px solid var(--border)",
+                        color: "var(--foreground)",
+                        fontSize: "0.82rem",
+                      }}
+                    >
+                      {substanceOptions.map((sub) => (
+                        <option key={sub.id} value={sub.id}>
+                          {sub.label} (Commercial: ≥ {sub.unit})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Quantity Input */}
+                  <div>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.3rem" }}>
+                      <label style={{ fontSize: "0.75rem", color: "var(--muted)", fontWeight: 600 }}>
+                        CONSIGNMENT QUANTITY (G)
+                      </label>
+                      <span
+                        style={{
+                          fontSize: "0.7rem",
+                          fontWeight: 600,
+                          color: customPrediction.is_commercial ? "#f87171" : "#facc15",
+                        }}
+                      >
+                        {customPrediction.is_commercial ? "COMMERCIAL" : "RETAIL"}
+                      </span>
+                    </div>
+                    <input
+                      type="number"
+                      min={0.1}
+                      step={customSubstance === "lsd" ? "0.1" : "1"}
+                      value={customQuantity}
+                      onChange={(e) => setCustomQuantity(Math.max(0.1, parseFloat(e.target.value) || 0.1))}
+                      style={{
+                        width: "100%",
+                        padding: "0.45rem 0.6rem",
+                        borderRadius: "4px",
+                        background: "var(--surface)",
+                        border: "1px solid var(--border)",
+                        color: "var(--foreground)",
+                        fontSize: "0.82rem",
+                      }}
+                    />
+                  </div>
+
+                  {/* Transport Modality Select */}
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.75rem", color: "var(--muted)", marginBottom: "0.3rem", fontWeight: 600 }}>
+                      TRANSPORT MODALITY
+                    </label>
+                    <select
+                      value={customMode}
+                      onChange={(e) => setCustomMode(e.target.value)}
+                      style={{
+                        width: "100%",
+                        padding: "0.45rem 0.6rem",
+                        borderRadius: "4px",
+                        background: "var(--surface)",
+                        border: "1px solid var(--border)",
+                        color: "var(--foreground)",
+                        fontSize: "0.82rem",
+                      }}
+                    >
+                      {modalityOptions.map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Quick Presets */}
+                <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap", fontSize: "0.75rem", color: "var(--muted)" }}>
+                  <span style={{ fontWeight: 600 }}>Quick Presets:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomGateway("walayar");
+                      setCustomSubstance("mdma");
+                      setCustomQuantity(50);
+                      setCustomMode("private_car");
+                    }}
+                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid var(--border)", borderRadius: "4px", padding: "0.2rem 0.5rem", color: "var(--foreground)", cursor: "pointer", fontSize: "0.7rem" }}
+                  >
+                    Walayar MDMA (50g)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomGateway("muthanga");
+                      setCustomSubstance("ganja");
+                      setCustomQuantity(25000);
+                      setCustomMode("heavy_truck");
+                    }}
+                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid var(--border)", borderRadius: "4px", padding: "0.2rem 0.5rem", color: "var(--foreground)", cursor: "pointer", fontSize: "0.7rem" }}
+                  >
+                    Muthanga Ganja (25kg)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomGateway("nedumbassery");
+                      setCustomSubstance("methamphetamine");
+                      setCustomQuantity(200);
+                      setCustomMode("air_passenger");
+                    }}
+                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid var(--border)", borderRadius: "4px", padding: "0.2rem 0.5rem", color: "var(--foreground)", cursor: "pointer", fontSize: "0.7rem" }}
+                  >
+                    Nedumbassery Meth (200g)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomGateway("kumily");
+                      setCustomSubstance("hashish_oil");
+                      setCustomQuantity(1500);
+                      setCustomMode("interstate_bus");
+                    }}
+                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid var(--border)", borderRadius: "4px", padding: "0.2rem 0.5rem", color: "var(--foreground)", cursor: "pointer", fontSize: "0.7rem" }}
+                  >
+                    Kumily Hash Oil (1.5kg)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomGateway("palakkad_rail");
+                      setCustomSubstance("heroin");
+                      setCustomQuantity(500);
+                      setCustomMode("train_express");
+                    }}
+                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid var(--border)", borderRadius: "4px", padding: "0.2rem 0.5rem", color: "var(--foreground)", cursor: "pointer", fontSize: "0.7rem" }}
+                  >
+                    Palakkad Rail Heroin (500g)
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Active Scenario Detailed Dashboard */}
           {(() => {
-            const currentScenario = transitData.scenarios[activeScenarioIdx] || transitData.scenarios[0];
+            const currentScenario =
+              transitScenarioType === "custom"
+                ? customPrediction
+                : transitData.scenarios[activeScenarioIdx] || transitData.scenarios[0];
             const topDest = currentScenario.predicted_destinations[0];
 
             return (
@@ -362,6 +787,85 @@ export default function NewsModelDemo() {
                       </div>
                     ))}
                   </div>
+
+                  {/* Projected Corridor Transit Journey Breadcrumb */}
+                  {topDest && topDest.waypoint_path && (
+                    <div
+                      style={{
+                        background: "rgba(15, 23, 42, 0.6)",
+                        borderRadius: "6px",
+                        padding: "0.85rem 1rem",
+                        border: "1px solid rgba(56, 189, 248, 0.25)",
+                      }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.6rem", flexWrap: "wrap", gap: "0.4rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                          <Zap size={16} style={{ color: "#38bdf8" }} />
+                          <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#e2e8f0" }}>
+                            Projected Corridor Journey (#1 Target: {topDest.district})
+                          </span>
+                        </div>
+                        <span style={{ fontSize: "0.75rem", color: "#38bdf8", background: "rgba(56, 189, 248, 0.12)", padding: "0.15rem 0.5rem", borderRadius: "4px" }}>
+                          Total: {topDest.distance_km} km · ~{topDest.estimated_transit_hours} hrs total transit
+                        </span>
+                      </div>
+
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap", paddingTop: "0.25rem" }}>
+                        {topDest.waypoint_path.map((node, nIdx) => {
+                          const isStart = nIdx === 0;
+                          const isEnd = nIdx === topDest.waypoint_path.length - 1;
+                          return (
+                            <span key={nIdx} style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem" }}>
+                              <div
+                                style={{
+                                  padding: "0.3rem 0.6rem",
+                                  borderRadius: "4px",
+                                  fontSize: "0.75rem",
+                                  fontWeight: 600,
+                                  background: isStart
+                                    ? "rgba(16, 185, 129, 0.2)"
+                                    : isEnd
+                                    ? "rgba(239, 68, 68, 0.25)"
+                                    : "rgba(56, 189, 248, 0.15)",
+                                  color: isStart ? "#34d399" : isEnd ? "#f87171" : "#7dd3fc",
+                                  border: isStart
+                                    ? "1px solid rgba(16, 185, 129, 0.45)"
+                                    : isEnd
+                                    ? "1px solid rgba(239, 68, 68, 0.5)"
+                                    : "1px solid rgba(56, 189, 248, 0.3)",
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: "0.35rem",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    width: "6px",
+                                    height: "6px",
+                                    borderRadius: "50%",
+                                    background: isStart ? "#10b981" : isEnd ? "#ef4444" : "#38bdf8",
+                                    display: "inline-block",
+                                    boxShadow: isStart
+                                      ? "0 0 6px #10b981"
+                                      : isEnd
+                                      ? "0 0 6px #ef4444"
+                                      : "0 0 4px #38bdf8",
+                                  }}
+                                />
+                                <span>
+                                  {isStart ? "Entry: " : isEnd ? "Target: " : "Via: "}
+                                  {formatNodeName(node)}
+                                </span>
+                              </div>
+                              {!isEnd && (
+                                <ArrowRight size={12} style={{ color: "var(--muted)" }} />
+                              )}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Right: Dual-Pane Tactical & Community Guidance */}
